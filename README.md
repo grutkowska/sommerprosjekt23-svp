@@ -24,7 +24,7 @@ For å kjøre tester for en app:
 1.  cd til appen du ønsker å kjøre tester på og kjør `pnpm vitest`.
 
 # Henvendelser
-
+aawdfadwad
 Spørsmål knyttet til koden eller prosjektet kan rettes mot nav.team.foreldrepenger@nav.no.
 
 ## For NAV-ansatte

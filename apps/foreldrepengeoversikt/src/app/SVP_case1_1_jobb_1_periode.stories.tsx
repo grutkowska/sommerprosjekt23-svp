@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'Case 1',
+    title: 'SVP_case1_1_jobb_1_periode.stories',
     component: AppContainer,
 };
 
@@ -31,4 +31,4 @@ const Template: StoryFn<any> = () => {
     return <AppContainer />;
 };
 
-export const VisApp2 = Template.bind({});
+export const VisApp1 = Template.bind({});

@@ -7,6 +7,7 @@ import dokumenter from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/do
 import tidslinjeHendelser from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/tidslinjeHendelser.json';
 import manglendeVedlegg from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/manglendeVedlegg.json';
 
+
 import AppContainer from './AppContainer';
 import { AxiosInstance } from './api/apiInterceptor';
 
@@ -14,6 +15,7 @@ import '@navikt/ds-css';
 
 export default {
     title: 'SVP_case2_1_jobb_1_periode_avslag.stories',
+
     component: AppContainer,
 };
 

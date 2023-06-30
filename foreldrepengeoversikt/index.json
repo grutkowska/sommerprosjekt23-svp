@@ -1,1 +1,1 @@
-{"v":4,"entries":{"appcontainer--vis-app":{"id":"appcontainer--vis-app","title":"AppContainer","name":"Vis App","importPath":"./src/app/AppContainer.stories.tsx","tags":["story"],"type":"story"}}}
+{"v":4,"entries":{"case-1--vis-app-2":{"id":"case-1--vis-app-2","title":"Case 1","name":"Vis App 2","importPath":"./src/app/SVP_case1_1_jobb_1_periode.stories.tsx","tags":["story"],"type":"story"},"case-2--vis-app-2":{"id":"case-2--vis-app-2","title":"Case 2","name":"Vis App 2","importPath":"./src/app/SVP_case2_1_jobb_1_periode_avslag.stories.tsx","tags":["story"],"type":"story"}}}

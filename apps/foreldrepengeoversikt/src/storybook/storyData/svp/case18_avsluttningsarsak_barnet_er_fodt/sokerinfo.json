@@ -1,30 +1,32 @@
 {
   "søker": {
-    "fnr": "04508020452",
-    "fornavn": "Trygg",
-    "etternavn": "Tevling",
+    "fnr": "23518815245",
+    "fornavn": "Styrbar",
+    "etternavn": "Alm",
     "kjønn": "K",
-    "fødselsdato": "1980-10-04",
+    "fødselsdato": "1988-11-23",
     "bankkonto": {
       "kontonummer": "",
       "banknavn": ""
     },
+    "barn": [
+      {
+        "fnr": "27462353370",
+        "fornavn": "Innesluttet",
+        "etternavn": "Veranda",
+        "kjønn": "M",
+        "fødselsdato": "2023-06-27"
+      }
+    ],
     "sivilstand": {
       "type": "UGIFT"
     }
   },
   "arbeidsforhold": [
     {
-      "arbeidsgiverId": "972674818",
+      "arbeidsgiverId": "907670201",
       "arbeidsgiverIdType": "orgnr",
-      "arbeidsgiverNavn": "PENGELØS SPAREBANK",
-      "stillingsprosent": 100,
-      "fom": "2003-06-26"
-    },
-    {
-      "arbeidsgiverId": "805824352",
-      "arbeidsgiverIdType": "orgnr",
-      "arbeidsgiverNavn": "VEGANSK SLAKTERI",
+      "arbeidsgiverNavn": "KLONELABBEN",
       "stillingsprosent": 100,
       "fom": "2003-06-26"
     }

@@ -10,7 +10,7 @@ import { useGetBackgroundColor } from './hooks/useBackgroundColor';
 import ForeldrepengeoversiktRoutes from './routes/ForeldrepengeoversiktRoutes';
 import { HendelseType } from './types/HendelseType';
 import { mapSakerDTOToSaker } from './utils/sakerUtils';
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
+//import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import Environment from './Environment';
 
 import './styles/app.css';

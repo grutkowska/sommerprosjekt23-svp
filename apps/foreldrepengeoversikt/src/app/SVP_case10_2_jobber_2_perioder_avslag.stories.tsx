@@ -1,11 +1,11 @@
 import { StoryFn } from '@storybook/react';
 import MockAdapter from 'axios-mock-adapter';
 
-import søkerinfo from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/sokerinfo.json';
-import saker from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/saker.json';
-import dokumenter from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/dokumenter.json';
-import tidslinjeHendelser from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/tidslinjeHendelser.json';
-import manglendeVedlegg from 'storybook/storyData/svp/case2_1_jobb_1_periode_avslag/manglendeVedlegg.json';
+import søkerinfo from 'storybook/storyData/svp/case10_2_jobber_2_perioder_avslag/sokerinfo.json';
+import saker from 'storybook/storyData/svp/case10_2_jobber_2_perioder_avslag/saker.json';
+import dokumenter from 'storybook/storyData/svp/case10_2_jobber_2_perioder_avslag/dokumenter.json';
+import tidslinjeHendelser from 'storybook/storyData/svp/case10_2_jobber_2_perioder_avslag/tidslinjeHendelser.json';
+import manglendeVedlegg from 'storybook/storyData/svp/case10_2_jobber_2_perioder_avslag/manglendeVedlegg.json';
 
 import AppContainer from './AppContainer';
 import { AxiosInstance } from './api/apiInterceptor';
@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case2_1_jobb_1_periode_avslag.stories',
+    title: 'SVP_case10_2_jobber_2_perioder_avslag.stories',
     component: AppContainer,
 };
 
@@ -31,4 +31,4 @@ const Template: StoryFn<any> = () => {
     return <AppContainer />;
 };
 
-export const VisApp2 = Template.bind({});
+export const VisApp10 = Template.bind({});

@@ -25,7 +25,7 @@ const Template: StoryFn<any> = () => {
     apiMock.onGet('/innsyn/tidslinje').reply(200, tidslinjeHendelser);
     apiMock.onGet('/historikk/vedlegg').reply(200, manglendeVedlegg);
     apiMock.onGet('/minidialog').reply(200, []);
-
+    apiMock.onGet('/innsyn/v2/saker/oppdatert').reply(200, true);
     apiMock.onPost('/soknad/ettersen').reply(200, {});
 
     return <AppContainer />;

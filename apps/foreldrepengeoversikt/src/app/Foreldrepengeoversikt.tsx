@@ -43,9 +43,6 @@ const Foreldrepengeoversikt: React.FunctionComponent = () => {
         },
     });
 
-    //const oppdatertQuery = { data: true };
-    // const oppdatertQuery = { data: true } as UseQueryResult<boolean, unknown>;
-
     const sakerSuspended = getSakerSuspended(oppdatertQuery);
 
     const { søkerinfoData, søkerinfoError } = Api.useSøkerinfo();

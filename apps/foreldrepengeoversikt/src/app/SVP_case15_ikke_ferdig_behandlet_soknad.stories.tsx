@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case15_ikke_ferdig_behandlet_soknad.stories',
+    title: 'SVP_case15_ikke_ferdig_behandlet_soknad',
     component: AppContainer,
 };
 

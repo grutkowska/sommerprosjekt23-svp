@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case18_avsluttningsarsak_barnet_er_fodt.stories',
+    title: 'SVP_case18_avsluttningsarsak_barnet_er_fodt',
     component: AppContainer,
 };
 

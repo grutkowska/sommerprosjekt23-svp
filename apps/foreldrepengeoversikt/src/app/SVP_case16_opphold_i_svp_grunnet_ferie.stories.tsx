@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case16_opphold_i_svp_grunnet_ferie.stories',
+    title: 'SVP_case16_opphold_i_svp_grunnet_ferie',
     component: AppContainer,
 };
 

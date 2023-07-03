@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case13_2_jobber_frilanser_og_sykepleie_avslag.stories',
+    title: 'SVP_case13_2_jobber_frilanser_og_sykepleie_avslag',
     component: AppContainer,
 };
 

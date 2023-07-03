@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case17_opphold_i_svp_grunnet_sykepenger.stories',
+    title: 'SVP_case17_opphold_i_svp_grunnet_sykepenger',
     component: AppContainer,
 };
 

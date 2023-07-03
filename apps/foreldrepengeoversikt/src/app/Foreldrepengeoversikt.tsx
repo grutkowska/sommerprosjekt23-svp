@@ -10,9 +10,8 @@ import { useGetBackgroundColor } from './hooks/useBackgroundColor';
 import ForeldrepengeoversiktRoutes from './routes/ForeldrepengeoversiktRoutes';
 import { HendelseType } from './types/HendelseType';
 import { mapSakerDTOToSaker } from './utils/sakerUtils';
-import { UseQueryResult } from '@tanstack/react-query';
-//import Environment from './Environment';
-
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import Environment from './Environment';
 
 import './styles/app.css';
 import { SakOppslag } from './types/SakOppslag';
@@ -29,23 +28,23 @@ const Foreldrepengeoversikt: React.FunctionComponent = () => {
     const bem = bemUtils('app');
     const backgroundColor = useGetBackgroundColor();
 
-    // const oppdatertQuery = useQuery<boolean>({
-    //     queryKey: ['oppdatert'],
-    //     queryFn: async () =>
-    //         await fetch(`${Environment.REST_API_URL}/innsyn/v2/saker/oppdatert`, { credentials: 'include' }).then(
-    //             (response) => response.json()
-    //         ),
-    //     refetchInterval: (data) => {
-    //         if (data) {
-    //             return false;
-    //         }
+    const oppdatertQuery = useQuery<boolean>({
+        queryKey: ['oppdatert'],
+        queryFn: async () =>
+            await fetch(`${Environment.REST_API_URL}/innsyn/v2/saker/oppdatert`, { credentials: 'include' }).then(
+                (response) => response.json()
+            ),
+        refetchInterval: (data) => {
+            if (data) {
+                return false;
+            }
 
-    //         return 15000;
-    //     },
-    // });
+            return 15000;
+        },
+    });
 
     //const oppdatertQuery = { data: true };
-    const oppdatertQuery = { data: true } as UseQueryResult<boolean, unknown>;
+    // const oppdatertQuery = { data: true } as UseQueryResult<boolean, unknown>;
 
     const sakerSuspended = getSakerSuspended(oppdatertQuery);
 

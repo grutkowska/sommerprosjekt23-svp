@@ -15,6 +15,18 @@ import '@navikt/ds-css';
 export default {
     title: 'SVP_case18_avsluttningsarsak_barnet_er_fodt',
     component: AppContainer,
+    parameters: {
+        mockData: [
+            {
+                url: 'test/innsyn/v2/saker/oppdatert',
+                method: 'GET',
+                status: 200,
+                response: {
+                    data: true,
+                },
+            },
+        ],
+    },
 };
 
 const Template: StoryFn<any> = () => {

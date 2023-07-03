@@ -15,6 +15,18 @@ import '@navikt/ds-css';
 export default {
     title: 'SVP_case12_2_jobber_frilanser_og_sykepleie',
     component: AppContainer,
+    parameters: {
+        mockData: [
+            {
+                url: 'test/innsyn/v2/saker/oppdatert',
+                method: 'GET',
+                status: 200,
+                response: {
+                    data: true,
+                },
+            },
+        ],
+    },
 };
 
 const Template: StoryFn<any> = () => {
@@ -25,7 +37,6 @@ const Template: StoryFn<any> = () => {
     apiMock.onGet('/innsyn/tidslinje').reply(200, tidslinjeHendelser);
     apiMock.onGet('/historikk/vedlegg').reply(200, manglendeVedlegg);
     apiMock.onGet('/minidialog').reply(200, []);
-    apiMock.onGet('/innsyn/v2/saker/oppdatert').reply(200, true);
     apiMock.onPost('/soknad/ettersen').reply(200, {});
 
     return <AppContainer />;

@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case14_selvstendig_neringsdrivende.stories',
+    title: 'SVP_case14_selvstendig_neringsdrivende',
     component: AppContainer,
 };
 

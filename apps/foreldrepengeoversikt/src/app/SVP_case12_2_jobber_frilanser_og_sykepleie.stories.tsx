@@ -1,11 +1,11 @@
 import { StoryFn } from '@storybook/react';
 import MockAdapter from 'axios-mock-adapter';
 
-import søkerinfo from 'storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/sokerinfo.json';
-import saker from 'storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/saker.json';
-import dokumenter from 'storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/dokumenter.json';
-import tidslinjeHendelser from 'storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/tidslinjeHendelser.json';
-import manglendeVedlegg from 'storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/manglendeVedlegg.json';
+import søkerinfo from './../storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/sokerinfo.json';
+import saker from './../storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/saker.json';
+import dokumenter from './../storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/dokumenter.json';
+import tidslinjeHendelser from './../storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/tidslinjeHendelser.json';
+import manglendeVedlegg from './../storybook/storyData/svp/case12_2_jobber_frilanser_og_sykepleie/manglendeVedlegg.json';
 
 import AppContainer from './AppContainer';
 import { AxiosInstance } from './api/apiInterceptor';
@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case12_2_jobber_frilanser_og_sykepleie.stories',
+    title: 'SVP_case12_2_jobber_frilanser_og_sykepleie',
     component: AppContainer,
 };
 
@@ -25,7 +25,7 @@ const Template: StoryFn<any> = () => {
     apiMock.onGet('/innsyn/tidslinje').reply(200, tidslinjeHendelser);
     apiMock.onGet('/historikk/vedlegg').reply(200, manglendeVedlegg);
     apiMock.onGet('/minidialog').reply(200, []);
-
+    apiMock.onGet('/innsyn/v2/saker/oppdatert').reply(200, true);
     apiMock.onPost('/soknad/ettersen').reply(200, {});
 
     return <AppContainer />;

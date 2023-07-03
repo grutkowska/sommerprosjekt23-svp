@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case19_2_jobber_1_innviglet_1_delvis.stories',
+    title: 'SVP_case19_2_jobber_1_innviglet_1_delvis',
     component: AppContainer,
 };
 

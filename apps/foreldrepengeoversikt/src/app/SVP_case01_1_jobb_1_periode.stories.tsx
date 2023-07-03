@@ -1,11 +1,11 @@
 import { StoryFn } from '@storybook/react';
 import MockAdapter from 'axios-mock-adapter';
 
-import søkerinfo from 'storybook/storyData/svp/case4_1_jobb_2_perioder_delvis_innvilget/sokerinfo.json';
-import saker from 'storybook/storyData/svp/case4_1_jobb_2_perioder_delvis_innvilget/saker.json';
-import dokumenter from 'storybook/storyData/svp/case4_1_jobb_2_perioder_delvis_innvilget/dokumenter.json';
-import tidslinjeHendelser from 'storybook/storyData/svp/case4_1_jobb_2_perioder_delvis_innvilget/tidslinjeHendelser.json';
-import manglendeVedlegg from 'storybook/storyData/svp/case4_1_jobb_2_perioder_delvis_innvilget/manglendeVedlegg.json';
+import søkerinfo from 'storybook/storyData/svp/case1_1_jobb_1_periode/sokerinfo.json';
+import saker from 'storybook/storyData/svp/case1_1_jobb_1_periode/saker.json';
+import dokumenter from 'storybook/storyData/svp/case1_1_jobb_1_periode/dokumenter.json';
+import tidslinjeHendelser from 'storybook/storyData/svp/case1_1_jobb_1_periode/tidslinjeHendelser.json';
+import manglendeVedlegg from 'storybook/storyData/svp/case1_1_jobb_1_periode/manglendeVedlegg.json';
 
 import AppContainer from './AppContainer';
 import { AxiosInstance } from './api/apiInterceptor';
@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case4_1_jobb_2_perioder_delvis_innvilget.stories',
+    title: 'SVP_case01_1_jobb_1_periode',
     component: AppContainer,
 };
 
@@ -25,10 +25,10 @@ const Template: StoryFn<any> = () => {
     apiMock.onGet('/innsyn/tidslinje').reply(200, tidslinjeHendelser);
     apiMock.onGet('/historikk/vedlegg').reply(200, manglendeVedlegg);
     apiMock.onGet('/minidialog').reply(200, []);
-
+    apiMock.onGet('/innsyn/v2/saker/oppdatert').reply(200, true);
     apiMock.onPost('/soknad/ettersen').reply(200, {});
 
     return <AppContainer />;
 };
 
-export const VisApp4 = Template.bind({});
+export const VisApp1 = Template.bind({});

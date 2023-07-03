@@ -13,7 +13,7 @@ import { AxiosInstance } from './api/apiInterceptor';
 import '@navikt/ds-css';
 
 export default {
-    title: 'SVP_case10_2_jobber_2_perioder_avslag.stories',
+    title: 'SVP_case10_2_jobber_2_perioder_avslag',
     component: AppContainer,
 };
 

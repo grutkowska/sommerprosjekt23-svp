@@ -94,6 +94,7 @@
             "sakAvsluttet": false,
             "sisteSøknadMottattDato": "2023-01-31",
             "kanSøkeOmEndring": false,
+            "kanSøkeOmEndring": false,
             "sakTilhørerMor": true,
             "gjelderAdopsjon": false,
             "morUføretrygd": false,
@@ -105,8 +106,12 @@
             },
             "familiehendelse": {
                 "termindato": "2023-09-15",
+                "termindato": "2023-09-15",
                 "antallBarn": 1
             },
+            "åpenBehandling": {
+                "tilstand": "UNDER_BEHANDLING",
+                "søknadsperioder": [
             "åpenBehandling": {
                 "tilstand": "UNDER_BEHANDLING",
                 "søknadsperioder": [
@@ -114,8 +119,14 @@
                         "fom": "2023-08-25",
                         "tom": "2023-09-14",
                         "kontoType": "FORELDREPENGER_FØR_FØDSEL"
+                        "fom": "2023-08-25",
+                        "tom": "2023-09-14",
+                        "kontoType": "FORELDREPENGER_FØR_FØDSEL"
                     },
                     {
+                        "fom": "2023-09-15",
+                        "tom": "2023-10-26",
+                        "kontoType": "MØDREKVOTE"
                         "fom": "2023-09-15",
                         "tom": "2023-10-26",
                         "kontoType": "MØDREKVOTE"

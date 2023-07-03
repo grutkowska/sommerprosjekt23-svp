@@ -11,7 +11,8 @@ import ForeldrepengeoversiktRoutes from './routes/ForeldrepengeoversiktRoutes';
 import { HendelseType } from './types/HendelseType';
 import { mapSakerDTOToSaker } from './utils/sakerUtils';
 import { UseQueryResult } from '@tanstack/react-query';
-import Environment from './Environment';
+//import Environment from './Environment';
+
 
 import './styles/app.css';
 import { SakOppslag } from './types/SakOppslag';
@@ -87,7 +88,7 @@ const Foreldrepengeoversikt: React.FunctionComponent = () => {
             </div>
         );
     }
-
+    console.log(søkerinfoData);
     const aktiveMinidialoger = minidialogData
         ? minidialogData.filter(
               ({ gyldigTil, aktiv, hendelse }) =>

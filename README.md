@@ -14,14 +14,13 @@ Du må på forhånd ha installert Node.js (v.18). Vi anbefaler å bruke Git Bash
 
 For å kjøre opp appen i dev:
 
-1. cd til appen du ønsker å jobbe med, f.eks `cd apps/foreldrepengeoversikt`
-2. Kjør `pnpm run dev-api`
-3. Kjør `pnpm run dev`
+1.  cd til appen du ønsker å jobbe med, f.eks `apps/foreldrepengeoversikt`
+2.  Kjør `pnpm run dev-api`.
+3.  Kjør `pnpm run dev`
 
 For å kjøre tester for en app:
 
-1. cd til appen du ønsker å kjøre tester på, f.eks `cd apps/foreldrepengeoversikt`
-2. Kjør `pnpm vitest`.
+1.  cd til appen du ønsker å kjøre tester på og kjør `pnpm vitest`.
 
 # Henvendelser
 

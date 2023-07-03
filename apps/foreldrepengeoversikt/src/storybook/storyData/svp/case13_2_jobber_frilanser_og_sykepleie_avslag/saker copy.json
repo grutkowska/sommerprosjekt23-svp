@@ -3,16 +3,16 @@
   "engangsstønad": [],
   "svangerskapspenger": [
     {
-      "saksnummer": "352012258",
+      "saksnummer": "352012282",
       "familiehendelse": {
-        "termindato": "2023-09-22",
+        "termindato": "2023-10-19",
         "antallBarn": 0
       },
       "sakAvsluttet": true,
       "gjeldendeVedtak": {
         "arbeidsforhold": []
       },
-      "oppdatertTidspunkt": "2023-07-03T14:14:11.801"
+      "oppdatertTidspunkt": "2023-06-28T15:20:39.494"
     }
   ]
 }

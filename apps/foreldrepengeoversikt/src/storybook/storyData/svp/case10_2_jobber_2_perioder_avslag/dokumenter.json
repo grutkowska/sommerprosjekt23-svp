@@ -1,5 +1,15 @@
 [
   {
+    "type": "UTGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T14:14:12",
+    "saksnummer": "352012274",
+    "tittel": "Avslagsbrev svangerskapspenger",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236568/624987622",
+    "journalpost": "598236568",
+    "dokumentId": "624987622",
+    "erHoveddokument": true
+  },
+  {
     "type": "INNGÅENDE_DOKUMENT",
     "mottatt": "2023-06-26T15:39:44",
     "saksnummer": "352012274",

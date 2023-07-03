@@ -11,7 +11,7 @@ import ForeldrepengeoversiktRoutes from './routes/ForeldrepengeoversiktRoutes';
 import { HendelseType } from './types/HendelseType';
 import { mapSakerDTOToSaker } from './utils/sakerUtils';
 import { UseQueryResult } from '@tanstack/react-query';
-//import Environment from './Environment';
+import Environment from './Environment';
 
 import './styles/app.css';
 import { SakOppslag } from './types/SakOppslag';
@@ -43,7 +43,8 @@ const Foreldrepengeoversikt: React.FunctionComponent = () => {
     //     },
     // });
 
-    const oppdatertQuery = { data: true };
+    //const oppdatertQuery = { data: true };
+    const oppdatertQuery = { data: true } as UseQueryResult<boolean, unknown>;
 
     const sakerSuspended = getSakerSuspended(oppdatertQuery);
 

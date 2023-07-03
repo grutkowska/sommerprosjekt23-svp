@@ -3,9 +3,9 @@
   "engangsstønad": [],
   "svangerskapspenger": [
     {
-      "saksnummer": "352012258",
+      "saksnummer": "352012312",
       "familiehendelse": {
-        "termindato": "2023-10-06",
+        "termindato": "2023-11-25",
         "antallBarn": 0
       },
       "sakAvsluttet": false,
@@ -19,26 +19,26 @@
                 "type": "ORGANISASJON"
               }
             },
-            "behovFrom": "2023-07-29",
+            "behovFrom": "2023-06-30",
             "tilrettelegginger": [
               {
-                "fom": "2023-07-29",
-                "tom": "2023-08-19",
+                "fom": "2023-07-15",
+                "tom": "2023-11-03",
+                "type": "DELVIS",
+                "arbeidstidprosent": 50,
+                "resultat": {
+                  "resultatType": "INNVILGET",
+                  "utbetalingsgrad": 50
+                }
+              },
+              {
+                "fom": "2023-06-30",
+                "tom": "2023-07-14",
                 "type": "INGEN",
                 "arbeidstidprosent": 0,
                 "resultat": {
                   "resultatType": "INNVILGET",
                   "utbetalingsgrad": 100
-                }
-              },
-              {
-                "fom": "2023-08-20",
-                "tom": "2023-09-14",
-                "type": "HEL",
-                "arbeidstidprosent": 0,
-                "resultat": {
-                  "resultatType": "INNVILGET",
-                  "utbetalingsgrad": 0
                 }
               }
             ],
@@ -53,11 +53,11 @@
                 "type": "ORGANISASJON"
               }
             },
-            "behovFrom": "2023-07-07",
+            "behovFrom": "2023-06-30",
             "tilrettelegginger": [
               {
-                "fom": "2023-07-09",
-                "tom": "2023-09-14",
+                "fom": "2023-07-28",
+                "tom": "2023-11-03",
                 "type": "INGEN",
                 "arbeidstidprosent": 0,
                 "resultat": {
@@ -71,7 +71,7 @@
           }
         ]
       },
-      "oppdatertTidspunkt": "2023-06-30T15:09:19.633"
+      "oppdatertTidspunkt": "2023-06-30T15:08:51.369"
     }
   ]
 }

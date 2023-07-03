@@ -3,9 +3,9 @@
   "engangsstønad": [],
   "svangerskapspenger": [
     {
-      "saksnummer": "352012258",
+      "saksnummer": "352012317",
       "familiehendelse": {
-        "termindato": "2023-08-17",
+        "termindato": "2023-11-25",
         "antallBarn": 0
       },
       "sakAvsluttet": false,
@@ -15,25 +15,25 @@
             "aktivitet": {
               "type": "ORDINÆRT_ARBEID",
               "arbeidsgiver": {
-                "id": "839942907",
+                "id": "972674818",
                 "type": "ORGANISASJON"
               }
             },
             "behovFrom": "2023-07-03",
             "tilrettelegginger": [
               {
-                "fom": "2023-07-17",
-                "tom": "2023-07-26",
+                "fom": "2023-08-14",
+                "tom": "2023-11-03",
                 "type": "DELVIS",
-                "arbeidstidprosent": 20,
+                "arbeidstidprosent": 50,
                 "resultat": {
                   "resultatType": "INNVILGET",
-                  "utbetalingsgrad": 80
+                  "utbetalingsgrad": 50
                 }
               },
               {
                 "fom": "2023-07-03",
-                "tom": "2023-07-16",
+                "tom": "2023-08-06",
                 "type": "DELVIS",
                 "arbeidstidprosent": 50,
                 "resultat": {
@@ -42,12 +42,19 @@
                 }
               }
             ],
-            "oppholdsperioder": [],
+            "oppholdsperioder": [
+              {
+                "fom": "2023-08-07",
+                "tom": "2023-08-13",
+                "årsak": "SYKEPENGER",
+                "oppholdKilde": "SAKSBEHANDLER"
+              }
+            ],
             "avslutningÅrsak": "NORMAL"
           }
         ]
       },
-      "oppdatertTidspunkt": "2023-06-28T15:20:39.117"
+      "oppdatertTidspunkt": "2023-07-03T14:40:55.495"
     }
   ]
 }

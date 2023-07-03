@@ -1,5 +1,55 @@
 [
   {
+    "type": "UTGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T15:49:49",
+    "saksnummer": "352012294",
+    "tittel": "Innvilgelsesbrev svangerskapspenger",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236604/624987664",
+    "journalpost": "598236604",
+    "dokumentId": "624987664",
+    "erHoveddokument": true
+  },
+  {
+    "type": "INNGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T15:46:54",
+    "saksnummer": "352012294",
+    "tittel": "Søknad om svangerskapspenger",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236603/624987661",
+    "journalpost": "598236603",
+    "dokumentId": "624987661",
+    "erHoveddokument": true
+  },
+  {
+    "type": "INNGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T15:46:54",
+    "saksnummer": "352012294",
+    "tittel": "Skjema for tilrettelegging og omplassering ved graviditet",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236603/624987662",
+    "journalpost": "598236603",
+    "dokumentId": "624987662",
+    "erHoveddokument": false
+  },
+  {
+    "type": "INNGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T15:46:54",
+    "saksnummer": "352012294",
+    "tittel": "Skjema for tilrettelegging og omplassering ved graviditet",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236603/624987663",
+    "journalpost": "598236603",
+    "dokumentId": "624987663",
+    "erHoveddokument": false
+  },
+  {
+    "type": "UTGÅENDE_DOKUMENT",
+    "mottatt": "2023-07-03T15:45:59",
+    "saksnummer": "352012294",
+    "tittel": "Innvilgelsesbrev svangerskapspenger",
+    "url": "https://foreldrepengesoknad-api.intern.dev.nav.no/rest/dokument/hent-dokument/598236602/624987660",
+    "journalpost": "598236602",
+    "dokumentId": "624987660",
+    "erHoveddokument": true
+  },
+  {
     "type": "INNGÅENDE_DOKUMENT",
     "mottatt": "2023-06-28T08:46:26",
     "saksnummer": "352012294",

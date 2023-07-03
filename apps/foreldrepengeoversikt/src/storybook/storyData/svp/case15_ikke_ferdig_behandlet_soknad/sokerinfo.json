@@ -1,10 +1,10 @@
 {
   "søker": {
-    "fnr": "04508020452",
-    "fornavn": "Trygg",
-    "etternavn": "Tevling",
+    "fnr": "25417828276",
+    "fornavn": "Utydelig",
+    "etternavn": "Astrolog",
     "kjønn": "K",
-    "fødselsdato": "1980-10-04",
+    "fødselsdato": "1978-01-25",
     "bankkonto": {
       "kontonummer": "",
       "banknavn": ""
@@ -18,13 +18,6 @@
       "arbeidsgiverId": "972674818",
       "arbeidsgiverIdType": "orgnr",
       "arbeidsgiverNavn": "PENGELØS SPAREBANK",
-      "stillingsprosent": 100,
-      "fom": "2003-06-26"
-    },
-    {
-      "arbeidsgiverId": "805824352",
-      "arbeidsgiverIdType": "orgnr",
-      "arbeidsgiverNavn": "VEGANSK SLAKTERI",
       "stillingsprosent": 100,
       "fom": "2003-06-26"
     }

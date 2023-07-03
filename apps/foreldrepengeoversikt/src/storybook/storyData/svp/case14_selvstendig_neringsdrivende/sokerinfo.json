@@ -1,10 +1,10 @@
 {
   "søker": {
-    "fnr": "04508020452",
-    "fornavn": "Trygg",
-    "etternavn": "Tevling",
+    "fnr": "23418920637",
+    "fornavn": "Initiativrik",
+    "etternavn": "Juice",
     "kjønn": "K",
-    "fødselsdato": "1980-10-04",
+    "fødselsdato": "1989-01-23",
     "bankkonto": {
       "kontonummer": "",
       "banknavn": ""
@@ -12,21 +12,5 @@
     "sivilstand": {
       "type": "UGIFT"
     }
-  },
-  "arbeidsforhold": [
-    {
-      "arbeidsgiverId": "972674818",
-      "arbeidsgiverIdType": "orgnr",
-      "arbeidsgiverNavn": "PENGELØS SPAREBANK",
-      "stillingsprosent": 100,
-      "fom": "2003-06-26"
-    },
-    {
-      "arbeidsgiverId": "805824352",
-      "arbeidsgiverIdType": "orgnr",
-      "arbeidsgiverNavn": "VEGANSK SLAKTERI",
-      "stillingsprosent": 100,
-      "fom": "2003-06-26"
-    }
-  ]
+  }
 }

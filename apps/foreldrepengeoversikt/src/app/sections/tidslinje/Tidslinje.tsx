@@ -23,6 +23,8 @@ import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepe
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
 
+//import { S } from '@storybook/react/dist/types-0a347bb9';
+
 interface Params {
     saker: SakOppslag;
     visHeleTidslinjen: boolean;
@@ -40,6 +42,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
     const førsteUttaksdagISaken =
         sak.ytelse === Ytelse.FORELDREPENGER ? getFørsteUttaksdagIForeldrepengesaken(sak) : undefined;
     const { tidslinjeHendelserData, tidslinjeHendelserError } = Api.useGetTidslinjeHendelser(params.saksnummer!);
+
     const { manglendeVedleggData, manglendeVedleggError } = Api.useGetManglendeVedlegg(params.saksnummer!);
     const barnFraSak = getBarnGrupperingFraSak(sak, søkersBarn);
     const erAvslåttForeldrepengesøknad =
@@ -84,6 +87,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
     const finnesHendelserFørAktivtSteg = alleSorterteHendelser.find((hendelse) =>
         dayjs(hendelse.opprettet).isSameOrBefore(dayjs(), 'd')
     );
+
     return (
         <div>
             {hendelserForVisning.map((hendelse, index) => {

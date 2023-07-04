@@ -10,9 +10,10 @@
       },
       "sakAvsluttet": true,
       "gjeldendeVedtak": {
-        "arbeidsforhold": []
+        "arbeidsforhold": [],
+        "avslagÅrsak": "ANNET"
       },
-      "oppdatertTidspunkt": "2023-06-28T15:20:39.494"
+      "oppdatertTidspunkt": "2023-07-04T12:24:18.184"
     }
   ]
 }

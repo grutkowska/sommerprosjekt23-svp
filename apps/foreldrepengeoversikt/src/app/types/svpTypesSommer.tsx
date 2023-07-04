@@ -1,8 +1,6 @@
 export interface GjeldendeVedtak {
     arbeidsforhold: Arbeidsforhold[];
-    oppdatertTidspunkt: string;
-    sakAvsluttet: boolean;
-    saksnummer: string;
+    avslagÅrsak: string;
 }
 
 export interface Arbeidsforhold {
@@ -13,7 +11,7 @@ export interface Arbeidsforhold {
     tilrettelegginger: svpPerioder[];
 }
 
-interface svpPerioder {
+export interface svpPerioder {
     fom: string;
     tom: string;
     type: string; // Enums??

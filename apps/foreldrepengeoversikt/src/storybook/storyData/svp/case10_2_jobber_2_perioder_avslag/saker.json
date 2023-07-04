@@ -11,9 +11,9 @@
       "sakAvsluttet": true,
       "gjeldendeVedtak": {
         "arbeidsforhold": [],
-        "avslagÅrsak": "ANNET"
+        "avslagÅrsak": "ARBEIDSGIVER_KAN_TILRETTELEGGE"
       },
-      "oppdatertTidspunkt": "2023-07-04T12:23:50.007"
+      "oppdatertTidspunkt": "2023-07-04T13:36:32.628"
     }
   ]
 }

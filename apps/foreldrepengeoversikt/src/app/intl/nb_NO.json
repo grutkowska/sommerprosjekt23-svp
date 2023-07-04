@@ -85,6 +85,8 @@
     "snarveier.endringerIDinSituasjon": "Endringer i din situasjon",
     "snarveier.slikKlagerDu": "Slik klager du",
     "snarveier.pengestøtter": "pengestøtter",
+    "søknad.periodeType.ingen": " kan du ikke fortsette å jobbe hos <b>{arbeidsgiver}</b>.",
+    "søknad.periodeType.delvis": " jobber du hos <b>{arbeidsgiver}</b> og du kan fortsette med {arbeidstidprosent}% stilling.",
     "kontaktOss.chatMedOss": "Chat med oss",
     "kontaktOss.skrivTilOss": "Skriv til oss",
     "kontaktOss.skrivTilOss.del1": "Send beskjed eller nye opplysninger i saken din. Du kan også sende spørsmål.",

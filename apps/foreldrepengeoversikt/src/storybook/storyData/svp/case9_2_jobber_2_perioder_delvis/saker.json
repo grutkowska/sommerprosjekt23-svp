@@ -22,8 +22,8 @@
             "behovFrom": "2023-07-20",
             "tilrettelegginger": [
               {
-                "fom": "2023-10-25",
-                "tom": "2023-11-24",
+                "fom": "2023-08-26",
+                "tom": "2023-10-05",
                 "type": "HEL",
                 "arbeidstidprosent": 0,
                 "resultat": {
@@ -42,8 +42,8 @@
                 }
               },
               {
-                "fom": "2023-08-26",
-                "tom": "2023-10-05",
+                "fom": "2023-10-25",
+                "tom": "2023-11-24",
                 "type": "HEL",
                 "arbeidstidprosent": 0,
                 "resultat": {
@@ -121,7 +121,7 @@
           }
         ]
       },
-      "oppdatertTidspunkt": "2023-07-03T15:49:50.43"
+      "oppdatertTidspunkt": "2023-07-04T12:23:49.321"
     }
   ]
 }

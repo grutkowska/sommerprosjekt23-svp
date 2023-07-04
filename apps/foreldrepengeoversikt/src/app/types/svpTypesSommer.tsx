@@ -5,7 +5,7 @@ export interface GjeldendeVedtak {
     saksnummer: string;
 }
 
-interface Arbeidsforhold {
+export interface Arbeidsforhold {
     aktivitet: Aktivitet;
     avslutningsÅrsak?: string; //Enum??
     behovFrom: string;

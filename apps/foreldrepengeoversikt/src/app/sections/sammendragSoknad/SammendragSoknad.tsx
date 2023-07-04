@@ -6,7 +6,8 @@ import { formaterDato } from 'app/utils/dateUtils';
 import { XMarkIcon, CheckmarkIcon } from '@navikt/aksel-icons';
 import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
 import { intlUtils } from '@navikt/fp-common';
-import { IntlShape, useIntl, FormattedMessage } from 'react-intl';
+import { IntlShape, useIntl } from 'react-intl';
+//import { FormattedMessage } from 'react-intl';
 
 interface Props {
     sak: SvangerskapspengeSak;
@@ -35,14 +36,17 @@ const getArbeidsgiverNavn = (
 
 const getPeriodeType = (periodeType: svpPerioder, intl: IntlShape, arbeidgiverNavn: string) => {
     if (periodeType.type == 'INGEN') {
-        //return intlUtils(intl, 'søknad.periodeType.ingen', { arbeidsgiver: arbeidgiverNavn });
+        return intlUtils(intl, 'søknad.periodeType.ingen', { arbeidsgiver: arbeidgiverNavn });
+        /*
         return (
             <FormattedMessage
                 id="søknad.periodeType.ingen"
                 values={{ arbeidsgiver: arbeidgiverNavn, b: (msg: any) => <b>{msg}</b> }}
             />
         );
+        */
     } else if (periodeType.type == 'DELVIS') {
+        /*
         return (
             <FormattedMessage
                 id="søknad.periodeType.delvis"
@@ -53,12 +57,11 @@ const getPeriodeType = (periodeType: svpPerioder, intl: IntlShape, arbeidgiverNa
                 }}
             />
         );
-        /*
+        */
         return intlUtils(intl, 'søknad.periodeType.delvis', {
             arbeidsgiver: arbeidgiverNavn,
             arbeidstidprosent: periodeType.arbeidstidprosent,
         });
-        */
     } else {
         throw new Error('error med getPeriodeType()');
     }

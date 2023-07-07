@@ -13,6 +13,7 @@ import { MorsAktivitet } from 'app/types/MorsAktivitet';
 import { PeriodeResultatÅrsak } from 'app/types/PeriodeResultatÅrsak';
 import { getTidsperiode, isValidTidsperiode, Tidsperioden } from './tidsperiodeUtils';
 import { Uttaksdagen } from './Uttaksdagen';
+import { svpPerioder } from 'app/types/svpTypesSommer';
 
 export const Periodene = (perioder: Periode[]) => ({
     sort: () => [...perioder].sort(sorterPerioder),
@@ -519,4 +520,48 @@ export const getOverlappendePeriodeTittel = (
         return 'Utsettelse';
     }
     return 'Samtidig uttak';
+};
+
+export const getSvpPeriodeType = (periodeType: svpPerioder, intl: IntlShape, arbeidgiverNavn: string) => {
+    if (periodeType.type == 'INGEN') {
+        return intlUtils(intl, 'søknad.periodeType.ingen', { arbeidsgiver: arbeidgiverNavn });
+        /*
+        return (
+            <FormattedMessage
+                id="søknad.periodeType.ingen"
+                values={{ arbeidsgiver: arbeidgiverNavn, b: (msg: any) => <b>{msg}</b> }}
+            />
+        );
+        */
+    } else if (periodeType.type == 'DELVIS') {
+        /*
+        return (
+            <FormattedMessage
+                id="søknad.periodeType.delvis"
+                values={{
+                    arbeidsgiver: arbeidgiverNavn,
+                    arbeidstidprosent: periodeType.arbeidstidprosent,
+                    b: (msg: any) => <b>{msg}</b>,
+                }}
+            />
+        );
+        */
+        return intlUtils(intl, 'søknad.periodeType.delvis', {
+            arbeidsgiver: arbeidgiverNavn,
+            arbeidstidprosent: periodeType.arbeidstidprosent,
+        });
+    } else {
+        throw new Error('error med getPeriodeType()');
+    }
+};
+
+export const alleSvpPerioderSortert = (svpPerioder: svpPerioder[], oppholdsPerioder?: svpPerioder[]) => {
+    const perioder = oppholdsPerioder ? svpPerioder.concat(oppholdsPerioder) : svpPerioder;
+    return perioder.sort(comparePeriodersDato);
+};
+
+const comparePeriodersDato = (a: svpPerioder, b: svpPerioder): number => {
+    if (ISOStringToDate(a.fom)! < ISOStringToDate(b.fom)!) return -1;
+    if (ISOStringToDate(a.fom)! > ISOStringToDate(b.fom)!) return 1;
+    return 0;
 };

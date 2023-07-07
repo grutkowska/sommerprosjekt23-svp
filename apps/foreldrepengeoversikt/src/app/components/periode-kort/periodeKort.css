@@ -1,6 +1,56 @@
 .periodeKort {
-    background-color: white;
-    padding: 2px 20px;
     margin-bottom: 10px;
-    border-radius: 0.35rem;
+}
+
+.eksapansjonsKort {
+    padding: 0%;
+    overflow: hidden;
+}
+
+.ekspansjonsKortTittel {
+    display: flex;    
+    align-items: center;
+}
+
+.ekspansjonsKortTittel div:first-child {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.ekspansjonsKortTittel span {
+    gap: 5px;
+}
+
+.cell {
+    padding: 0 10px;
+}
+
+.cellDato {
+    white-space: nowrap
+}
+
+.row {
+    padding: 0% 10px;
+    height: 90px;
+}
+#dinSoknadArbeidsgiverNavn {
+    width: fit-content;
+    justify-content: flex-start;
+       
+    align-items: center;
+    gap: 5px;
+}
+@media screen and (max-width: 900px) {
+    .ekspansjonsKortTittel {
+        padding: 2px 10px;
+    }
+    .ekspansjonsKortTittel > button {
+        min-height: 2.5rem;
+        min-width: 2.5rem;
+    }
+    .ekspansjonsKortTittel > .statusTag {
+        height: 2rem;
+        width: 2rem;
+    }
 }

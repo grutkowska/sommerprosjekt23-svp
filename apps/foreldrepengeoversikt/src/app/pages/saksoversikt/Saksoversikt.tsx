@@ -29,6 +29,7 @@ import SeHeleProsessen from 'app/components/se-hele-prosessen/SeHeleProsessen';
 import TestTimeline from 'app/components/test-timeline/testTimeline';
 import { SammendragSoknad } from 'app/sections/sammendragSoknad/SammendragSoknad';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
+import classNames from 'classnames';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -96,12 +97,16 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
             </div>
         );
     }
+    console.log(gjeldendeSak);
     return (
-        <div className={bem.block}>
-            <ContentSection cornerStyle="square" heading={intlUtils(intl, 'saksoversikt.tidslinje')}>
+
+        <div className={classNames(bem.block)}>
+            <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
+            <ContentSection padding="none" className="svartBorder">
                 <Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />
             </ContentSection>
-            <ContentSection padding="none">
+            <ContentSection padding="none" className="svartBorder">
+
                 <SeHeleProsessen />
             </ContentSection>
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (

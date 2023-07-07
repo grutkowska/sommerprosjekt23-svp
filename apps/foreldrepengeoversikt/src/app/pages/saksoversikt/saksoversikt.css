@@ -1,3 +1,8 @@
 .saksoversikt__oppgaver {
     background-color: var(--a-orange-100);
 }
+
+.svartBorder {
+    border: 1px solid;
+    overflow: hidden;
+}

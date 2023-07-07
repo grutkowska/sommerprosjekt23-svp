@@ -2,16 +2,14 @@ import PeriodeKort from 'app/components/periode-kort/PeriodeKort';
 
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO, SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
-import { formaterDato } from 'app/utils/dateUtils';
-import { XMarkIcon, CheckmarkIcon } from '@navikt/aksel-icons';
-
 import { guid } from '@navikt/fp-common';
 
-import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
-import { intlUtils } from '@navikt/fp-common';
-import { IntlShape, useIntl } from 'react-intl';
+import { Arbeidsforhold } from 'app/types/svpTypesSommer';
+import { ArbeidsgiverInfo } from 'app/types/ArbeidsgiverInfo';
+import { ArbeidsgiverInfoType } from 'app/types/ArbeidsgiverInfoType';
+//import { intlUtils } from '@navikt/fp-common';
+//import { IntlShape, useIntl } from 'react-intl';
 //import { FormattedMessage } from 'react-intl';
-
 
 interface Props {
     sak: SvangerskapspengeSak;
@@ -21,60 +19,38 @@ interface Props {
 const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
     gjeldendeVedtakArbeidsforhold: Arbeidsforhold
-): string => {
+): ArbeidsgiverInfo => {
     if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
         const arbeidsforhold = søkerArbeidsforhold
             ? søkerArbeidsforhold.find(
                   (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
               )
             : undefined;
-        return arbeidsforhold?.arbeidsgiverNavn || '';
+        return {
+            navn: arbeidsforhold?.arbeidsgiverNavn || '',
+            id: arbeidsforhold?.arbeidsgiverId,
+            type: ArbeidsgiverInfoType.ORGANISASJON,
+        };
     } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
-        return 'frilanser';
+        return {
+            navn: 'frilans',
+            type: ArbeidsgiverInfoType.PRIVAT,
+        };
     } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'selvstendig næringsdrivende';
+        return {
+            navn: 'selvstendig næringsdrivende',
+            type: ArbeidsgiverInfoType.PRIVAT,
+        };
     } else {
-        return 'Type not found';
-    }
-};
-
-const getPeriodeType = (periodeType: svpPerioder, intl: IntlShape, arbeidgiverNavn: string) => {
-    if (periodeType.type == 'INGEN') {
-        return intlUtils(intl, 'søknad.periodeType.ingen', { arbeidsgiver: arbeidgiverNavn });
-        /*
-        return (
-            <FormattedMessage
-                id="søknad.periodeType.ingen"
-                values={{ arbeidsgiver: arbeidgiverNavn, b: (msg: any) => <b>{msg}</b> }}
-            />
-        );
-        */
-    } else if (periodeType.type == 'DELVIS') {
-        /*
-        return (
-            <FormattedMessage
-                id="søknad.periodeType.delvis"
-                values={{
-                    arbeidsgiver: arbeidgiverNavn,
-                    arbeidstidprosent: periodeType.arbeidstidprosent,
-                    b: (msg: any) => <b>{msg}</b>,
-                }}
-            />
-        );
-        */
-        return intlUtils(intl, 'søknad.periodeType.delvis', {
-            arbeidsgiver: arbeidgiverNavn,
-            arbeidstidprosent: periodeType.arbeidstidprosent,
-        });
-    } else {
-        throw new Error('error med getPeriodeType()');
+        return {
+            navn: 'Type not found',
+            type: ArbeidsgiverInfoType.PRIVAT,
+        };
     }
 };
 
 export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
-    const datoFormat = 'DD. MMMM';
-    const intl = useIntl();
-    let melding;
+    //const intl = useIntl();
 
     if ('åpenBehandling' in sak) {
         return (
@@ -82,20 +58,17 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                 <h2>Din søknad er under behandling</h2>
                 {sak.åpenBehandling &&
                     sak.åpenBehandling.søknad &&
-                    sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold) => {
-                        return arbeidsforhold.tilrettelegginger.map((periode) => {
-                            melding = (
-                                <p>
-                                    <b>{formaterDato(periode.fom, datoFormat)}</b>
-                                    {getPeriodeType(
-                                        periode,
-                                        intl,
-                                        getArbeidsgiverNavn(søker.arbeidsforhold, arbeidsforhold)
-                                    )}
-                                </p>
-                            );
-                            return <PeriodeKort key={guid()}>{melding}</PeriodeKort>;
-                        });
+                    sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold, index) => {
+                        return (
+                            <PeriodeKort
+                                key={guid()}
+                                title={getArbeidsgiverNavn(søker.arbeidsforhold, arbeidsforhold)}
+                                ferdigBehandlet={false}
+                                svpPerioder={arbeidsforhold.tilrettelegginger}
+                                oppholdsPerioder={arbeidsforhold.oppholdsperioder}
+                                arbeidgiverIndex={index + 1}
+                            ></PeriodeKort>
+                        );
                     })}
             </>
         );
@@ -104,13 +77,13 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
             <>
                 <h2>Din søknad er avslått</h2>
                 {
-                    <PeriodeKort>
-                        <>
-                            <p>
-                                <b>{'Avslags årsak: ' + sak.gjeldendeVedtak?.avslagÅrsak}</b>
-                            </p>
-                        </>
-                    </PeriodeKort>
+                    <PeriodeKort
+                        title={{
+                            navn: 'Avslags årsak: ' + sak.gjeldendeVedtak?.avslagÅrsak,
+                            type: ArbeidsgiverInfoType.PRIVAT,
+                        }}
+                        ferdigBehandlet={true}
+                    ></PeriodeKort>
                 }
             </>
         );
@@ -119,30 +92,17 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
             <>
                 <h2>Dine vedtak</h2>
                 {sak.gjeldendeVedtak &&
-                    sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold) => {
-                        return arbeidsforhold.tilrettelegginger.map((periode) => {
-                            melding = (
-                                <>
-                                    <p>
-                                        <b>
-                                            {' '}
-                                            {formaterDato(periode.fom, datoFormat)} -{' '}
-                                            {formaterDato(periode.tom, datoFormat)}{' '}
-                                        </b>
-                                        jobber du hos{' '}
-                                        {søker.arbeidsforhold &&
-                                            getArbeidsgiverNavn(søker.arbeidsforhold, arbeidsforhold)}{' '}
-                                        og mottar {periode.resultat.utbetalingsgrad}% svangerskapspenger
-                                        {periode.resultat.resultatType === 'INNVILGET' ? (
-                                            <CheckmarkIcon title="a11y-title" fontSize="1rem" />
-                                        ) : (
-                                            <XMarkIcon title="a11y-title" fontSize="1rem" />
-                                        )}
-                                    </p>
-                                </>
-                            );
-                            return <PeriodeKort key={guid()}>{melding}</PeriodeKort>;
-                        });
+                    sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
+                        return (
+                            <PeriodeKort
+                                key={guid()}
+                                title={getArbeidsgiverNavn(søker.arbeidsforhold, arbeidsforhold)}
+                                ferdigBehandlet={true}
+                                svpPerioder={arbeidsforhold.tilrettelegginger}
+                                oppholdsPerioder={arbeidsforhold.oppholdsperioder}
+                                arbeidgiverIndex={index + 1}
+                            ></PeriodeKort>
+                        );
                     })}
             </>
         );

@@ -2,6 +2,7 @@ import PeriodeKort from 'app/components/periode-kort/PeriodeKort';
 
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO, SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
+
 import { guid } from '@navikt/fp-common';
 
 import { Arbeidsforhold } from 'app/types/svpTypesSommer';
@@ -9,7 +10,9 @@ import { ArbeidsgiverInfo } from 'app/types/ArbeidsgiverInfo';
 import { ArbeidsgiverInfoType } from 'app/types/ArbeidsgiverInfoType';
 //import { intlUtils } from '@navikt/fp-common';
 //import { IntlShape, useIntl } from 'react-intl';
+
 //import { FormattedMessage } from 'react-intl';
+
 
 interface Props {
     sak: SvangerskapspengeSak;
@@ -50,7 +53,9 @@ const getArbeidsgiverNavn = (
 };
 
 export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
+
     //const intl = useIntl();
+
 
     if ('åpenBehandling' in sak) {
         return (
@@ -58,6 +63,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                 <h2>Din søknad er under behandling</h2>
                 {sak.åpenBehandling &&
                     sak.åpenBehandling.søknad &&
+
                     sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold, index) => {
                         return (
                             <PeriodeKort
@@ -69,6 +75,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                 arbeidgiverIndex={index + 1}
                             ></PeriodeKort>
                         );
+
                     })}
             </>
         );
@@ -92,6 +99,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
             <>
                 <h2>Dine vedtak</h2>
                 {sak.gjeldendeVedtak &&
+
                     sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
                         return (
                             <PeriodeKort
@@ -103,6 +111,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                 arbeidgiverIndex={index + 1}
                             ></PeriodeKort>
                         );
+
                     })}
             </>
         );

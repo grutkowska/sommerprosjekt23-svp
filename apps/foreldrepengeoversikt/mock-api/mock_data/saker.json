@@ -13,6 +13,7 @@
                 "arbeidsforhold": [
                     {
                         "aktivitet": {
+
                             "type": "ORDINÆRT_ARBEID",
                             "arbeidsgiver": {
                                 "id": "972674818",
@@ -51,11 +52,13 @@
                                     "utbetalingsgrad": 80
                                 }
                             }
+
                         ],
                         "oppholdsperioder": [],
                         "avslutningÅrsak": "NORMAL"
                     },
                     {
+
                         "aktivitet": {
                             "type": "ORDINÆRT_ARBEID",
                             "arbeidsgiver": {
@@ -93,6 +96,7 @@
                                 "resultat": {
                                     "resultatType": "INNVILGET",
                                     "utbetalingsgrad": 80.0
+
                                 }
                             }
                         ],
@@ -100,8 +104,10 @@
                         "avslutningÅrsak": "NORMAL"
                     }
                 ],
+
                 "oppdatertTidspunkt": "2023-06-28T15:20:39.67"
             }
         }
     ]
 }
+

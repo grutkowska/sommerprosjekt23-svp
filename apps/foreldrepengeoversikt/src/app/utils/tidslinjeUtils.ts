@@ -440,14 +440,17 @@ export const getHendelserForVisning = (
     return hendelserForVisning;
 };
 export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (sak: SvangerskapspengeSak): Tidslinjehendelse => {
+
     let arbeidsgiverString = ' ';
     sak.gjeldendeVedtak?.arbeidsforhold.forEach((arbeidsforhold) => {
         arbeidsforhold.tilrettelegginger.some((i) => {
             if (dayjs().isBefore(i.tom) && dayjs().isAfter(i.fom) && i.resultat.resultatType === 'INNVILGET') {
+
                 return (arbeidsgiverString +=
                     (arbeidsforhold.aktivitet.type !== 'FRILANS'
                         ? arbeidsforhold.aktivitet.arbeidsgiver.id
                         : 'for din frilans virksomhet') + ' ');
+
             } else return;
         });
     });

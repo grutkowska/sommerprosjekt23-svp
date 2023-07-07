@@ -99,12 +99,14 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     }
     console.log(gjeldendeSak);
     return (
+
         <div className={classNames(bem.block)}>
             <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
             <ContentSection padding="none" className="svartBorder">
                 <Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />
             </ContentSection>
             <ContentSection padding="none" className="svartBorder">
+
                 <SeHeleProsessen />
             </ContentSection>
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (

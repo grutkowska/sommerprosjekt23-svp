@@ -6,3 +6,13 @@
     border: 1px solid;
     overflow: hidden;
 }
+
+.dashboardOrganizer {
+    display: flex;
+    flex-direction: row;
+}
+
+.dasboardSeksjon {
+    margin-right: 10px;
+    margin-bottom: 15px;
+}

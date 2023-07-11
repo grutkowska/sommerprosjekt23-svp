@@ -19,17 +19,16 @@ import { Ytelse } from 'app/types/Ytelse';
 import { getAlleYtelser, getFamiliehendelseDato, getNavnAnnenForelder } from 'app/utils/sakerUtils';
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
-
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
-
 import './saksoversikt.css';
 import { RequestStatus } from 'app/types/RequestStatus';
 import SeHeleProsessen from 'app/components/se-hele-prosessen/SeHeleProsessen';
-import TestTimeline from 'app/components/test-timeline/testTimeline';
 import { SammendragSoknad } from 'app/sections/sammendragSoknad/SammendragSoknad';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import classNames from 'classnames';
+import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
+import { SvangerskapDashboardwrapper } from './svangerskapDashboardWrapper';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -49,7 +48,6 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
 
     const gjeldendeSak = alleSaker.find((sak) => sak.saksnummer === params.saksnummer)!;
     useSetSelectedSak(gjeldendeSak);
-
     const navnAnnenForelder = getNavnAnnenForelder(søkerinfo, gjeldendeSak);
 
     const aktiveMinidialogerForSaken = minidialogerData
@@ -66,11 +64,9 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     let annenPartFnr = undefined;
     let barnFnr = undefined;
     let annenPartVedtakIsSuspended = true;
-
     if (gjeldendeSak.ytelse === Ytelse.FORELDREPENGER) {
         familiehendelsesdato = getFamiliehendelseDato(gjeldendeSak.familiehendelse);
         annenPartFnr = gjeldendeSak.annenPart?.fnr;
-
         const barnFraSak =
             gjeldendeSak.barn && gjeldendeSak.barn.length > 0
                 ? gjeldendeSak.barn.find((barn) => barn.fnr !== undefined)
@@ -97,18 +93,25 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
             </div>
         );
     }
-    console.log(gjeldendeSak);
     return (
-
         <div className={classNames(bem.block)}>
-            <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
-            <ContentSection padding="none" className="svartBorder">
-                <Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />
-            </ContentSection>
-            <ContentSection padding="none" className="svartBorder">
-
-                <SeHeleProsessen />
-            </ContentSection>
+            <SvangerskapDashboardwrapper
+                svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
+                skjermStørreEnn700={true}
+                elementA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
+                elementB={
+                    <ContentSection padding="none" className="svartBorder">
+                        <SeHeleProsessen />
+                    </ContentSection>
+                }
+                elementC={<PeriodeTimeline />}
+                elementD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
+                elementE={
+                    <ContentSection padding="none" className="svartBorder">
+                        <SeDokumenter />
+                    </ContentSection>
+                }
+            />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>
                     <Oppgaver
@@ -118,20 +121,6 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                     />
                 </ContentSection>
             )}
-
-            {gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER ? (
-                <SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />
-            ) : (
-                <>
-                    <ContentSection padding="none">
-                        <TestTimeline />
-                    </ContentSection>
-                    <ContentSection padding="none">
-                        <SeDokumenter />
-                    </ContentSection>
-                </>
-            )}
-
             {gjeldendeSak.ytelse === Ytelse.FORELDREPENGER && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.dinPlan')}>
                     <DinPlan

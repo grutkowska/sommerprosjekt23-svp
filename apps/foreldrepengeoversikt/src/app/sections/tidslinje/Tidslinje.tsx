@@ -22,6 +22,7 @@ import { SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
 import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepengesaken } from 'app/utils/sakerUtils';
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
+import ContentSection from 'app/components/content-section/ContentSection';
 
 //import { S } from '@storybook/react/dist/types-0a347bb9';
 
@@ -90,82 +91,89 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
 
     return (
         <div>
-            {hendelserForVisning.map((hendelse, index) => {
-                const isActiveStep = index === aktivtStegIndex;
-                const alleDokumenter = hendelse.dokumenter.map((dokument) => {
-                    return <DokumentHendelse dokument={dokument} key={dokument.url} />;
-                });
-                const visKlokkeslett =
-                    hendelse.tidslinjeHendelseType !== TidslinjehendelseType.FAMILIEHENDELSE &&
-                    dayjs(hendelse.opprettet).isSameOrBefore(dayjs());
+            <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
+            <ContentSection padding="none" className="svartBorder">
+                {hendelserForVisning.map((hendelse, index) => {
+                    const isActiveStep = index === aktivtStegIndex;
+                    const alleDokumenter = hendelse.dokumenter.map((dokument) => {
+                        return <DokumentHendelse dokument={dokument} key={dokument.url} />;
+                    });
+                    const visKlokkeslett =
+                        hendelse.tidslinjeHendelseType !== TidslinjehendelseType.FAMILIEHENDELSE &&
+                        dayjs(hendelse.opprettet).isSameOrBefore(dayjs());
 
-                return (
-                    <TidslinjeHendelse
-                        date={hendelse.opprettet}
-                        title={getTidslinjehendelseTittel(
-                            hendelse.tidslinjeHendelseType,
-                            intl,
-                            hendelse.tidligstBehandlingsDato,
-                            manglendeVedleggData,
-                            barnFraSak,
-                            sak
-                        )}
-                        key={guid()}
-                        isActiveStep={isActiveStep}
-                        visKlokkeslett={visKlokkeslett}
-                        type={hendelse.tidslinjeHendelseType}
-                        førsteUttaksdagISaken={førsteUttaksdagISaken}
-                        tidligstBehandlingsDato={hendelse.tidligstBehandlingsDato}
-                        finnesHendelserFørAktivtSteg={!!finnesHendelserFørAktivtSteg}
-                        visHeleTidslinjen={visHeleTidslinjen}
-                    >
-                        <ul style={{ listStyle: 'none', padding: '0' }}>
-                            {hendelse.tidslinjeHendelseType === TidslinjehendelseType.VENT_DOKUMENTASJON &&
-                                manglendeVedleggData &&
-                                manglendeVedleggData.length > 1 && (
-                                    <div className={bem.element('manglende_vedlegg')}>
-                                        <div>{intlUtils(intl, 'tidslinje.VENT_DOKUMENTASJON.flereVedlegg.tittel')}</div>
-                                        <ul>
-                                            {manglendeVedleggData.map((skjemaId) => {
-                                                return (
-                                                    <li key={guid()}>{intlUtils(intl, `ettersendelse.${skjemaId}`)}</li>
-                                                );
-                                            })}
-                                        </ul>
-                                    </div>
+                    return (
+                        <TidslinjeHendelse
+                            date={hendelse.opprettet}
+                            title={getTidslinjehendelseTittel(
+                                hendelse.tidslinjeHendelseType,
+                                intl,
+                                hendelse.tidligstBehandlingsDato,
+                                manglendeVedleggData,
+                                barnFraSak,
+                                sak
+                            )}
+                            key={guid()}
+                            isActiveStep={isActiveStep}
+                            visKlokkeslett={visKlokkeslett}
+                            type={hendelse.tidslinjeHendelseType}
+                            førsteUttaksdagISaken={førsteUttaksdagISaken}
+                            tidligstBehandlingsDato={hendelse.tidligstBehandlingsDato}
+                            finnesHendelserFørAktivtSteg={!!finnesHendelserFørAktivtSteg}
+                            visHeleTidslinjen={visHeleTidslinjen}
+                        >
+                            <ul style={{ listStyle: 'none', padding: '0' }}>
+                                {hendelse.tidslinjeHendelseType === TidslinjehendelseType.VENT_DOKUMENTASJON &&
+                                    manglendeVedleggData &&
+                                    manglendeVedleggData.length > 1 && (
+                                        <div className={bem.element('manglende_vedlegg')}>
+                                            <div>
+                                                {intlUtils(intl, 'tidslinje.VENT_DOKUMENTASJON.flereVedlegg.tittel')}
+                                            </div>
+                                            <ul>
+                                                {manglendeVedleggData.map((skjemaId) => {
+                                                    return (
+                                                        <li key={guid()}>
+                                                            {intlUtils(intl, `ettersendelse.${skjemaId}`)}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
+                                    )}
+                                {hendelse.merInformasjon && (
+                                    <BodyShort size="small" className={bem.element('mer_informasjon')}>
+                                        {hendelse.merInformasjon}
+                                    </BodyShort>
                                 )}
-                            {hendelse.merInformasjon && (
-                                <BodyShort size="small" className={bem.element('mer_informasjon')}>
-                                    {hendelse.merInformasjon}
-                                </BodyShort>
-                            )}
-                            {alleDokumenter.length > 0 && alleDokumenter.length <= 3 && alleDokumenter}
-                            {alleDokumenter.length > 0 && alleDokumenter.length > 3 && (
-                                <ReadMore
-                                    className={bem.element('medium_font')}
-                                    header={`Du sendte ${hendelse.dokumenter.length} dokumenter`}
-                                >
-                                    {alleDokumenter}
-                                </ReadMore>
-                            )}
-                            {hendelse.linkTittel && hendelse.eksternalUrl && (
-                                <Link href={hendelse.eksternalUrl}>
-                                    <BodyShort size="small">{hendelse.linkTittel}</BodyShort>
-                                    <ExternalLink fontSize={'16px'}></ExternalLink>
-                                </Link>
-                            )}
-                            {hendelse.linkTittel && hendelse.internalUrl && (
-                                <LinkInternal
-                                    className={bem.element('medium_font')}
-                                    to={`${sakPath}/${hendelse.internalUrl}`}
-                                >
-                                    <Button>{hendelse.linkTittel}</Button>
-                                </LinkInternal>
-                            )}
-                        </ul>
-                    </TidslinjeHendelse>
-                );
-            })}
+                                {alleDokumenter.length > 0 && alleDokumenter.length <= 3 && alleDokumenter}
+                                {alleDokumenter.length > 0 && alleDokumenter.length > 3 && (
+                                    <ReadMore
+                                        className={bem.element('medium_font')}
+                                        header={`Du sendte ${hendelse.dokumenter.length} dokumenter`}
+                                    >
+                                        {alleDokumenter}
+                                    </ReadMore>
+                                )}
+                                {hendelse.linkTittel && hendelse.eksternalUrl && (
+                                    <Link href={hendelse.eksternalUrl}>
+                                        <BodyShort size="small">{hendelse.linkTittel}</BodyShort>
+                                        <ExternalLink fontSize={'16px'}></ExternalLink>
+                                    </Link>
+                                )}
+                                {hendelse.linkTittel && hendelse.internalUrl && (
+                                    <LinkInternal
+                                        className={bem.element('medium_font')}
+                                        to={`${sakPath}/${hendelse.internalUrl}`}
+                                    >
+                                        <Button>{hendelse.linkTittel}</Button>
+                                    </LinkInternal>
+                                )}
+                            </ul>
+                        </TidslinjeHendelse>
+                    );
+                })}
+            </ContentSection>
         </div>
     );
 };

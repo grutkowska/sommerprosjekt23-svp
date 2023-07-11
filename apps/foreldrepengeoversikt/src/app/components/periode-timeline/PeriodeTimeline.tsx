@@ -1,9 +1,10 @@
 import { Sak } from 'app/types/Sak';
 import './periodeTimeline.css';
-import { PeriodeTimelineView } from './PeriodeTimelineView';
+import { PeriodeTimelineView, Soyle, Bane, AlleBaner } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
 import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
+import dayjs from 'dayjs';
 
 interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -36,6 +37,13 @@ const getArbeidsgiverNavn = (
         return 'Type not found';
     }
 };
+
+const getAntallSvangerskapsDager = (terminDato: string, antallMåneder: number) => {
+    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
+};
+const getPeriodeDag = (terminDato: string, dato: string) => {
+    return dayjs(terminDato).diff(dayjs(dato), 'day');
+};
 //termindato - et absolut tall å regne ut ifra
 const mapTilretteleggingTilPeriode = (periode: svpPerioder) => {
     return {
@@ -55,7 +63,26 @@ const mapSvpSakTilPeriodeTimeline = (sak: SvangerskapspengeSak, arbeidsforhold: 
 };
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
-    return <PeriodeTimelineView />;
+    const start = '2022-11-01';
+    const slutt = '2022-12-01';
+    const termin = '2023-01-01';
+    const antallMnd = 6;
+    const startTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, start);
+    const sluttTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, slutt);
+    const startTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-09-01');
+    const sluttTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-10-01');
+    const totalTall = getAntallSvangerskapsDager(termin, antallMnd);
+    console.log('start: ', startTall, 'slutt: ', sluttTall, 'total: ', totalTall);
+    return (
+        <PeriodeTimelineView>
+            <AlleBaner antall="4">
+                <Bane nr="1" height={getAntallSvangerskapsDager(termin, antallMnd).toString()}>
+                    <Soyle start={startTall.toString()} slutt={sluttTall.toString()} />
+                    <Soyle start={startTall2.toString()} slutt={sluttTall2.toString()} />
+                </Bane>
+            </AlleBaner>
+        </PeriodeTimelineView>
+    );
 };
 
 export default PeriodeTimeline;

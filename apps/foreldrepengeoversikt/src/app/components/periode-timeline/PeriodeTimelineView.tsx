@@ -5,41 +5,69 @@ interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> 
     children?: React.ReactNode;
 }
 
-export const PeriodeTimelineView: React.FC<PeriodeTimelineViewProps> = () => {
+export const PeriodeTimelineView: React.FC<PeriodeTimelineViewProps> = ({ children }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return <div className={bem.block}>{children}</div>;
+};
+//export default PeriodeTimelineView;
+interface SoyleProps extends PeriodeTimelineViewProps {
+    start: string;
+    slutt: string;
+}
+export const Soyle: React.FC<SoyleProps> = ({ start, slutt }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return (
+        <div className={bem.element('periode')} style={{ gridRow: `${start}/${slutt}`, backgroundColor: 'pink' }}></div>
+    );
+};
+
+export const DatoKolonne = () => {
+    return (
+        <div
+            style={{
+                display: 'grid',
+                gridColumn: '2',
+                gridTemplateRows: ' repeat(270, 2px) ',
+            }}
+        ></div>
+    );
+};
+
+interface BaneProps extends PeriodeTimelineViewProps {
+    nr: string;
+    height?: string;
+}
+
+export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return (
+        <div
+            className={bem.element('bane')}
+            style={{
+                gridColumn: `${nr}`,
+                gridTemplateRows: `repeat(${height}, 2px)`,
+            }}
+        >
+            {children}
+        </div>
+    );
+};
+
+interface AlleBanerProps extends PeriodeTimelineViewProps {
+    antall: string;
+}
+
+export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, auto)',
+                gridTemplateColumns: `repeat(${antall}, auto)`,
                 height: 'fit-content',
             }}
         >
-            <div
-                style={{
-                    display: 'grid',
-                    gridColumn: '2',
-                    gridTemplateRows: ' repeat(270, 2px) ',
-                }}
-            >
-                <div className={bem.element('periode')} style={{ gridRow: '1/270', backgroundColor: 'pink' }}></div>
-            </div>
+            {children}
         </div>
     );
-};
-
-export const Soyle = () => {
-    return;
-};
-
-export const DatoKolonne = () => {
-    return;
-};
-
-export const Bane = () => {
-    return;
-};
-
-export const AlleBaner = () => {
-    return;
 };

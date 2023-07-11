@@ -1,3 +1,10 @@
+.periodeTimelineView {
+    margin-bottom: 1rem;
+}
+.periodeTimelineView__bane {
+    display: grid;
+    
+}
 .periodeTimelineView__periode {
     border-radius: 5px;
     border: 2px solid red;

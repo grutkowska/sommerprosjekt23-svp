@@ -104,7 +104,12 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                         <SeHeleProsessen />
                     </ContentSection>
                 }
-                elementC={<PeriodeTimeline />}
+                elementC={
+                    <PeriodeTimeline
+                        sak={gjeldendeSak as SvangerskapspengeSak}
+                        søkerArbeidsforhold={søkerinfo.arbeidsforhold}
+                    />
+                }
                 elementD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
                 elementE={
                     <ContentSection padding="none" className="svartBorder">

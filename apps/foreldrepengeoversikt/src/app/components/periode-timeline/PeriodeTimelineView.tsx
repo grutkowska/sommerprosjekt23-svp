@@ -13,11 +13,16 @@ export const PeriodeTimelineView: React.FC<PeriodeTimelineViewProps> = ({ childr
 interface SoyleProps extends PeriodeTimelineViewProps {
     start: string;
     slutt: string;
+    farge: string;
 }
-export const Soyle: React.FC<SoyleProps> = ({ start, slutt }) => {
+export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge }) => {
     const bem = bemUtils('periodeTimelineView');
+    console.log(start, slutt);
     return (
-        <div className={bem.element('periode')} style={{ gridRow: `${start}/${slutt}`, backgroundColor: 'pink' }}></div>
+        <div
+            className={bem.element('periode')}
+            style={{ gridRow: `${start}/${slutt}`, backgroundColor: `light${farge}`, borderColor: `${farge}` }}
+        ></div>
     );
 };
 
@@ -45,7 +50,7 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
             className={bem.element('bane')}
             style={{
                 gridColumn: `${nr}`,
-                gridTemplateRows: `repeat(${height}, 2px)`,
+                gridTemplateRows: `repeat(${height}, 1px)`,
             }}
         >
             {children}

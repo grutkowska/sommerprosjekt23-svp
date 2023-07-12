@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import OversiktRoutes from './routes';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Saksoversikt from 'app/pages/saksoversikt/Saksoversikt';
 import { bemUtils } from '@navikt/fp-common';
 import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
@@ -73,7 +73,13 @@ const ForeldrepengeoversiktRoutes: React.FunctionComponent<Props> = ({
     return (
         <>
             <Header grupperteSaker={grupperteSaker} oppgaverIds={oppgaverIds} />
-            <div className={bem.block}>
+            <div
+                className={
+                    '/' + useLocation().pathname.split('/')[1] === `${OversiktRoutes.SAKSOVERSIKT}`
+                        ? 'routesWrapperDashboard'
+                        : bem.block
+                }
+            >
                 <Routes>
                     <Route
                         path={OversiktRoutes.HOVEDSIDE}

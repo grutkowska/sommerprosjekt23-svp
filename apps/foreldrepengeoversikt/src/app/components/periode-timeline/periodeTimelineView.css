@@ -1,0 +1,32 @@
+.periodeTimelineView {
+    margin-bottom: 1rem;
+    display: grid;
+    flex-direction: row;
+    background-color: white;
+    grid-template-columns: [first] 40px [header] auto [end];
+    grid-template-rows: [start] 40px [header] auto [end];
+    padding: 1rem;
+    border: 0.1rem solid;
+    border-radius: 0.5rem;
+}
+.periodeTimelineView__alleBaner {
+    height: fit-content;
+    width: 100%;
+    grid-column-gap: 5px;
+    grid-column: 2;
+    grid-row: 2;
+}
+.periodeTimelineView__baneHeaderBoks {
+    display: grid;
+    grid-template-columns: [first] auto [end];
+    grid-column: header / end;
+    grid-row: start / header;
+}
+.periodeTimelineView__bane {
+    display: grid;
+
+}
+.periodeTimelineView__periode {
+    border-radius: 5px;
+    border: 2px solid red;
+}

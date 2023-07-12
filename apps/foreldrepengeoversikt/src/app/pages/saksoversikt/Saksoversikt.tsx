@@ -28,7 +28,7 @@ import { SammendragSoknad } from 'app/sections/sammendragSoknad/SammendragSoknad
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import classNames from 'classnames';
 import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
-import { SvangerskapDashboardwrapper } from './svangerskapDashboardWrapper';
+import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;

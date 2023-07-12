@@ -30,16 +30,16 @@ export const år = (dato: Dayjs): string => {
     return dato.format('YYYY');
 };
 
-export const get9månederFraTerminDato = (dato: string | undefined): string[] => {
+export const get9månederFraTerminDato = (dato: string | undefined, antMnd: number): string[] => {
     const datoFormatMåneder = 'MMM';
     dayjs.extend(customParseFormat);
     let terminDato = dayjs(dato, 'YYYY-MM-DD');
     const svpMåneder: string[] = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < antMnd; i++) {
         terminDato = terminDato.subtract(1, 'M');
-        svpMåneder.push(formaterDato(terminDato.toDate(), datoFormatMåneder));
+        svpMåneder.push(terminDato.toDate().toISOString());
     }
-    return svpMåneder;
+    return svpMåneder.reverse();
 };
 
 export const getUkerOgDagerFromDager = (dager: number): { dager: number; uker: number } => {

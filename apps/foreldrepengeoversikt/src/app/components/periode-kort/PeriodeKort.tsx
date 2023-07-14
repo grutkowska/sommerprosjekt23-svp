@@ -52,7 +52,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         )}
                         {title.id && `Org: ` + title.id}
                     </div>
-                    {ferdigBehandlet ? (
+                    {/*ferdigBehandlet ? (
                         <Tag variant="success" size="small">
                             <CheckmarkIcon title="a11y-title" className="statusTag" />
                             {window.innerWidth > 900 && 'Ferdig behandlet'}
@@ -62,7 +62,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                             <ClockIcon title="a11y-title" className="statusTag" />
                             {window.innerWidth > 900 && 'Under behandlet'}
                         </Tag>
-                    )}
+                    )*/}
                 </ExpansionCard.Header>
                 {allePerioder && (
                     <ExpansionCard.Content className="eksapansjonsKort">

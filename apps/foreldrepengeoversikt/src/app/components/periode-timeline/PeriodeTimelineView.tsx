@@ -80,7 +80,7 @@ interface YAkseElementProps extends PeriodeTimelineViewProps {
     startPos: number;
 }
 export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos }) => {
-    console.log(`${startPos} / ${startPos + height}`);
+    //console.log(`${startPos} / ${startPos + height}`);
     return <div style={{ gridRow: `${startPos + 2}/${startPos + height}` }}>{children}</div>;
 };
 

@@ -1,4 +1,5 @@
 import { bemUtils } from '@navikt/fp-common';
+import { Tag, TagProps } from '@navikt/ds-react';
 import './periodeTimelineView.css';
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,6 +27,17 @@ export const BaneHeaderBoks: React.FC<BaneHeaderBoksProps> = ({ children, antall
         </div>
     );
 };
+
+const fargeRekkefølgeForTag: Array<TagProps['variant']> = [
+    'info',
+    'success',
+    'warning',
+    'error',
+    'alt1',
+    'alt2',
+    'neutral',
+];
+
 interface BaneHeaderProps extends PeriodeTimelineViewProps {
     farge?: string;
     nr: number;
@@ -37,7 +49,7 @@ export const BaneHeader: React.FC<BaneHeaderProps> = ({ children, nr }) => {
                 gridColumn: `${nr}`,
             }}
         >
-            {children}
+            {<Tag variant={fargeRekkefølgeForTag[nr - 1]}>{children}</Tag>}
         </div>
     );
 };

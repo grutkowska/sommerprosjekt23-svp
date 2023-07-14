@@ -93,6 +93,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold);
     let currentPos = 0;
     let currentPos1 = 0;
+    const farger = ['blue', 'green'];
     return timelineData ? (
         <PeriodeTimelineView>
             <BaneHeaderBoks antall={timelineData?.length}>
@@ -133,7 +134,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                         key={guid()}
                                         start={periode.start.toString()}
                                         slutt={periode.slutt.toString()}
-                                        farge="green"
+                                        farge={farger[index]}
                                     />
                                 );
                             })}

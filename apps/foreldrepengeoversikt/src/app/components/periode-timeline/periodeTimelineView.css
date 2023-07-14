@@ -6,7 +6,7 @@
     grid-template-columns: [first] 40px [header] auto [end];
     grid-template-rows: [start] 40px [header] auto [end];
     padding: 1rem;
-    border: 0.1rem solid;
+    border: 0.01rem solid;
     border-radius: 0.5rem;
 }
 .periodeTimelineView__alleBaner {

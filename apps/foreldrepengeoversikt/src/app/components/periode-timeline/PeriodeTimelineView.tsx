@@ -92,7 +92,7 @@ interface YAkseElementProps extends PeriodeTimelineViewProps {
     startPos: number;
 }
 export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos }) => {
-    console.log(`${startPos} / ${startPos + height}`);
+    //console.log(`${startPos} / ${startPos + height}`);
     return <div style={{ gridRow: `${startPos + 2}/${startPos + height}` }}>{children}</div>;
 };
 
@@ -128,6 +128,46 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall }) => {
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
+            }}
+        >
+            {children}
+        </div>
+    );
+};
+
+interface DatoPilBaneProps extends PeriodeTimelineViewProps {
+    height?: string;
+}
+
+export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return (
+        <div
+            className={bem.element('datoPilbane')}
+            style={{
+                display: 'grid',
+                gridTemplateRows: `repeat(${height}, 1px)`,
+            }}
+        >
+            {children}
+        </div>
+    );
+};
+
+interface DatoPilProps extends PeriodeTimelineViewProps {
+    nr: number;
+    height?: string;
+}
+
+export const DatoPil: React.FC<DatoPilProps> = ({ children, nr, height }) => {
+    const bem = bemUtils('periodeTimelineView');
+    console.log('nr: ', nr, 'height: ', height);
+    return (
+        <div
+            className={bem.element('datoPil')}
+            style={{
+                gridRow: `${nr}`,
+                gridTemplateRows: `repeat(${height}, 1px)`,
             }}
         >
             {children}

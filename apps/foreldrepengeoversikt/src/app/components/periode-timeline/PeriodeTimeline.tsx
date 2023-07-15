@@ -8,6 +8,8 @@ import {
     YAkseElement,
     BaneHeaderBoks,
     BaneHeader,
+    DatoPil,
+    DatoPilBane,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
@@ -80,19 +82,19 @@ const mapSvpSakTilPeriodeTimeline = (
 };
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
-    const start = '2022-11-01';
-    const slutt = '2022-12-01';
-    const termin = '2023-01-01';
+    //const start = '2022-11-01';
+    //const slutt = '2022-12-01';
+    //const termin = '2023-01-01';
     const antallMnd = 10;
-    const startTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, start);
-    const sluttTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, slutt);
+    //const startTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, start);
+    //const sluttTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, slutt);
     //const startTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-09-01');
     //const sluttTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-10-01');
-    const totalTall = getAntallSvangerskapsDager(termin, antallMnd);
-    console.log('start: ', startTall, 'slutt: ', sluttTall, 'total: ', totalTall);
+    //const totalTall = getAntallSvangerskapsDager(termin, antallMnd);
+    //console.log('start: ', startTall, 'slutt: ', sluttTall, 'total: ', totalTall);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold);
     let currentPos = 0;
-    let currentPos1 = 0;
+    //let currentPos1 = 0;
     const farger = ['blue', 'green'];
     return timelineData ? (
         <PeriodeTimelineView>
@@ -108,7 +110,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             <YAkseAlleElementer height={antallMnd.toString()}>
                 {get9månederFraTerminDato(sak.familiehendelse?.termindato, antallMnd).map((månedNavn) => {
                     const daysInMonth = dayjs(månedNavn).daysInMonth();
-                    console.log((currentPos1 += daysInMonth) - daysInMonth);
+                    //console.log((currentPos1 += daysInMonth) - daysInMonth);
                     return (
                         <YAkseElement
                             key={guid()}
@@ -141,6 +143,12 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         </Bane>
                     );
                 })}
+                <DatoPilBane height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}>
+                    <DatoPil
+                        nr={dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')}
+                        height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                    ></DatoPil>
+                </DatoPilBane>
             </AlleBaner>
         </PeriodeTimelineView>
     ) : (

@@ -169,8 +169,15 @@ export const DatoPil: React.FC<DatoPilProps> = ({ children, nr, height }) => {
                 gridRow: `${nr}`,
                 gridTemplateRows: `repeat(${height}, 1px)`,
             }}
+            draggable={true}
+            onDragStart={handleDrag}
         >
             {children}
         </div>
     );
 };
+function handleDrag(ev: React.DragEvent<HTMLDivElement>): void {
+    const id = (ev.target as HTMLDivElement).id;
+    ev.dataTransfer.setData('text/plain', id);
+    console.log(ev.movementY.valueOf());
+}

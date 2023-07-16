@@ -145,6 +145,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 })}
                 <DatoPilBane height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}>
                     <DatoPil
+                        key={guid()}
                         nr={dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')}
                         height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
                     ></DatoPil>

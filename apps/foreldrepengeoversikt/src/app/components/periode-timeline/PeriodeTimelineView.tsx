@@ -60,7 +60,7 @@ interface SoyleProps extends PeriodeTimelineViewProps {
     start: string;
     slutt: string;
     farge: string;
-    columnNr: number;
+    columnNr: string;
 }
 export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, columnNr }) => {
     const bem = bemUtils('periodeTimelineView');
@@ -85,9 +85,10 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
         <div
             style={{
                 display: 'grid',
-                gridColumn: '1',
+                gridColumn: '1/3',
                 gridRow: '2',
                 gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateColumns: '50px auto 20px',
             }}
         >
             {children}
@@ -103,9 +104,28 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
     //console.log(`${startPos} / ${startPos + height}`);
     const bem = bemUtils('periodeTimelineView');
     return (
-        <div className={bem.element('yAkseElement')} style={{ gridRow: `${startPos + 1}/${startPos + height}` }}>
-            {children}
-        </div>
+        <>
+            <div
+                className={bem.element('yAkseElement')}
+                style={{
+                    gridRow: `${startPos + 1}/${startPos + height}`,
+                    gridColumn: '1',
+                    borderBottom: '1px lightgrey solid',
+                }}
+            >
+                {children}
+            </div>
+            <div
+                className={bem.element('yAkseElement')}
+                style={{
+                    gridRow: `${startPos + 1}/${startPos + height}`,
+                    gridColumn: '2',
+                    borderBottom: '1px lightgrey solid',
+                }}
+            >
+                <p style={{ color: 'white' }}>empty</p>
+            </div>
+        </>
     );
 };
 
@@ -139,7 +159,7 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
             className={bem.element('alleBaner')}
             style={{
                 display: 'grid',
-                gridTemplateColumns: `repeat(${antall}, 1fr) 20px`,
+                gridTemplateColumns: `repeat(${antall}, 1fr)`,
                 gridTemplateRows: `repeat(${height}, 1px)`,
             }}
         >

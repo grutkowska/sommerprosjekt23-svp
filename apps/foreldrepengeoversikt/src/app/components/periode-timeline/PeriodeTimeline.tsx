@@ -181,13 +181,22 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                         start={periode.start.toString()}
                                         slutt={periode.slutt.toString()}
                                         farge={farger[index]}
-                                        columnNr={index + 1}
+                                        columnNr={(index + 1).toString()}
                                     />
                                 );
                             })}
                         </>
                     );
                 })}
+                <Soyle
+                    start={(
+                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) -
+                        dayjs(sak.familiehendelse!.termindato!).subtract(3, 'w').diff(sak.familiehendelse?.termindato)
+                    ).toString()}
+                    slutt={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                    farge={'grey'}
+                    columnNr={'1 / ' + (timelineData!.length + 1).toString()}
+                ></Soyle>
             </AlleBaner>
             <DatoPilBane
                 height={

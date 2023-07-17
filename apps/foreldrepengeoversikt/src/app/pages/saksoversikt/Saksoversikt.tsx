@@ -59,7 +59,6 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                   hendelse !== HendelseType.TILBAKEKREVING_FATTET_VEDTAK
           )
         : undefined;
-    console.log(gjeldendeSak);
     const planErVedtatt = gjeldendeSak.åpenBehandling === undefined;
     let familiehendelsesdato = undefined;
     let annenPartFnr = undefined;

@@ -96,6 +96,10 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     let currentPos = 0;
     //let currentPos1 = 0;
     const farger = ['blue', 'green'];
+    console.log(
+        dayjs(sak.familiehendelse?.termindato).daysInMonth() -
+            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D'))
+    );
     return timelineData ? (
         <PeriodeTimelineView>
             <BaneHeaderBoks antall={timelineData?.length}>
@@ -107,29 +111,69 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     );
                 })}
             </BaneHeaderBoks>
-            <YAkseAlleElementer height={antallMnd.toString()}>
+            <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
                 {get9månederFraTerminDato(sak.familiehendelse?.termindato, antallMnd).map((månedNavn) => {
                     const daysInMonth = dayjs(månedNavn).daysInMonth();
+                    console.log(månedNavn);
+                    let mndFormat = '';
+                    {
+                        if (dayjs().isSame(månedNavn, 'month'))
+                            mndFormat = ' fkfkf '; //formaterDato(dayjs().toString(), 'DD-MMM');
+                        else mndFormat = formaterDato(månedNavn, 'MMM');
+                    }
                     //console.log((currentPos1 += daysInMonth) - daysInMonth);
-                    return (
-                        <YAkseElement
-                            key={guid()}
-                            startPos={(currentPos += daysInMonth) - daysInMonth}
-                            height={daysInMonth}
-                        >
-                            {formaterDato(månedNavn, 'MMM')}
-                        </YAkseElement>
-                    );
+                    if (dayjs().isSame(månedNavn, 'month')) {
+                        console.log('if løkke');
+                        return (
+                            <YAkseElement
+                                key={guid()}
+                                startPos={(currentPos += daysInMonth) - daysInMonth}
+                                height={daysInMonth}
+                            >
+                                <p
+                                    style={{
+                                        color: 'white',
+                                    }}
+                                >
+                                    {mndFormat}
+                                </p>
+                            </YAkseElement>
+                        );
+                    } else {
+                        return (
+                            <YAkseElement
+                                key={guid()}
+                                startPos={(currentPos += daysInMonth) - daysInMonth}
+                                height={daysInMonth}
+                            >
+                                <p
+                                    style={{
+                                        color: 'lightgrey',
+                                    }}
+                                >
+                                    {mndFormat}
+                                </p>
+                            </YAkseElement>
+                        );
+                    }
                 })}
             </YAkseAlleElementer>
-            <AlleBaner antall={timelineData!.length.toString()}>
+            <AlleBaner
+                antall={timelineData!.length.toString()}
+                height={
+                    getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
+                    (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
+                        parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
+                }
+            >
                 {timelineData!.map((bane, index) => {
                     return (
-                        <Bane
-                            key={guid()}
-                            nr={(index + 1).toString()}
-                            height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
-                        >
+                        /*
+                        <Bane key={guid()} nr={(index + 1).toString()}>
+                            
+                        </Bane>
+                        */
+                        <>
                             {bane.perioder.map((periode) => {
                                 return (
                                     <Soyle
@@ -137,20 +181,33 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                         start={periode.start.toString()}
                                         slutt={periode.slutt.toString()}
                                         farge={farger[index]}
+                                        columnNr={index + 1}
                                     />
                                 );
                             })}
-                        </Bane>
+                        </>
                     );
                 })}
-                <DatoPilBane height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}>
-                    <DatoPil
-                        key={guid()}
-                        nr={dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')}
-                        height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
-                    ></DatoPil>
-                </DatoPilBane>
             </AlleBaner>
+            <DatoPilBane
+                height={
+                    getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
+                    (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
+                        parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
+                }
+            >
+                <DatoPil
+                    key={guid()}
+                    nr={
+                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) -
+                        dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')
+                    }
+                    nrColumns={timelineData!.length}
+                    //height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                >
+                    {formaterDato(dayjs().toString(), 'DD-MMM')}
+                </DatoPil>
+            </DatoPilBane>
         </PeriodeTimelineView>
     ) : (
         <div></div>

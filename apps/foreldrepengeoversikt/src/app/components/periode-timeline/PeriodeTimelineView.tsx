@@ -20,7 +20,7 @@ export const BaneHeaderBoks: React.FC<BaneHeaderBoksProps> = ({ children, antall
         <div
             className={bem.element('baneHeaderBoks')}
             style={{
-                gridTemplateColumns: `repeat(${antall}, 1fr)`,
+                gridTemplateColumns: `repeat(${antall}, 1fr) 10px`,
             }}
         >
             {children}
@@ -47,6 +47,8 @@ export const BaneHeader: React.FC<BaneHeaderProps> = ({ children, nr }) => {
         <div
             style={{
                 gridColumn: `${nr}`,
+                justifyContent: 'center',
+                display: 'flex',
             }}
         >
             {<Tag variant={fargeRekkefølgeForTag[nr - 1]}>{children}</Tag>}
@@ -58,13 +60,19 @@ interface SoyleProps extends PeriodeTimelineViewProps {
     start: string;
     slutt: string;
     farge: string;
+    columnNr: number;
 }
-export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge }) => {
+export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, columnNr }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             className={bem.element('periode')}
-            style={{ gridRow: `${start}/${slutt}`, backgroundColor: `light${farge}`, borderColor: `${farge}` }}
+            style={{
+                gridRow: `${start}/${slutt}`,
+                backgroundColor: `light${farge}`,
+                borderColor: `${farge}`,
+                gridColumn: `${columnNr}`,
+            }}
         ></div>
     );
 };
@@ -93,22 +101,25 @@ interface YAkseElementProps extends PeriodeTimelineViewProps {
 }
 export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos }) => {
     //console.log(`${startPos} / ${startPos + height}`);
-    return <div style={{ gridRow: `${startPos + 2}/${startPos + height}` }}>{children}</div>;
+    const bem = bemUtils('periodeTimelineView');
+    return (
+        <div className={bem.element('yAkseElement')} style={{ gridRow: `${startPos + 1}/${startPos + height}` }}>
+            {children}
+        </div>
+    );
 };
 
 interface BaneProps extends PeriodeTimelineViewProps {
     nr: string;
-    height?: string;
 }
 
-export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
+export const Bane: React.FC<BaneProps> = ({ children, nr }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             className={bem.element('bane')}
             style={{
                 gridColumn: `${nr}`,
-                gridTemplateRows: `repeat(${height}, 1px)`,
             }}
         >
             {children}
@@ -118,16 +129,18 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
 
 interface AlleBanerProps extends PeriodeTimelineViewProps {
     antall: string;
+    height?: number;
 }
 
-export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall }) => {
+export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             className={bem.element('alleBaner')}
             style={{
                 display: 'grid',
-                gridTemplateColumns: `repeat(${antall}, 1fr)`,
+                gridTemplateColumns: `repeat(${antall}, 1fr) 20px`,
+                gridTemplateRows: `repeat(${height}, 1px)`,
             }}
         >
             {children}
@@ -136,7 +149,7 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall }) => {
 };
 
 interface DatoPilBaneProps extends PeriodeTimelineViewProps {
-    height?: string;
+    height?: number;
 }
 
 export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) => {
@@ -147,6 +160,7 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             style={{
                 display: 'grid',
                 gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateColumns: `50px auto 20px`,
             }}
         >
             {children}
@@ -156,23 +170,34 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
 
 interface DatoPilProps extends PeriodeTimelineViewProps {
     nr: number;
-    height?: string;
+    nrColumns: number;
 }
 
-export const DatoPil: React.FC<DatoPilProps> = ({ children, nr, height }) => {
+export const DatoPil: React.FC<DatoPilProps> = ({ nr, nrColumns, children }) => {
     const bem = bemUtils('periodeTimelineView');
-    console.log('nr: ', nr, 'height: ', height);
+    console.log('nr: ', nrColumns > 3 ? nrColumns + 1 : 3);
     return (
         <div
             className={bem.element('datoPil')}
             style={{
-                gridRow: `${nr}`,
-                gridTemplateRows: `repeat(${height}, 1px)`,
+                display: 'grid',
+                gridRow: `${nr - 9}`,
+                gridColumn: `1/${4}`,
+                gridTemplateColumns: `50px auto 20px`,
+                //gridTemplateRows: `repeat(${height}, 1px)`,
             }}
             draggable={true}
             onDragStart={handleDrag}
         >
-            {children}
+            <div>{children}</div>
+            <div className={bem.element('datoPilStrek')}></div>
+            <div
+                style={{
+                    backgroundColor: 'black',
+                    borderRadius: '50%',
+                    gridColumn: 3,
+                }}
+            ></div>
         </div>
     );
 };

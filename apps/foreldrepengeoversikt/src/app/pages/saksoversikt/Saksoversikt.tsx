@@ -30,6 +30,7 @@ import classNames from 'classnames';
 import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
 import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
+import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -107,11 +108,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                     svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
                     skjermStørreEnn800={storSkjerm}
                     componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
-                    componentB={
-                        <ContentSection padding="none" className="svartBorder">
-                            <SeHeleProsessen />
-                        </ContentSection>
-                    }
+                    componentB={<SeHeleProsessenLink />}
                     componentC={
                         <PeriodeTimeline
                             sak={gjeldendeSak as SvangerskapspengeSak}

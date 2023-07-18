@@ -37,3 +37,14 @@
 .content-section__heading {
     margin-bottom: 1rem;
 }
+.content-section--margin-large {
+    margin-bottom: 3rem;
+}
+
+.content-section--margin-default {
+    margin-bottom: 2rem;
+}
+
+.content-section--margin-none {
+    margin-bottom: 0;
+}

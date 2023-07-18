@@ -1,6 +1,7 @@
 import { bemUtils } from '@navikt/fp-common';
 import { Tag, TagProps } from '@navikt/ds-react';
 import './periodeTimelineView.css';
+import { useState } from 'react';
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -128,7 +129,6 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
             </div>
         </>
     );
-
 };
 
 interface BaneProps extends PeriodeTimelineViewProps {
@@ -179,6 +179,7 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
     return (
         <div
             className={bem.element('datoPilbane')}
+            id="pilBanen"
             style={{
                 display: 'grid',
                 gridTemplateRows: `repeat(${height}, 1px)`,
@@ -192,24 +193,50 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
 
 interface DatoPilProps extends PeriodeTimelineViewProps {
     nr: number;
-    nrColumns: number;
+    nrColumns?: number;
+    onPosChange: (posX: number, posY: number) => void;
 }
 
-export const DatoPil: React.FC<DatoPilProps> = ({ nr, nrColumns, children }) => {
+export const DatoPil: React.FC<DatoPilProps> = ({ nr, children, onPosChange }) => {
     const bem = bemUtils('periodeTimelineView');
-    console.log('nr: ', nrColumns > 3 ? nrColumns + 1 : 3);
+    const [yPos, setYPos] = useState(nr - 9);
+
+    function handleDrag(ev: React.DragEvent<HTMLDivElement>): void {
+        ev.preventDefault();
+        const newYPos = ev.clientY - document.getElementById('pilBanen').getBoundingClientRect().top;
+        const calculatedYPos = newYPos < 1 ? 1 : newYPos > 304 ? 304 : newYPos;
+
+        setYPos((prev) => {
+            console.log('HandleDrag; Inne i callback: ', calculatedYPos);
+            return prev < 1 ? prev : Math.round(calculatedYPos);
+        });
+    }
+    function handleDragEnd(ev: React.DragEvent<HTMLDivElement>): void {
+        ev.preventDefault();
+        const newYPos = ev.clientY - document.getElementById('pilBanen').getBoundingClientRect().top;
+        const calculatedYPos = newYPos < 1 ? 1 : newYPos > 304 ? 304 : newYPos;
+
+        setYPos((prev) => {
+            console.log('HandleDrag; Inne i callback: ', calculatedYPos);
+            return prev < 1 ? prev : Math.round(calculatedYPos);
+        });
+        onPosChange(ev.clientX, yPos);
+    }
+    console.log('ypos: ', yPos, 'Nr input: ', nr);
+
     return (
         <div
             className={bem.element('datoPil')}
             style={{
                 display: 'grid',
-                gridRow: `${nr - 9}`,
+                gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
                 gridTemplateColumns: `50px auto 20px`,
-                //gridTemplateRows: `repeat(${height}, 1px)`,
+                cursor: 'move',
             }}
             draggable={true}
-            onDragStart={handleDrag}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
         >
             <div>{children}</div>
             <div className={bem.element('datoPilStrek')}></div>
@@ -223,8 +250,3 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, nrColumns, children }) => 
         </div>
     );
 };
-function handleDrag(ev: React.DragEvent<HTMLDivElement>): void {
-    const id = (ev.target as HTMLDivElement).id;
-    ev.dataTransfer.setData('text/plain', id);
-    console.log(ev.movementY.valueOf());
-}

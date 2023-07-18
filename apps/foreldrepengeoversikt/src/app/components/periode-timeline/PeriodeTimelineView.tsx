@@ -1,6 +1,13 @@
 import { bemUtils } from '@navikt/fp-common';
 import { Tag, TagProps } from '@navikt/ds-react';
 import './periodeTimelineView.css';
+declare module '*.module.css';
+declare module '*.module.scss';
+
+const repeatPx = '2px';
+const borderTykkelse = '2px';
+const yAksePadding = '50px';
+const gridTemplate = yAksePadding + ' auto';
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -10,7 +17,6 @@ export const PeriodeTimelineView: React.FC<PeriodeTimelineViewProps> = ({ childr
     const bem = bemUtils('periodeTimelineView');
     return <div className={bem.block}>{children}</div>;
 };
-//export default PeriodeTimelineView;
 interface BaneHeaderBoksProps extends PeriodeTimelineViewProps {
     antall: number;
 }
@@ -20,7 +26,7 @@ export const BaneHeaderBoks: React.FC<BaneHeaderBoksProps> = ({ children, antall
         <div
             className={bem.element('baneHeaderBoks')}
             style={{
-                gridTemplateColumns: `repeat(${antall}, 1fr) 10px`,
+                gridTemplateColumns: `repeat(${antall}, 1fr) 20px`,
             }}
         >
             {children}
@@ -60,18 +66,44 @@ interface SoyleProps extends PeriodeTimelineViewProps {
     start: string;
     slutt: string;
     farge: string;
-    columnNr: string;
+    opacity?: string;
 }
-export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, columnNr }) => {
+export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, opacity }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             className={bem.element('periode')}
             style={{
                 gridRow: `${start}/${slutt}`,
-                backgroundColor: `light${farge}`,
+                backgroundColor: `${farge}`,
                 borderColor: `${farge}`,
-                gridColumn: `${columnNr}`,
+                opacity: `${opacity}`,
+                zIndex: 2,
+            }}
+        ></div>
+    );
+};
+
+interface SoyleBakgrunnProps extends PeriodeTimelineViewProps {
+    start: string;
+    slutt: string;
+    farge: string;
+    opacity?: string;
+}
+export const SoyleBakgrunn: React.FC<SoyleBakgrunnProps> = ({ start, slutt, farge, opacity }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return (
+        <div
+            className={bem.element('periode')}
+            style={{
+                gridRow: `${start}/${slutt}`,
+                backgroundColor: `${farge}`,
+                borderColor: `${farge}`,
+                opacity: `${opacity}`,
+                position: `absolute`,
+                width: `100%`,
+                zIndex: 1,
+                mixBlendMode: `multiply`,
             }}
         ></div>
     );
@@ -85,10 +117,10 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
         <div
             style={{
                 display: 'grid',
-                gridColumn: '1/3',
+                gridColumn: '1/4',
                 gridRow: '2',
-                gridTemplateRows: `repeat(${height}, 1px)`,
-                gridTemplateColumns: '50px auto 20px',
+                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                gridTemplateColumns: `${gridTemplate}`,
             }}
         >
             {children}
@@ -111,7 +143,7 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
                 style={{
                     gridRow: `${startPos + 1}/${startPos + height}`,
                     gridColumn: '1',
-                    borderBottom: '1px lightgrey solid',
+                    borderBottom: `${borderTykkelse}` + ' lightgrey solid',
                 }}
             >
                 {children}
@@ -121,27 +153,29 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
                 style={{
                     gridRow: `${startPos + 1}/${startPos + height}`,
                     gridColumn: '2',
-                    borderBottom: '1px lightgrey solid',
+                    borderBottom: `${borderTykkelse}` + ' lightgrey solid',
                 }}
             >
                 <p style={{ color: 'white' }}>empty</p>
             </div>
         </>
     );
-
 };
 
 interface BaneProps extends PeriodeTimelineViewProps {
     nr: string;
+    height?: string;
+    bakgrunnFarge?: string;
 }
 
-export const Bane: React.FC<BaneProps> = ({ children, nr }) => {
+export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
     const bem = bemUtils('periodeTimelineView');
     return (
         <div
             className={bem.element('bane')}
             style={{
                 gridColumn: `${nr}`,
+                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
             }}
         >
             {children}
@@ -151,7 +185,7 @@ export const Bane: React.FC<BaneProps> = ({ children, nr }) => {
 
 interface AlleBanerProps extends PeriodeTimelineViewProps {
     antall: string;
-    height?: number;
+    height: number;
 }
 
 export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }) => {
@@ -162,7 +196,7 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
-                gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
             }}
         >
             {children}
@@ -181,8 +215,8 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             className={bem.element('datoPilbane')}
             style={{
                 display: 'grid',
-                gridTemplateRows: `repeat(${height}, 1px)`,
-                gridTemplateColumns: `50px auto 20px`,
+                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                gridTemplateColumns: `${gridTemplate}`,
             }}
         >
             {children}
@@ -205,8 +239,8 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, nrColumns, children }) => 
                 display: 'grid',
                 gridRow: `${nr - 9}`,
                 gridColumn: `1/${4}`,
-                gridTemplateColumns: `50px auto 20px`,
-                //gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateColumns: `${gridTemplate}` + ' 20px',
+                //gridTemplateRows: `repeat(${height}, ${repeatPx})`,
             }}
             draggable={true}
             onDragStart={handleDrag}

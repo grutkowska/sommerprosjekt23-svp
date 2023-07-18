@@ -62,7 +62,7 @@ const StatusTag: React.FunctionComponent<Props> = ({ sak, className }) => {
 
     return (
         <Tag className={className} variant="success" size="xsmall">
-            Aktiv
+            Ferdig behandlet
         </Tag>
     );
 };

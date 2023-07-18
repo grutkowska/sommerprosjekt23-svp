@@ -90,16 +90,20 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     //const sluttTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, slutt);
     //const startTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-09-01');
     //const sluttTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-10-01');
+
     //const totalTall = getAntallSvangerskapsDager(termin, antallMnd);
+
     //console.log('start: ', startTall, 'slutt: ', sluttTall, 'total: ', totalTall);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold);
     let currentPos = 0;
     //let currentPos1 = 0;
+
     const farger = ['blue', 'green'];
     console.log(
         dayjs(sak.familiehendelse?.termindato).daysInMonth() -
             parseInt(formaterDato(sak.familiehendelse?.termindato, 'D'))
     );
+
     return timelineData ? (
         <PeriodeTimelineView>
             <BaneHeaderBoks antall={timelineData?.length}>
@@ -114,6 +118,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
                 {get9månederFraTerminDato(sak.familiehendelse?.termindato, antallMnd).map((månedNavn) => {
                     const daysInMonth = dayjs(månedNavn).daysInMonth();
+
                     console.log(månedNavn);
                     let mndFormat = '';
                     {
@@ -156,6 +161,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             </YAkseElement>
                         );
                     }
+
                 })}
             </YAkseAlleElementer>
             <AlleBaner

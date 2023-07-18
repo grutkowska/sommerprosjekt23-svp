@@ -13,7 +13,6 @@ import { ArbeidsgiverInfoType } from 'app/types/ArbeidsgiverInfoType';
 
 //import { FormattedMessage } from 'react-intl';
 
-
 interface Props {
     sak: SvangerskapspengeSak;
     søker: SøkerinfoDTO;
@@ -53,17 +52,13 @@ const getArbeidsgiverNavn = (
 };
 
 export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
-
     //const intl = useIntl();
-
 
     if ('åpenBehandling' in sak) {
         return (
-            <>
-                <h2>Din søknad er under behandling</h2>
+            <div>
                 {sak.åpenBehandling &&
                     sak.åpenBehandling.søknad &&
-
                     sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold, index) => {
                         return (
                             <PeriodeKort
@@ -75,13 +70,12 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                 arbeidgiverIndex={index + 1}
                             ></PeriodeKort>
                         );
-
                     })}
-            </>
+            </div>
         );
     } else if (sak.sakAvsluttet) {
         return (
-            <>
+            <div>
                 <h2>Din søknad er avslått</h2>
                 {
                     <PeriodeKort
@@ -92,14 +86,12 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                         ferdigBehandlet={true}
                     ></PeriodeKort>
                 }
-            </>
+            </div>
         );
     } else if ('gjeldendeVedtak' in sak) {
         return (
-            <>
-                <h2>Dine vedtak</h2>
+            <div>
                 {sak.gjeldendeVedtak &&
-
                     sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
                         return (
                             <PeriodeKort
@@ -111,9 +103,8 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                 arbeidgiverIndex={index + 1}
                             ></PeriodeKort>
                         );
-
                     })}
-            </>
+            </div>
         );
     } else return <></>;
 };

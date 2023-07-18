@@ -1,47 +1,55 @@
 import './saksoversikt.css';
 interface Props {
     svangerskapSak: boolean;
-    skjermStørreEnn700: boolean;
-    elementA: JSX.Element;
-    elementB: JSX.Element;
-    elementC: JSX.Element;
-    elementD: JSX.Element;
-    elementE: JSX.Element;
+    skjermStørreEnn800: boolean;
+    componentA: JSX.Element;
+    componentB: JSX.Element;
+    componentC: JSX.Element;
+    componentD: JSX.Element;
+    componentE: JSX.Element;
 }
 
 export const SvangerskapDashboardwrapper: React.FC<Props> = ({
     svangerskapSak,
-    skjermStørreEnn700,
-    elementA,
-    elementB,
-    elementC,
-    elementD,
-    elementE,
+    skjermStørreEnn800,
+    componentA,
+    componentB,
+    componentC,
+    componentD,
+    componentE,
 }) => {
-    const elementer = [elementA, elementB, svangerskapSak && elementC, svangerskapSak && elementD, elementE];
-    let rekkefølge = skjermStørreEnn700 ? [1, 2, 3, 4, 5] : [1, 2, 4, 5];
-    rekkefølge = svangerskapSak ? rekkefølge : [1, 2, 5];
+    const komponenter =
+        skjermStørreEnn800 && svangerskapSak
+            ? [svangerskapSak && componentC, svangerskapSak && componentD, componentE, componentA, componentB]
+            : [componentA, componentB, svangerskapSak && componentC, svangerskapSak && componentD, componentE];
 
     return (
         <>
-            {skjermStørreEnn700 && svangerskapSak ? (
-                <div className="dashboardOrganizer">
-                    <div className="dasboardSeksjon">
-                        {elementer[2]}
-                        {elementer[4]}
+            {skjermStørreEnn800 && svangerskapSak ? (
+                <div className="dashboard">
+                    <div style={{ minWidth: '100%' }}>
+                        <h2>Dine Svangerskapspenger</h2>
                     </div>
-                    <div className="dasboardSeksjon">
-                        {elementer[3]}
-                        {elementer[0]}
-                        {elementer[1]}
+                    <div className="dashboardMain">
+                        <div className="dasboardSeksjon" style={{ width: '100%' }}>
+                            {komponenter[1]}
+                            {komponenter[3]}
+                            {komponenter[4]}
+                        </div>
+                        <div className="dasboardSeksjon" style={{ maxWidth: '360px' }}>
+                            {komponenter[0]}
+                            {komponenter[2]}
+                        </div>
                     </div>
                 </div>
             ) : (
-                elementer.map((element, index) => {
-                    if (index === rekkefølge[index] - 1) {
-                        return element;
-                    } else return;
-                })
+                <>
+                    {komponenter[0]}
+                    {komponenter[1]}
+                    {komponenter[2]}
+                    {komponenter[3]}
+                    {komponenter[4]}
+                </>
             )}
         </>
     );

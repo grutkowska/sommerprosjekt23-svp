@@ -7,7 +7,12 @@
     overflow: hidden;
 }
 
-.dashboardOrganizer {
+.dashboard {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboardMain {
     display: flex;
     flex-direction: row;
 }

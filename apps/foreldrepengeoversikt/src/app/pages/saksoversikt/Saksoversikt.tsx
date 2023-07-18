@@ -1,5 +1,4 @@
 import { Loader } from '@navikt/ds-react';
-
 import { bemUtils, intlUtils } from '@navikt/fp-common';
 import Api from 'app/api/api';
 import ContentSection from 'app/components/content-section/ContentSection';
@@ -7,6 +6,7 @@ import SeDokumenter from 'app/components/se-dokumenter/SeDokumenter';
 import { useSetBackgroundColor } from 'app/hooks/useBackgroundColor';
 import { useSetSelectedRoute } from 'app/hooks/useSelectedRoute';
 import { useSetSelectedSak } from 'app/hooks/useSelectedSak';
+import { useState } from 'react';
 import OversiktRoutes from 'app/routes/routes';
 import DinPlan from 'app/sections/din-plan/DinPlan';
 import Oppgaver from 'app/sections/oppgaver/Oppgaver';
@@ -29,6 +29,7 @@ import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import classNames from 'classnames';
 import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
 import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
+import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -45,7 +46,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     const navnPåSøker = søkerinfo.søker.fornavn;
     const params = useParams();
     const alleSaker = getAlleYtelser(saker);
-
+    const [storSkjerm, setStorSkjerm] = useState(() => window.innerWidth > 800);
     const gjeldendeSak = alleSaker.find((sak) => sak.saksnummer === params.saksnummer)!;
     useSetSelectedSak(gjeldendeSak);
     const navnAnnenForelder = getNavnAnnenForelder(søkerinfo, gjeldendeSak);
@@ -81,7 +82,13 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
         familiehendelsesdato,
         annenPartVedtakIsSuspended
     );
-
+    useDebounceOnWindowEvent(
+        () => {
+            setStorSkjerm(() => window.innerWidth > 1000);
+        },
+        100,
+        'resize'
+    );
     if (
         !annenPartVedtakIsSuspended &&
         annenPartsVedtakRequestStatus !== RequestStatus.FINISHED &&
@@ -95,28 +102,30 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     }
     return (
         <div className={classNames(bem.block)}>
-            <SvangerskapDashboardwrapper
-                svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
-                skjermStørreEnn700={true}
-                elementA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
-                elementB={
-                    <ContentSection padding="none" className="svartBorder">
-                        <SeHeleProsessen />
-                    </ContentSection>
-                }
-                elementC={
-                    <PeriodeTimeline
-                        sak={gjeldendeSak as SvangerskapspengeSak}
-                        søkerArbeidsforhold={søkerinfo.arbeidsforhold}
-                    />
-                }
-                elementD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
-                elementE={
-                    <ContentSection padding="none" className="svartBorder">
-                        <SeDokumenter />
-                    </ContentSection>
-                }
-            />
+            {
+                <SvangerskapDashboardwrapper
+                    svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
+                    skjermStørreEnn800={storSkjerm}
+                    componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
+                    componentB={
+                        <ContentSection padding="none" className="svartBorder">
+                            <SeHeleProsessen />
+                        </ContentSection>
+                    }
+                    componentC={
+                        <PeriodeTimeline
+                            sak={gjeldendeSak as SvangerskapspengeSak}
+                            søkerArbeidsforhold={søkerinfo.arbeidsforhold}
+                        />
+                    }
+                    componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
+                    componentE={
+                        <ContentSection padding="none" className="svartBorder">
+                            <SeDokumenter />
+                        </ContentSection>
+                    }
+                />
+            }
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>
                     <Oppgaver

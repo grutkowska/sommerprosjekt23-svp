@@ -102,6 +102,7 @@ interface YAkseElementProps extends PeriodeTimelineViewProps {
 }
 export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos }) => {
     //console.log(`${startPos} / ${startPos + height}`);
+
     const bem = bemUtils('periodeTimelineView');
     return (
         <>
@@ -127,6 +128,7 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
             </div>
         </>
     );
+
 };
 
 interface BaneProps extends PeriodeTimelineViewProps {

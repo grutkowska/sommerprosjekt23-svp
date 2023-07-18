@@ -18,13 +18,14 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
     componentD,
     componentE,
 }) => {
-    const komponenter = skjermStørreEnn800
-        ? [svangerskapSak && componentC, svangerskapSak && componentD, componentE, componentA, componentB]
-        : [componentA, componentB, svangerskapSak && componentC, svangerskapSak && componentD, componentE];
+    const komponenter =
+        skjermStørreEnn800 && svangerskapSak
+            ? [svangerskapSak && componentC, svangerskapSak && componentD, componentE, componentA, componentB]
+            : [componentA, componentB, svangerskapSak && componentC, svangerskapSak && componentD, componentE];
 
     return (
         <>
-            {skjermStørreEnn800 ? (
+            {skjermStørreEnn800 && svangerskapSak ? (
                 <div className="dashboard">
                     <div style={{ minWidth: '100%' }}>
                         <h2>Dine Svangerskapspenger</h2>
@@ -42,9 +43,13 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
                     </div>
                 </div>
             ) : (
-                komponenter.map((element) => {
-                    return element;
-                })
+                <>
+                    {komponenter[0]}
+                    {komponenter[1]}
+                    {komponenter[2]}
+                    {komponenter[3]}
+                    {komponenter[4]}
+                </>
             )}
         </>
     );

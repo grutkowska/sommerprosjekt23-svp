@@ -1,5 +1,4 @@
 import { Loader } from '@navikt/ds-react';
-import { useEffect, useState } from 'react';
 import { bemUtils, intlUtils } from '@navikt/fp-common';
 import Api from 'app/api/api';
 import ContentSection from 'app/components/content-section/ContentSection';
@@ -7,7 +6,7 @@ import SeDokumenter from 'app/components/se-dokumenter/SeDokumenter';
 import { useSetBackgroundColor } from 'app/hooks/useBackgroundColor';
 import { useSetSelectedRoute } from 'app/hooks/useSelectedRoute';
 import { useSetSelectedSak } from 'app/hooks/useSelectedSak';
-import useDebounce from '../../../../../foreldrepengesoknad/src/app/utils/hooks/useDebounce';
+import { useState } from 'react';
 import OversiktRoutes from 'app/routes/routes';
 import DinPlan from 'app/sections/din-plan/DinPlan';
 import Oppgaver from 'app/sections/oppgaver/Oppgaver';
@@ -87,7 +86,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
         () => {
             setStorSkjerm(() => window.innerWidth > 1000);
         },
-        500,
+        100,
         'resize'
     );
     if (

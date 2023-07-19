@@ -14,7 +14,7 @@ import {
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
-import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
+import { svpPerioder } from 'app/types/svpTypesSommer';
 import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
@@ -38,21 +38,20 @@ interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
 }
 
-const getArbeidsgiverNavn = (
+export const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    gjeldendeVedtakArbeidsforhold: Arbeidsforhold
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
 ): string => {
-    if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
         const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find(
-                  (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
-              )
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
             : undefined;
         return arbeidsforhold?.arbeidsgiverNavn || '';
         //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
+    } else if (arbeidsForholdType === 'FRILANS') {
         return 'frilanser';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
         return 'selvstendig næringsdrivende';
     } else {
         return 'Type not found';
@@ -83,7 +82,11 @@ const mapSvpSakTilPeriodeTimeline = (
 ) => {
     return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
         return {
-            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
+            navn: getArbeidsgiverNavn(
+                arbeidsforhold,
+                arbeidsgiver.aktivitet.type,
+                arbeidsgiver?.aktivitet?.arbeidsgiver?.id
+            ),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
                 return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, antallMnd);
             }),
@@ -102,9 +105,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         .subtract(getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd), 'day')
         .toISOString();
     let fomDato: string | undefined;
-    let tomDato: string | undefined;
     let startDatoBakgrunnSoyle = 0;
-    let sluttDatoBakgrunnSoyle = 0;
+    //let arbeidsType: string | undefined;
+    let utbetalingsGrad: number;
 
     return timelineData ? (
         <PeriodeTimelineView>
@@ -168,20 +171,14 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             <AlleBaner antall={timelineData!.length.toString()} height={alleBanerHeight}>
                 {timelineData!.map((bane, index) => {
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
-                    tomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].tilrettelegginger[index].tom;
                     startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
-                    sluttDatoBakgrunnSoyle = dayjs(tomDato).diff(oversteDato, 'day');
                     console.log(
                         'fom: ',
                         fomDato,
-                        'tomDato: ',
-                        tomDato,
                         'termin: ',
                         sak.familiehendelse?.termindato,
                         'startDatoBakgrunn: ',
-                        startDatoBakgrunnSoyle,
-                        'slutt:',
-                        sluttDatoBakgrunnSoyle
+                        startDatoBakgrunnSoyle
                     );
 
                     return (
@@ -191,17 +188,24 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
                             bakgrunnFarge={farger[index]}
                         >
-                            {bane.perioder.map((periode) => {
-                                return (
-                                    <>
-                                        <Soyle
-                                            key={guid()}
-                                            start={periode.start.toString()}
-                                            slutt={periode.slutt.toString()}
-                                            farge={farger[index]}
-                                        />
-                                    </>
-                                );
+                            {bane.perioder.map((periode, periodeIndex) => {
+                                //arbeidsType =
+                                //    sak.gjeldendeVedtak?.arbeidsforhold[index].tilrettelegginger[periodeIndex].type;
+                                utbetalingsGrad =
+                                    sak.gjeldendeVedtak!.arbeidsforhold[index].tilrettelegginger[periodeIndex].resultat
+                                        .utbetalingsgrad;
+                                if (utbetalingsGrad > 0) {
+                                    return (
+                                        <>
+                                            <Soyle
+                                                key={guid()}
+                                                start={periode.start.toString()}
+                                                slutt={periode.slutt.toString()}
+                                                farge={farger[index]}
+                                            />
+                                        </>
+                                    );
+                                } else return <></>;
                             })}
                             <SoyleBakgrunn
                                 key={guid()}

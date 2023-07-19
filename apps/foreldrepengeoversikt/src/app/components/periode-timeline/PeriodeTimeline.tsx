@@ -10,13 +10,22 @@ import {
     BaneHeader,
     DatoPil,
     DatoPilBane,
+    SoyleBakgrunn,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
-import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
+import { svpPerioder } from 'app/types/svpTypesSommer';
 import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
+
+const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+    return (
+        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
+        (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
+            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
+    );
+};
 
 interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -29,21 +38,20 @@ interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
 }
 
-const getArbeidsgiverNavn = (
+export const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    gjeldendeVedtakArbeidsforhold: Arbeidsforhold
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
 ): string => {
-    if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
         const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find(
-                  (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
-              )
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
             : undefined;
         return arbeidsforhold?.arbeidsgiverNavn || '';
         //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
+    } else if (arbeidsForholdType === 'FRILANS') {
         return 'frilanser';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
         return 'selvstendig næringsdrivende';
     } else {
         return 'Type not found';
@@ -69,40 +77,37 @@ const mapTilretteleggingTilPeriode = (
 };
 const mapSvpSakTilPeriodeTimeline = (
     sak: SvangerskapspengeSak,
-    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined
+    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    antallMnd: number
 ) => {
     return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
         return {
-            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
+            navn: getArbeidsgiverNavn(
+                arbeidsforhold,
+                arbeidsgiver.aktivitet.type,
+                arbeidsgiver?.aktivitet?.arbeidsgiver?.id
+            ),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, 10);
+                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, antallMnd);
             }),
         };
     });
 };
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
-    //const start = '2022-11-01';
-    //const slutt = '2022-12-01';
-    //const termin = '2023-01-01';
-    const antallMnd = 10;
-    //const startTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, start);
-    //const sluttTall = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, slutt);
-    //const startTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-09-01');
-    //const sluttTall2 = getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, '2022-10-01');
-
-    //const totalTall = getAntallSvangerskapsDager(termin, antallMnd);
-
-    //console.log('start: ', startTall, 'slutt: ', sluttTall, 'total: ', totalTall);
-    const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold);
+    const antallMnd = 9;
+    const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
+    const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
-    //let currentPos1 = 0;
-
     const farger = ['blue', 'green'];
-    console.log(
-        dayjs(sak.familiehendelse?.termindato).daysInMonth() -
-            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D'))
-    );
+
+    const oversteDato = dayjs(sak.familiehendelse?.termindato)
+        .subtract(getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd), 'day')
+        .toISOString();
+    let fomDato: string | undefined;
+    let startDatoBakgrunnSoyle = 0;
+    //let arbeidsType: string | undefined;
+    let utbetalingsGrad: number;
 
     return timelineData ? (
         <PeriodeTimelineView>
@@ -119,7 +124,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {get9månederFraTerminDato(sak.familiehendelse?.termindato, antallMnd).map((månedNavn) => {
                     const daysInMonth = dayjs(månedNavn).daysInMonth();
 
-                    console.log(månedNavn);
+                    //console.log(månedNavn);
                     let mndFormat = '';
                     {
                         if (dayjs().isSame(månedNavn, 'month'))
@@ -128,7 +133,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     }
                     //console.log((currentPos1 += daysInMonth) - daysInMonth);
                     if (dayjs().isSame(månedNavn, 'month')) {
-                        console.log('if løkke');
+                        //console.log('if løkke');
                         return (
                             <YAkseElement
                                 key={guid()}
@@ -161,56 +166,62 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             </YAkseElement>
                         );
                     }
-
                 })}
             </YAkseAlleElementer>
-            <AlleBaner
-                antall={timelineData!.length.toString()}
-                height={
-                    getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
-                    (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
-                        parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
-                }
-            >
+            <AlleBaner antall={timelineData!.length.toString()} height={alleBanerHeight}>
                 {timelineData!.map((bane, index) => {
+                    fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
+                    startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
+                    console.log(
+                        'fom: ',
+                        fomDato,
+                        'termin: ',
+                        sak.familiehendelse?.termindato,
+                        'startDatoBakgrunn: ',
+                        startDatoBakgrunnSoyle
+                    );
+
                     return (
-                        /*
-                        <Bane key={guid()} nr={(index + 1).toString()}>
-                            
-                        </Bane>
-                        */
-                        <>
-                            {bane.perioder.map((periode) => {
-                                return (
-                                    <Soyle
-                                        key={guid()}
-                                        start={periode.start.toString()}
-                                        slutt={periode.slutt.toString()}
-                                        farge={farger[index]}
-                                        columnNr={(index + 1).toString()}
-                                    />
-                                );
+                        <Bane
+                            key={guid()}
+                            nr={(index + 1).toString()}
+                            height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                            bakgrunnFarge={farger[index]}
+                        >
+                            {bane.perioder.map((periode, periodeIndex) => {
+                                //arbeidsType =
+                                //    sak.gjeldendeVedtak?.arbeidsforhold[index].tilrettelegginger[periodeIndex].type;
+                                utbetalingsGrad =
+                                    sak.gjeldendeVedtak!.arbeidsforhold[index].tilrettelegginger[periodeIndex].resultat
+                                        .utbetalingsgrad;
+                                if (utbetalingsGrad > 0) {
+                                    return (
+                                        <>
+                                            <Soyle
+                                                key={guid()}
+                                                start={periode.start.toString()}
+                                                slutt={periode.slutt.toString()}
+                                                farge={farger[index]}
+                                            />
+                                        </>
+                                    );
+                                } else return <></>;
                             })}
-                        </>
+                            <SoyleBakgrunn
+                                key={guid()}
+                                start={startDatoBakgrunnSoyle.toString()}
+                                slutt={getAntallSvangerskapsDager(
+                                    sak.familiehendelse?.termindato,
+                                    antallMnd
+                                ).toString()}
+                                farge={'light' + farger[index]}
+                                opacity="100%"
+                            />
+                        </Bane>
                     );
                 })}
-                <Soyle
-                    start={(
-                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) -
-                        dayjs(sak.familiehendelse!.termindato!).subtract(3, 'w').diff(sak.familiehendelse?.termindato)
-                    ).toString()}
-                    slutt={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
-                    farge={'grey'}
-                    columnNr={'1 / ' + (timelineData!.length + 1).toString()}
-                ></Soyle>
             </AlleBaner>
-            <DatoPilBane
-                height={
-                    getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
-                    (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
-                        parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
-                }
-            >
+            <DatoPilBane height={alleBanerHeight}>
                 <DatoPil
                     key={guid()}
                     nr={
@@ -218,7 +229,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')
                     }
                     nrColumns={timelineData!.length}
-                    //height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
                 >
                     {formaterDato(dayjs().toString(), 'DD-MMM')}
                 </DatoPil>

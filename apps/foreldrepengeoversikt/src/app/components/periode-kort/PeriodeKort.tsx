@@ -3,7 +3,7 @@ import { ExpansionCard, Table, Tag, TagProps } from '@navikt/ds-react';
 import './periodeKort.css';
 import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
-import { CheckmarkCircleIcon, CheckmarkIcon, ClockIcon, ParasolBeachIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
+import { CheckmarkCircleIcon, ParasolBeachIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
 import { ArbeidsgiverInfo } from 'app/types/ArbeidsgiverInfo';

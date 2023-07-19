@@ -41,7 +41,6 @@ interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
 export const førsteBokstavToUppercase = (string: string): string => {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
-
 export const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
     arbeidsForholdType: string,
@@ -98,6 +97,7 @@ const mapSvpSakTilPeriodeTimeline = (
     });
 };
 
+
 export const arbeidsgiverFarger = ['blue', 'green'];
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
@@ -113,7 +113,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd),
             'day'
         )
-
         .toISOString();
     let fomDato: string | undefined;
     let startDatoBakgrunnSoyle = 0;
@@ -192,7 +191,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         'termin: ',
                         sak.familiehendelse?.termindato,
                         'startDatoBakgrunn: ',
-                        startDatoBakgrunnSoyle,
+                      startDatoBakgrunnSoyle,
                         'antall dager fra termin:',
                         getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()
                     );
@@ -203,6 +202,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             nr={(index + 1).toString()}
                             height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
                             bakgrunnFarge={arbeidsgiverFarger[index]}
+
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -231,6 +231,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     antallMnd
                                 ).toString()}
                                 farge={'light' + arbeidsgiverFarger[index]}
+
                                 opacity="100%"
                             />
                         </Bane>

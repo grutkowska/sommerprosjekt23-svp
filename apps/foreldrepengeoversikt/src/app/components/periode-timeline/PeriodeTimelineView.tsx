@@ -156,7 +156,7 @@ export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, st
                     borderBottom: `${borderTykkelse}` + ' lightgrey solid',
                 }}
             >
-                <p style={{ color: 'white' }}>empty</p>
+                <p style={{ color: 'white', opacity: '0%' }}>empty</p>
             </div>
         </>
     );

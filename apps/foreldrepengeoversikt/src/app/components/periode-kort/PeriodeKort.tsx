@@ -1,17 +1,15 @@
-import { ExpansionCard, Table, Tag, TagProps } from '@navikt/ds-react';
+import { ExpansionCard, Table } from '@navikt/ds-react';
 
 import './periodeKort.css';
 import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
-import { CheckmarkCircleIcon, ParasolBeachIcon, XMarkOctagonIcon } from '@navikt/aksel-icons';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { ArbeidsgiverInfo } from 'app/types/ArbeidsgiverInfo';
-//import { getSvpPeriodeType } from 'app/utils/periodeUtils';
-//import { useIntl } from 'react-intl';
+import { førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
 
 interface Props {
-    title: ArbeidsgiverInfo;
+    arbeidsgiverNavn: string;
+    arbeidsgiverFarge?: string;
     ferdigBehandlet: boolean;
     svpPerioder?: svpPerioder[];
     oppholdsPerioder?: svpPerioder[];
@@ -19,21 +17,12 @@ interface Props {
 }
 
 const PeriodeKort: React.FunctionComponent<Props> = ({
-    title,
+    arbeidsgiverNavn,
+    arbeidsgiverFarge,
     ferdigBehandlet,
     svpPerioder,
     oppholdsPerioder,
-    arbeidgiverIndex,
 }: Props) => {
-    const fargeRekkefølgeForTag: Array<TagProps['variant']> = [
-        'info',
-        'success',
-        'warning',
-        'error',
-        'alt1',
-        'alt2',
-        'neutral',
-    ];
     const datoFormat = 'DD. MMM';
     //const intl = useIntl();
 
@@ -42,15 +31,32 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
         <div className="periodeKort">
             <ExpansionCard aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
-                    <div id="dinSoknadArbeidsgiverNavn">
-                        {arbeidgiverIndex ? (
-                            <Tag variant={fargeRekkefølgeForTag[arbeidgiverIndex - 1]} size="small">
-                                {title.navn}
-                            </Tag>
-                        ) : (
-                            title.navn
-                        )}
-                        {title.id && `Org: ` + title.id}
+                    <div>
+                        <div
+                            style={{
+                                backgroundColor: `${arbeidsgiverFarge}`,
+                                borderRadius: '50%',
+                                width: '20px',
+                                height: '20px',
+                                alignSelf: 'center',
+                            }}
+                        ></div>
+                        <div
+                            style={{
+                                width: '20px',
+                                // Bedre måte å gjøre dette på?? Spacinga
+                            }}
+                        ></div>
+
+                        <div>
+                            <h3
+                                style={{
+                                    margin: '0px',
+                                }}
+                            >
+                                {førsteBokstavToUppercase(arbeidsgiverNavn)}
+                            </h3>
+                        </div>
                     </div>
                     {/*ferdigBehandlet ? (
                         <Tag variant="success" size="small">
@@ -71,6 +77,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                 {allePerioder?.map((periode) => {
                                     return (
                                         <Table.Row key={guid()} className="row">
+                                            {/*
                                             {ferdigBehandlet && (
                                                 <Table.DataCell className="cell">
                                                     {periode.resultat ? (
@@ -92,16 +99,27 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     )}
                                                 </Table.DataCell>
                                             )}
+                                                    */}
 
-                                            <Table.DataCell align="center" className="cell cellDato" scope="row">
-                                                fra <b>{formaterDato(periode.fom, datoFormat)}</b>
-                                                <br />
-                                                til <b>{formaterDato(periode.tom, datoFormat)}</b>
-                                            </Table.DataCell>
+                                            <Table.DataCell>
+                                                <h4
+                                                    style={{
+                                                        margin: '5px',
+                                                        paddingLeft: '40px',
+                                                    }}
+                                                >
+                                                    {' '}
+                                                    <b>{formaterDato(periode.fom, datoFormat)}</b> til{' '}
+                                                    <b>{formaterDato(periode.tom, datoFormat)}</b>
+                                                </h4>
 
-                                            <Table.DataCell className="cell" align="left">
                                                 {periode.resultat ? (
-                                                    <p>
+                                                    <p
+                                                        style={{
+                                                            margin: '5px',
+                                                            paddingLeft: '40px',
+                                                        }}
+                                                    >
                                                         {`Trenger ${periode.type} tilrettelegging`}{' '}
                                                         {periode.type !== 'INGEN' &&
                                                             `på en

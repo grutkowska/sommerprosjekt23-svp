@@ -38,6 +38,9 @@ interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
 }
 
+export const førsteBokstavToUppercase = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
 export const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
     arbeidsForholdType: string,
@@ -47,12 +50,12 @@ export const getArbeidsgiverNavn = (
         const arbeidsforhold = søkerArbeidsforhold
             ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
             : undefined;
-        return arbeidsforhold?.arbeidsgiverNavn || '';
+        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
         //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
     } else if (arbeidsForholdType === 'FRILANS') {
-        return 'frilanser';
+        return 'Frilanser';
     } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'selvstendig næringsdrivende';
+        return 'Selvstendig næringsdrivende';
     } else {
         return 'Type not found';
     }
@@ -94,15 +97,22 @@ const mapSvpSakTilPeriodeTimeline = (
     });
 };
 
+
+export const arbeidsgiverFarger = ['blue', 'green'];
+
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     const antallMnd = 9;
     const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
-    const farger = ['blue', 'green'];
 
     const oversteDato = dayjs(sak.familiehendelse?.termindato)
-        .subtract(getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd), 'day')
+        .subtract(
+            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')) -
+                dayjs(sak.familiehendelse?.termindato).daysInMonth() +
+                getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd),
+            'day'
+        )
         .toISOString();
     let fomDato: string | undefined;
     let startDatoBakgrunnSoyle = 0;
@@ -143,6 +153,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 <p
                                     style={{
                                         color: 'white',
+                                        opacity: '0%',
                                     }}
                                 >
                                     {mndFormat}
@@ -173,12 +184,16 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
                     startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
                     console.log(
+                        'oversteDato; ',
+                        oversteDato,
                         'fom: ',
                         fomDato,
                         'termin: ',
                         sak.familiehendelse?.termindato,
                         'startDatoBakgrunn: ',
-                        startDatoBakgrunnSoyle
+                      startDatoBakgrunnSoyle,
+                        'antall dager fra termin:',
+                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()
                     );
 
                     return (
@@ -186,7 +201,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             key={guid()}
                             nr={(index + 1).toString()}
                             height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
-                            bakgrunnFarge={farger[index]}
+                            bakgrunnFarge={arbeidsgiverFarger[index]}
+
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -201,7 +217,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                                 key={guid()}
                                                 start={periode.start.toString()}
                                                 slutt={periode.slutt.toString()}
-                                                farge={farger[index]}
+                                                farge={arbeidsgiverFarger[index]}
                                             />
                                         </>
                                     );
@@ -214,7 +230,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     sak.familiehendelse?.termindato,
                                     antallMnd
                                 ).toString()}
-                                farge={'light' + farger[index]}
+                                farge={'light' + arbeidsgiverFarger[index]}
+
                                 opacity="100%"
                             />
                         </Bane>

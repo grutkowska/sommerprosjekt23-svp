@@ -9,15 +9,24 @@ import {
     BaneHeader,
     DatoPil,
     DatoPilBane,
+    SoyleBakgrunn,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
-import { Arbeidsforhold, svpPerioder } from 'app/types/svpTypesSommer';
+import { svpPerioder } from 'app/types/svpTypesSommer';
 import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import { useDatoContext } from 'app/context/periodeTimelineContext';
 import { useCallback, useRef } from 'react';
+
+const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+    return (
+        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
+        (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
+            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
+    );
+};
 
 interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -30,26 +39,29 @@ interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
 }
 
-const getArbeidsgiverNavn = (
+export const førsteBokstavToUppercase = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+export const getArbeidsgiverNavn = (
     søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    gjeldendeVedtakArbeidsforhold: Arbeidsforhold
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
 ): string => {
-    if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
         const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find(
-                  (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
-              )
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
             : undefined;
-        return arbeidsforhold?.arbeidsgiverNavn || '';
+        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
         //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
-        return 'frilanser';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'selvstendig næringsdrivende';
+    } else if (arbeidsForholdType === 'FRILANS') {
+        return 'Frilanser';
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+        return 'Selvstendig næringsdrivende';
     } else {
         return 'Type not found';
     }
 };
+
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     //const valgtDatoRef = useDatoContext();
@@ -68,6 +80,25 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         return formaterDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde), 'DD - MMM');
     };
 
+    const antallMnd = 9;
+    const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
+    const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
+    let currentPos = 0;
+
+    const oversteDato = dayjs(sak.familiehendelse?.termindato)
+        .subtract(
+            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')) -
+                dayjs(sak.familiehendelse?.termindato).daysInMonth() +
+                getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd),
+            'day'
+        )
+        .toISOString();
+    let fomDato: string | undefined;
+    let startDatoBakgrunnSoyle = 0;
+    //let arbeidsType: string | undefined;
+    let utbetalingsGrad: number;
+
+
     return timelineData ? (
         <PeriodeTimelineView>
             <BaneHeaderBoks antall={timelineData?.length}>
@@ -82,6 +113,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             <YAkseAlleElementer className="YAkseAlleElementer" height={baneHoyde.toString()}>
                 {get9månederFraTerminDato(sluttDatoForSVP.toString(), antallMnd).map((månedNavn) => {
                     const daysInMonth = dayjs(månedNavn).daysInMonth();
+
                     let mndFormat = '';
                     {
                         if (dayjs().isSame(månedNavn, 'month'))
@@ -93,6 +125,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         /* TODO : bruke context i If'en */
                     }
                     if (dayjs().isSame(månedNavn, 'month')) {
+
                         return (
                             <YAkseElement
                                 key={guid()}
@@ -102,6 +135,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 <p
                                     style={{
                                         color: 'white',
+                                        opacity: '0%',
                                     }}
                                 >
                                     {mndFormat}
@@ -127,33 +161,81 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     }
                 })}
             </YAkseAlleElementer>
+
             <AlleBaner antall={timelineData!.length.toString()} height={baneHoyde}>
+
                 {timelineData!.map((bane, index) => {
+                    fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
+                    startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
+                    console.log(
+                        'oversteDato; ',
+                        oversteDato,
+                        'fom: ',
+                        fomDato,
+                        'termin: ',
+                        sak.familiehendelse?.termindato,
+                        'startDatoBakgrunn: ',
+                      startDatoBakgrunnSoyle,
+                        'antall dager fra termin:',
+                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()
+                    );
+
                     return (
-                        <>
-                            {bane.perioder.map((periode) => {
-                                return (
-                                    <Soyle
-                                        key={guid()}
-                                        start={periode.start.toString()}
-                                        slutt={periode.slutt.toString()}
-                                        farge={farger[index]}
-                                        columnNr={(index + 1).toString()}
-                                    />
-                                );
+
+                        <Bane
+                            key={guid()}
+                            nr={(index + 1).toString()}
+                            height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                            bakgrunnFarge={arbeidsgiverFarger[index]}
+
+                        >
+                            {bane.perioder.map((periode, periodeIndex) => {
+                                //arbeidsType =
+                                //    sak.gjeldendeVedtak?.arbeidsforhold[index].tilrettelegginger[periodeIndex].type;
+                                utbetalingsGrad =
+                                    sak.gjeldendeVedtak!.arbeidsforhold[index].tilrettelegginger[periodeIndex].resultat
+                                        .utbetalingsgrad;
+                                if (utbetalingsGrad > 0) {
+                                    return (
+                                        <>
+                                            <Soyle
+                                                key={guid()}
+                                                start={periode.start.toString()}
+                                                slutt={periode.slutt.toString()}
+                                                farge={arbeidsgiverFarger[index]}
+                                            />
+                                        </>
+                                    );
+                                } else return <></>;
+
                             })}
-                        </>
+                            <SoyleBakgrunn
+                                key={guid()}
+                                start={startDatoBakgrunnSoyle.toString()}
+                                slutt={getAntallSvangerskapsDager(
+                                    sak.familiehendelse?.termindato,
+                                    antallMnd
+                                ).toString()}
+                                farge={'light' + arbeidsgiverFarger[index]}
+
+                                opacity="100%"
+                            />
+                        </Bane>
                     );
                 })}
             </AlleBaner>
+
             <DatoPilBane height={baneHoyde}>
+
                 <DatoPil
                     key={guid()}
                     nr={getGridPos(dayjs().toString(), dayjs(sluttDatoForSVP).toString(), baneHoyde)}
                     nrColumns={timelineData!.length}
+
                     relBaneHeight={baneHoyde}
                     handleTeksBoks={changeDatoTekst}
                 />
+
             </DatoPilBane>
         </PeriodeTimelineView>
     ) : (

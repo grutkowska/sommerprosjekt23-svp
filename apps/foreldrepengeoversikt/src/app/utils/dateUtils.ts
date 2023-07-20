@@ -1,4 +1,4 @@
-import { TidsperiodeDate, formatDate } from '@navikt/fp-common';
+import { TidsperiodeDate } from '@navikt/fp-common';
 import dayjs, { Dayjs } from 'dayjs';
 import { IntlShape } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';

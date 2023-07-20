@@ -10,11 +10,11 @@
     border: 0.01rem solid;
     border-radius: 0.5rem;
     position: relative;
-    gap: 10px
+    gap: 20px
 }
 .periodeTimelineView__alleBaner {
     width: 100%;
-    grid-column-gap: 5px;
+    grid-column-gap: 20px;
     grid-column: 2;
     grid-row: 2;
 }
@@ -27,11 +27,13 @@
 }
 .periodeTimelineView__datoPil {
     height: 20px;
+
     transition: none;
 }
 .periodeTimelineView__datoPilTekst > p {
     margin: 0%;
     overflow-x: hidden;
+
 }
 .periodeTimelineView__datoPilStrek {
     background-color: black;
@@ -47,7 +49,7 @@
 }
 .periodeTimelineView__bane {
     display: grid;
-
+    position: relative;
 }
 .periodeTimelineView__periode {
     border-radius: 5px;

@@ -9,7 +9,7 @@ declare module '*.module.scss';
 
 const repeatPx = '2px';
 const borderTykkelse = '2px';
-const yAksePadding = '50px';
+const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -119,10 +119,10 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
     return (
         <div
             style={{
+                height: '100%',
                 display: 'grid',
                 gridColumn: '1/4',
-                gridRow: '2',
-
+                gridRow: '2/ span 2',
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
             }}
@@ -179,7 +179,8 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
             className={bem.element('bane')}
             style={{
                 gridColumn: `${nr}`,
-                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                gridRow: `1/${height}`,
+                gridTemplateRows: `repeat(${height}, 1fr)`,
             }}
         >
             {children}
@@ -220,7 +221,7 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             id="pilBanen"
             style={{
                 display: 'grid',
-
+                gridRow: `2`,
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
             }}
@@ -282,7 +283,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                 display: 'grid',
                 gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
-
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
                 //gridTemplateRows: `repeat(${height}, ${repeatPx})`
             }}

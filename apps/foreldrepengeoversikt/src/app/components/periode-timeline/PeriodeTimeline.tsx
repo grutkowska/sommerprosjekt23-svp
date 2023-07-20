@@ -37,6 +37,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         );
         */
         //console.log(valgtDatoRef.current.toString());
+        /*
         return formaterDato(
             konverterGridPosTilDato(
                 currentRelPos,
@@ -45,6 +46,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             ).toISOString(),
             'DD - MMM'
         );
+        */
+        return formaterDato(dayjs().toDate(), 'DD - MMM');
     };
 
     const oversteDato = dayjs(sak.familiehendelse?.termindato)
@@ -72,7 +75,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 })}
             </BaneHeaderBoks>
 
-            <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
+            <YAkseAlleElementer className="YAkseAlleElementer" height={alleBanerHeight.toString()}>
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
@@ -123,7 +126,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     }
                 )}
             </YAkseAlleElementer>
-
             <AlleBaner antall={timelineData!.length.toString()} height={alleBanerHeight}>
                 {timelineData!.map((bane, index) => {
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;

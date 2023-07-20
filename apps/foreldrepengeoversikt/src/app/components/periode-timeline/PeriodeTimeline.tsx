@@ -2,7 +2,6 @@ import './periodeTimeline.css';
 import {
     PeriodeTimelineView,
     Soyle,
-    Bane,
     AlleBaner,
     YAkseAlleElementer,
     YAkseElement,
@@ -18,16 +17,8 @@ import { svpPerioder } from 'app/types/svpTypesSommer';
 import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
-
-/*
-const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
-    return (
-        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
-        (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
-            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
-    );
-};
-*/
+import { useDatoContext } from 'app/context/periodeTimelineContext';
+import { useCallback, useRef } from 'react';
 
 const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
     return (
@@ -73,6 +64,7 @@ export const getArbeidsgiverNavn = (
         return 'Type not found';
     }
 };
+
 
 const getTerminMinus21Dager = (termindato: string | undefined) => {
     return dayjs(termindato).subtract(21, 'day').toISOString();
@@ -125,7 +117,12 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
-
+    const changeDatoTekst = (currentRelPos: number) => {
+        //setValgtDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde));
+        valgtDatoRef.current = konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde);
+        //console.log(valgtDatoRef.current.toString());
+        return formaterDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde), 'DD - MMM');
+    };
     const oversteDato = dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato))
         .subtract(
             parseInt(formaterDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), 'D')) -
@@ -150,6 +147,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     );
                 })}
             </BaneHeaderBoks>
+
             <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
@@ -222,6 +220,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     );
 
                     return (
+
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
@@ -276,17 +275,16 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     );
                 })}
             </AlleBaner>
+
             <DatoPilBane height={alleBanerHeight}>
                 <DatoPil
                     key={guid()}
-                    nr={
-                        getAntallSvangerskapsDager(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd) -
-                        dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).diff(dayjs(), 'day')
-                    }
+                    nr={getGridPos(dayjs().toString(), dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), alleBanerHeight)}
                     nrColumns={timelineData!.length}
-                >
-                    {formaterDato(dayjs().toString(), 'DD-MMM')}
-                </DatoPil>
+                    relBaneHeight={alleBanerHeight}
+                    handleTeksBoks={changeDatoTekst}
+                />
+
             </DatoPilBane>
         </PeriodeTimelineView>
     ) : (
@@ -294,4 +292,43 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     );
 };
 
+const konverterGridPosTilDato = (gridPos: number, sluttDato: Dayjs, totalGrid: number) => {
+    //console.log('KonverterGridDato; gridPos: ', gridPos, ' calcGrid: ', totalGrid - gridPos);
+    return sluttDato.subtract(totalGrid - gridPos, 'day');
+};
+
+const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
+    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
+};
+const getDiffMellomDager = (terminDato: string | undefined, dato: string) => {
+    return dayjs(terminDato).diff(dayjs(dato), 'day');
+};
+const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
+    console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
+    return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
+};
+
+const mapTilretteleggingTilPeriode = (
+    periode: svpPerioder,
+    termin: string | undefined,
+    antallMnd: number
+): { start: number; slutt: number } => {
+    return {
+        start: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.fom),
+        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.tom),
+    };
+};
+const mapSvpSakTilPeriodeTimeline = (
+    sak: SvangerskapspengeSak,
+    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined
+) => {
+    return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
+        return {
+            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
+            perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
+                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, 10);
+            }),
+        };
+    });
+};
 export default PeriodeTimeline;

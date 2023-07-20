@@ -1,6 +1,11 @@
 import { bemUtils } from '@navikt/fp-common';
 import { Tag, TagProps } from '@navikt/ds-react';
 import './periodeTimelineView.css';
+
+import { useState } from 'react';
+import '../../img/transparent-background-pattern.jpg';
+import { renderToStaticMarkup } from 'react-dom/server';
+
 declare module '*.module.css';
 declare module '*.module.scss';
 
@@ -8,6 +13,7 @@ const repeatPx = '2px';
 const borderTykkelse = '2px';
 const yAksePadding = '50px';
 const gridTemplate = yAksePadding + ' auto';
+
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -119,8 +125,10 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 display: 'grid',
                 gridColumn: '1/4',
                 gridRow: '2',
-                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+
+                gridTemplateRows: `repeat(${height}, 1fr)`, 
                 gridTemplateColumns: `${gridTemplate}`,
+
             }}
         >
             {children}
@@ -196,7 +204,8 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
-                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                gridTemplateRows: `repeat(${height}, 1fr)`,
+
             }}
         >
             {children}
@@ -213,10 +222,13 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
     return (
         <div
             className={bem.element('datoPilbane')}
+            id="pilBanen"
             style={{
                 display: 'grid',
-                gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+
+                gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
+
             }}
         >
             {children}
@@ -226,39 +238,80 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
 
 interface DatoPilProps extends PeriodeTimelineViewProps {
     nr: number;
-    nrColumns: number;
+    nrColumns?: number;
+    onPosChange?: (posX: number, posY: number) => void;
+    relBaneHeight: number;
+    handleTeksBoks: (relativePos: number) => string;
 }
 
-export const DatoPil: React.FC<DatoPilProps> = ({ nr, nrColumns, children }) => {
+export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksBoks }) => {
     const bem = bemUtils('periodeTimelineView');
-    console.log('nr: ', nrColumns > 3 ? nrColumns + 1 : 3);
+    const [yPos, setYPos] = useState<number | undefined>(nr - 8);
+    const baneHeightInPx = document.getElementById('pilBanen')?.getBoundingClientRect().height;
+    const relBanePx = relBaneHeight / baneHeightInPx!;
+    console.log(
+        'Utsiden: relBanePx: ',
+        relBanePx,
+        'baneHeightInPx: ',
+        baneHeightInPx,
+        ' relBaneHeight: ',
+        relBaneHeight
+    );
+    function handleDrag(e: React.DragEvent<HTMLDivElement>): void {
+        console.log(
+            'Innsiden: Mouseypos: ',
+            e.clientY,
+            'rammeTop',
+            document.getElementById('pilBanen')!.getBoundingClientRect().top
+        );
+        e.dataTransfer.effectAllowed = 'none';
+        const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
+        const boundYPos = newYPos < 1 ? 1 : newYPos > baneHeightInPx! ? baneHeightInPx! : newYPos;
+        const gridBanePos = boundYPos * relBanePx;
+        setYPos(Math.round(gridBanePos!));
+        //console.log('Innsiden: ypos: ', yPos, 'calculatedYPos: ', boundYPos, 'newYPos: ', newYPos);
+    }
+    function handleDragEnd(e: React.DragEvent<HTMLDivElement>): void {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
+        const boundYPos = newYPos < 1 ? 1 : newYPos > baneHeightInPx! ? baneHeightInPx! : newYPos;
+        const gridBanePos = boundYPos * relBanePx;
+        setYPos(Math.round(gridBanePos!));
+    }
+    //console.log('Utsiden: relBanePx: ', relBanePx, 'Nr input: ', nr);
+
     return (
         <div
             className={bem.element('datoPil')}
             style={{
                 display: 'grid',
-                gridRow: `${nr - 9}`,
+                gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
-                //gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                //gridTemplateRows: `repeat(${height}, ${repeatPx})`
             }}
             draggable={true}
-            onDragStart={handleDrag}
+            onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = 'none';
+            }}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
         >
-            <div>{children}</div>
+            <div className={bem.element('datoPilTekst')}>
+                <p>{handleTeksBoks(yPos!)}</p>
+            </div>
             <div className={bem.element('datoPilStrek')}></div>
             <div
                 style={{
                     backgroundColor: 'black',
                     borderRadius: '50%',
                     gridColumn: 3,
+                    width: '20px',
+                    height: '20px',
+                    cursor: 'move',
                 }}
             ></div>
         </div>
     );
 };
-function handleDrag(ev: React.DragEvent<HTMLDivElement>): void {
-    const id = (ev.target as HTMLDivElement).id;
-    ev.dataTransfer.setData('text/plain', id);
-    console.log(ev.movementY.valueOf());
-}

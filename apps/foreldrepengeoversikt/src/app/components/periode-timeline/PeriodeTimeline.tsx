@@ -2,6 +2,7 @@ import './periodeTimeline.css';
 import {
     PeriodeTimelineView,
     Soyle,
+    Bane,
     AlleBaner,
     YAkseAlleElementer,
     YAkseElement,
@@ -15,102 +16,9 @@ import {
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
 import { svpPerioder } from 'app/types/svpTypesSommer';
-import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
-import { useDatoContext } from 'app/context/periodeTimelineContext';
-import { useCallback, useRef } from 'react';
-import { useDatoContext } from 'app/context/periodeTimelineContext';
-import { useCallback, useRef } from 'react';
-
-const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
-    return (
-        getAntallSvangerskapsDager(
-            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
-            antallMnd
-        ) +
-        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
-            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
-    );
-};
-
-interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
-    children?: React.ReactNode;
-    /**
-     * Decides startingpoint in timeline.
-     * Defaults to earliest date among the timeline periods.
-     * @note Using this disables use of ZoomButtons. You will need to control zooming yourself.
-     */
-    sak: SvangerskapspengeSak;
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
-}
-
-export const førsteBokstavToUppercase = (string: string): string => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-};
-export const getArbeidsgiverNavn = (
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    arbeidsForholdType: string,
-    arbeidsgiverID?: string
-): string => {
-    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
-        const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
-            : undefined;
-        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
-        //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
-    } else if (arbeidsForholdType === 'FRILANS') {
-        return 'Frilanser';
-    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'Selvstendig næringsdrivende';
-    } else {
-        return 'Type not found';
-    }
-};
-
-const getTerminMinus21Dager = (termindato: string | undefined) => {
-    return dayjs(termindato).subtract(21, 'day').toISOString();
-};
-
-const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
-    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
-};
-const getPeriodeDag = (terminDato: string | undefined, dato: string) => {
-    return dayjs(terminDato).diff(dayjs(dato), 'day');
-};
-//termindato - et absolut tall å regne ut ifra
-const mapTilretteleggingTilPeriode = (
-    periode: svpPerioder,
-    termin: string | undefined,
-    antallMnd: number
-): { start: number; slutt: number } => {
-    return {
-        start: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.fom),
-        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.tom),
-    };
-};
-const mapSvpSakTilPeriodeTimeline = (
-    sak: SvangerskapspengeSak,
-    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    antallMnd: number
-) => {
-    return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
-        return {
-            navn: getArbeidsgiverNavn(
-                arbeidsforhold,
-                arbeidsgiver.aktivitet.type,
-                arbeidsgiver?.aktivitet?.arbeidsgiver?.id
-            ),
-            perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(
-                    periode,
-                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                    antallMnd
-                );
-            }),
-        };
-    });
-};
+import dayjs, { Dayjs } from 'dayjs';
 
 export const arbeidsgiverFarger = ['blue', 'green'];
 
@@ -122,9 +30,22 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     let currentPos = 0;
     const changeDatoTekst = (currentRelPos: number) => {
         //setValgtDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde));
-        valgtDatoRef.current = konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde);
+        /*
+        valgtDatoRef.current = konverterGridPosTilDato(
+            currentRelPos,
+            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)),
+            alleBanerHeight
+        );
+        */
         //console.log(valgtDatoRef.current.toString());
-        return formaterDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde), 'DD - MMM');
+        return formaterDato(
+            konverterGridPosTilDato(
+                currentRelPos,
+                dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)),
+                alleBanerHeight
+            ).toISOString(),
+            'DD - MMM'
+        );
     };
     const oversteDato = dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato));
 
@@ -140,7 +61,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     let startDatoBakgrunnSoyle = 0;
     //let arbeidsType: string | undefined;
     let utbetalingsGrad: number;
-
+    console.log('Allebaner: ', alleBanerHeight);
     return timelineData ? (
         <PeriodeTimelineView>
             <BaneHeaderBoks antall={timelineData?.length}>
@@ -305,36 +226,95 @@ const konverterGridPosTilDato = (gridPos: number, sluttDato: Dayjs, totalGrid: n
     return sluttDato.subtract(totalGrid - gridPos, 'day');
 };
 
-const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
-    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
-};
-const getDiffMellomDager = (terminDato: string | undefined, dato: string) => {
-    return dayjs(terminDato).diff(dayjs(dato), 'day');
-};
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
     console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
     return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
 };
 
+const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+    return (
+        getAntallSvangerskapsDager(
+            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
+            antallMnd
+        ) +
+        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
+            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
+    );
+};
+
+interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
+    children?: React.ReactNode;
+    /**
+     * Decides startingpoint in timeline.
+     * Defaults to earliest date among the timeline periods.
+     * @note Using this disables use of ZoomButtons. You will need to control zooming yourself.
+     */
+    sak: SvangerskapspengeSak;
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
+}
+
+export const førsteBokstavToUppercase = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+export const getArbeidsgiverNavn = (
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
+): string => {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
+        const arbeidsforhold = søkerArbeidsforhold
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
+            : undefined;
+        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
+        //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
+    } else if (arbeidsForholdType === 'FRILANS') {
+        return 'Frilanser';
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+        return 'Selvstendig næringsdrivende';
+    } else {
+        return 'Type not found';
+    }
+};
+
+const getTerminMinus21Dager = (termindato: string | undefined) => {
+    return dayjs(termindato).subtract(21, 'day').toISOString();
+};
+
+const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
+    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
+};
+const getPeriodeDag = (terminDato: string | undefined, dato: string) => {
+    return dayjs(terminDato).diff(dayjs(dato), 'day');
+};
+//termindato - et absolut tall å regne ut ifra
 const mapTilretteleggingTilPeriode = (
     periode: svpPerioder,
     termin: string | undefined,
     antallMnd: number
 ): { start: number; slutt: number } => {
     return {
-        start: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.fom),
-        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.tom),
+        start: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.fom),
+        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.tom),
     };
 };
 const mapSvpSakTilPeriodeTimeline = (
     sak: SvangerskapspengeSak,
-    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined
+    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    antallMnd: number
 ) => {
     return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
         return {
-            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
+            navn: getArbeidsgiverNavn(
+                arbeidsforhold,
+                arbeidsgiver.aktivitet.type,
+                arbeidsgiver?.aktivitet?.arbeidsgiver?.id
+            ),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, 10);
+                return mapTilretteleggingTilPeriode(
+                    periode,
+                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                    antallMnd
+                );
             }),
         };
     });
@@ -344,40 +324,91 @@ const konverterGridPosTilDato = (gridPos: number, sluttDato: Dayjs, totalGrid: n
     return sluttDato.subtract(totalGrid - gridPos, 'day');
 };
 
-const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
-    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
-};
-const getDiffMellomDager = (terminDato: string | undefined, dato: string) => {
-    return dayjs(terminDato).diff(dayjs(dato), 'day');
-};
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
     console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
     return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
 };
 
+const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+    return (
+        getAntallSvangerskapsDager(
+            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
+            antallMnd
+        ) +
+        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
+            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
+    );
+};
+
+interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
+    children?: React.ReactNode;
+    /**
+     * Decides startingpoint in timeline.
+     * Defaults to earliest date among the timeline periods.
+     * @note Using this disables use of ZoomButtons. You will need to control zooming yourself.
+     */
+    sak: SvangerskapspengeSak;
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
+}
+
+export const førsteBokstavToUppercase = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+export const getArbeidsgiverNavn = (
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
+): string => {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
+        const arbeidsforhold = søkerArbeidsforhold
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
+            : undefined;
+        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
+        //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
+    } else if (arbeidsForholdType === 'FRILANS') {
+        return 'Frilanser';
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+        return 'Selvstendig næringsdrivende';
+    } else {
+        return 'Type not found';
+    }
+};
+
+const getTerminMinus21Dager = (termindato: string | undefined) => {
+    return dayjs(termindato).subtract(21, 'day').toISOString();
+};
+
+const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
+    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
+};
+const getPeriodeDag = (terminDato: string | undefined, dato: string) => {
+    return dayjs(terminDato).diff(dayjs(dato), 'day');
+};
+//termindato - et absolut tall å regne ut ifra
 const mapTilretteleggingTilPeriode = (
     periode: svpPerioder,
     termin: string | undefined,
     antallMnd: number
 ): { start: number; slutt: number } => {
     return {
-        start: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.fom),
-        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getDiffMellomDager(termin, periode.tom),
+        start: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.fom),
+        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.tom),
     };
 };
 const mapSvpSakTilPeriodeTimeline = (
     sak: SvangerskapspengeSak,
-    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined
+    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    antallMnd: number
 ) => {
     return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
         return {
-            navn: getArbeidsgiverNavn(
-                arbeidsforhold,
-                arbeidsgiver.aktivitet.type,
-                arbeidsgiver.aktivitet.arbeidsgiver.id
-            ),
+            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, 10);
+                return mapTilretteleggingTilPeriode(
+                    periode,
+                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                    antallMnd
+                );
             }),
         };
     });

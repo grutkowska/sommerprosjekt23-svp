@@ -4,8 +4,6 @@ import './periodeTimelineView.css';
 
 import { useState } from 'react';
 import '../../img/transparent-background-pattern.jpg';
-import { renderToStaticMarkup } from 'react-dom/server';
-
 declare module '*.module.css';
 declare module '*.module.scss';
 

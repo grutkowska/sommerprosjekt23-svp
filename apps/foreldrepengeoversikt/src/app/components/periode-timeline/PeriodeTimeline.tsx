@@ -11,7 +11,6 @@ import {
     DatoPil,
     DatoPilBane,
     SoyleBakgrunn,
-    Bane,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
@@ -47,7 +46,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             'DD - MMM'
         );
     };
-    const oversteDato = dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato));
 
     const oversteDato = dayjs(sak.familiehendelse?.termindato)
         .subtract(
@@ -126,7 +124,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 )}
             </YAkseAlleElementer>
 
-            <AlleBaner antall={timelineData!.length.toString()} height={baneHoyde}>
+            <AlleBaner antall={timelineData!.length.toString()} height={alleBanerHeight}>
                 {timelineData!.map((bane, index) => {
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
                     startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
@@ -319,98 +317,5 @@ const mapSvpSakTilPeriodeTimeline = (
         };
     });
 };
-const konverterGridPosTilDato = (gridPos: number, sluttDato: Dayjs, totalGrid: number) => {
-    //console.log('KonverterGridDato; gridPos: ', gridPos, ' calcGrid: ', totalGrid - gridPos);
-    return sluttDato.subtract(totalGrid - gridPos, 'day');
-};
 
-const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
-    console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
-    return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
-};
-
-const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
-    return (
-        getAntallSvangerskapsDager(
-            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
-            antallMnd
-        ) +
-        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
-            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
-    );
-};
-
-interface PeriodeTimelineProps extends React.HTMLAttributes<HTMLDivElement> {
-    children?: React.ReactNode;
-    /**
-     * Decides startingpoint in timeline.
-     * Defaults to earliest date among the timeline periods.
-     * @note Using this disables use of ZoomButtons. You will need to control zooming yourself.
-     */
-    sak: SvangerskapspengeSak;
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined;
-}
-
-export const førsteBokstavToUppercase = (string: string): string => {
-    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-};
-export const getArbeidsgiverNavn = (
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    arbeidsForholdType: string,
-    arbeidsgiverID?: string
-): string => {
-    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
-        const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
-            : undefined;
-        return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
-        //return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
-    } else if (arbeidsForholdType === 'FRILANS') {
-        return 'Frilanser';
-    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'Selvstendig næringsdrivende';
-    } else {
-        return 'Type not found';
-    }
-};
-
-const getTerminMinus21Dager = (termindato: string | undefined) => {
-    return dayjs(termindato).subtract(21, 'day').toISOString();
-};
-
-const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
-    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
-};
-const getPeriodeDag = (terminDato: string | undefined, dato: string) => {
-    return dayjs(terminDato).diff(dayjs(dato), 'day');
-};
-//termindato - et absolut tall å regne ut ifra
-const mapTilretteleggingTilPeriode = (
-    periode: svpPerioder,
-    termin: string | undefined,
-    antallMnd: number
-): { start: number; slutt: number } => {
-    return {
-        start: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.fom),
-        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.tom),
-    };
-};
-const mapSvpSakTilPeriodeTimeline = (
-    sak: SvangerskapspengeSak,
-    arbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    antallMnd: number
-) => {
-    return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
-        return {
-            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
-            perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(
-                    periode,
-                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                    antallMnd
-                );
-            }),
-        };
-    });
-};
 export default PeriodeTimeline;

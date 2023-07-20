@@ -126,7 +126,6 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 gridRow: '2',
 
                 gridTemplateRows: `repeat(${height}, 1fr)`,
-
                 gridTemplateColumns: `${gridTemplate}`,
             }}
         >
@@ -203,7 +202,6 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
-
                 gridTemplateRows: `repeat(${height}, 1fr)`,
             }}
         >
@@ -226,7 +224,6 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
                 display: 'grid',
 
                 gridTemplateRows: `repeat(${height}, 1fr)`,
-
                 gridTemplateColumns: `${gridTemplate}`,
             }}
         >
@@ -289,7 +286,7 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                 gridColumn: `1/${4}`,
 
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
-                //gridTemplateRows: `repeat(${height}, ${repeatPx})`,
+                //gridTemplateRows: `repeat(${height}, ${repeatPx})`
             }}
             draggable={true}
             onDragStart={(e) => {

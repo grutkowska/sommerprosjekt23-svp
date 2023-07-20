@@ -14,7 +14,6 @@ const borderTykkelse = '2px';
 const yAksePadding = '50px';
 const gridTemplate = yAksePadding + ' auto';
 
-
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
 }
@@ -127,10 +126,8 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 gridRow: '2',
 
                 gridTemplateRows: `repeat(${height}, 1fr)`,
-     
 
                 gridTemplateColumns: `${gridTemplate}`,
-
             }}
         >
             {children}
@@ -208,7 +205,6 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
 
                 gridTemplateRows: `repeat(${height}, 1fr)`,
-
             }}
         >
             {children}
@@ -232,7 +228,6 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
                 gridTemplateRows: `repeat(${height}, 1fr)`,
 
                 gridTemplateColumns: `${gridTemplate}`,
-
             }}
         >
             {children}
@@ -295,7 +290,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
 
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
                 //gridTemplateRows: `repeat(${height}, ${repeatPx})`,
-
             }}
             draggable={true}
             onDragStart={(e) => {

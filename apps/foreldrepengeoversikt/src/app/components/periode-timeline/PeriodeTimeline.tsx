@@ -10,6 +10,7 @@ import {
     DatoPil,
     DatoPilBane,
     SoyleBakgrunn,
+    Bane,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
@@ -62,7 +63,6 @@ export const getArbeidsgiverNavn = (
     }
 };
 
-
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     //const valgtDatoRef = useDatoContext();
     const antallMnd = 9;
@@ -71,7 +71,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold);
     const valgtDatoRef = useRef(dayjs());
     let currentPos = 0;
-    const farger = ['blue', 'green'];
+    const arbeidsgiverFarger = ['blue', 'green'];
     //console.log('PeriodeTimeline rerender: ', valgtDato.toString(), 'Banehoyde: ', baneHoyde);
     const changeDatoTekst = (currentRelPos: number) => {
         //setValgtDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde));
@@ -80,10 +80,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         return formaterDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde), 'DD - MMM');
     };
 
-    const antallMnd = 9;
     const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
-    const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
-    let currentPos = 0;
 
     const oversteDato = dayjs(sak.familiehendelse?.termindato)
         .subtract(
@@ -97,7 +94,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     let startDatoBakgrunnSoyle = 0;
     //let arbeidsType: string | undefined;
     let utbetalingsGrad: number;
-
 
     return timelineData ? (
         <PeriodeTimelineView>
@@ -125,7 +121,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         /* TODO : bruke context i If'en */
                     }
                     if (dayjs().isSame(månedNavn, 'month')) {
-
                         return (
                             <YAkseElement
                                 key={guid()}
@@ -163,7 +158,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             </YAkseAlleElementer>
 
             <AlleBaner antall={timelineData!.length.toString()} height={baneHoyde}>
-
                 {timelineData!.map((bane, index) => {
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
                     startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
@@ -175,19 +169,17 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         'termin: ',
                         sak.familiehendelse?.termindato,
                         'startDatoBakgrunn: ',
-                      startDatoBakgrunnSoyle,
+                        startDatoBakgrunnSoyle,
                         'antall dager fra termin:',
                         getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()
                     );
 
                     return (
-
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
                             height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
                             bakgrunnFarge={arbeidsgiverFarger[index]}
-
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -207,7 +199,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                         </>
                                     );
                                 } else return <></>;
-
                             })}
                             <SoyleBakgrunn
                                 key={guid()}
@@ -217,7 +208,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     antallMnd
                                 ).toString()}
                                 farge={'light' + arbeidsgiverFarger[index]}
-
                                 opacity="100%"
                             />
                         </Bane>
@@ -226,16 +216,13 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             </AlleBaner>
 
             <DatoPilBane height={baneHoyde}>
-
                 <DatoPil
                     key={guid()}
                     nr={getGridPos(dayjs().toString(), dayjs(sluttDatoForSVP).toString(), baneHoyde)}
                     nrColumns={timelineData!.length}
-
                     relBaneHeight={baneHoyde}
                     handleTeksBoks={changeDatoTekst}
                 />
-
             </DatoPilBane>
         </PeriodeTimelineView>
     ) : (
@@ -275,7 +262,11 @@ const mapSvpSakTilPeriodeTimeline = (
 ) => {
     return sak.gjeldendeVedtak?.arbeidsforhold.map((arbeidsgiver) => {
         return {
-            navn: getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver),
+            navn: getArbeidsgiverNavn(
+                arbeidsforhold,
+                arbeidsgiver.aktivitet.type,
+                arbeidsgiver.aktivitet.arbeidsgiver.id
+            ),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
                 return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, 10);
             }),

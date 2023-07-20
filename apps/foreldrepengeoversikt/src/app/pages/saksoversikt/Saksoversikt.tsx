@@ -48,8 +48,6 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     const params = useParams();
     const alleSaker = getAlleYtelser(saker);
     const [storSkjerm, setStorSkjerm] = useState(() => window.innerWidth > 800);
-    const [valgtDato, setValgtDato] = useState(dayjs());
-    const [arbeidsgiverFarger, setArbeidsgiverFarger] = useState([]);
     const gjeldendeSak = alleSaker.find((sak) => sak.saksnummer === params.saksnummer)!;
     useSetSelectedSak(gjeldendeSak);
     const navnAnnenForelder = getNavnAnnenForelder(søkerinfo, gjeldendeSak);

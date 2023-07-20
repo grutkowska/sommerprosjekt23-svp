@@ -19,11 +19,24 @@ import dayjs from 'dayjs';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 
+/*
 const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
     return (
         getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) +
         (dayjs(sak.familiehendelse?.termindato).daysInMonth() -
             parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')))
+    );
+};
+*/
+
+const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+    return (
+        getAntallSvangerskapsDager(
+            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
+            antallMnd
+        ) +
+        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
+            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
     );
 };
 
@@ -61,6 +74,10 @@ export const getArbeidsgiverNavn = (
     }
 };
 
+const getTerminMinus21Dager = (termindato: string | undefined) => {
+    return dayjs(termindato).subtract(21, 'day').toISOString();
+};
+
 const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
     return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
 };
@@ -91,12 +108,15 @@ const mapSvpSakTilPeriodeTimeline = (
                 arbeidsgiver?.aktivitet?.arbeidsgiver?.id
             ),
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
-                return mapTilretteleggingTilPeriode(periode, sak.familiehendelse?.termindato, antallMnd);
+                return mapTilretteleggingTilPeriode(
+                    periode,
+                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                    antallMnd
+                );
             }),
         };
     });
 };
-
 
 export const arbeidsgiverFarger = ['blue', 'green'];
 
@@ -106,11 +126,11 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
 
-    const oversteDato = dayjs(sak.familiehendelse?.termindato)
+    const oversteDato = dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato))
         .subtract(
-            parseInt(formaterDato(sak.familiehendelse?.termindato, 'D')) -
-                dayjs(sak.familiehendelse?.termindato).daysInMonth() +
-                getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd),
+            parseInt(formaterDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), 'D')) -
+                dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() +
+                getAntallSvangerskapsDager(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd),
             'day'
         )
         .toISOString();
@@ -131,53 +151,55 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 })}
             </BaneHeaderBoks>
             <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
-                {get9månederFraTerminDato(sak.familiehendelse?.termindato, antallMnd).map((månedNavn) => {
-                    const daysInMonth = dayjs(månedNavn).daysInMonth();
+                {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
+                    (månedNavn) => {
+                        const daysInMonth = dayjs(månedNavn).daysInMonth();
 
-                    //console.log(månedNavn);
-                    let mndFormat = '';
-                    {
-                        if (dayjs().isSame(månedNavn, 'month'))
-                            mndFormat = ' fkfkf '; //formaterDato(dayjs().toString(), 'DD-MMM');
-                        else mndFormat = formaterDato(månedNavn, 'MMM');
-                    }
-                    //console.log((currentPos1 += daysInMonth) - daysInMonth);
-                    if (dayjs().isSame(månedNavn, 'month')) {
-                        //console.log('if løkke');
-                        return (
-                            <YAkseElement
-                                key={guid()}
-                                startPos={(currentPos += daysInMonth) - daysInMonth}
-                                height={daysInMonth}
-                            >
-                                <p
-                                    style={{
-                                        color: 'white',
-                                        opacity: '0%',
-                                    }}
+                        //console.log(månedNavn);
+                        let mndFormat = '';
+                        {
+                            if (dayjs().isSame(månedNavn, 'month'))
+                                mndFormat = ' fkfkf '; //formaterDato(dayjs().toString(), 'DD-MMM');
+                            else mndFormat = formaterDato(månedNavn, 'MMM');
+                        }
+                        //console.log((currentPos1 += daysInMonth) - daysInMonth);
+                        if (dayjs().isSame(månedNavn, 'month')) {
+                            //console.log('if løkke');
+                            return (
+                                <YAkseElement
+                                    key={guid()}
+                                    startPos={(currentPos += daysInMonth) - daysInMonth}
+                                    height={daysInMonth}
                                 >
-                                    {mndFormat}
-                                </p>
-                            </YAkseElement>
-                        );
-                    } else {
-                        return (
-                            <YAkseElement
-                                key={guid()}
-                                startPos={(currentPos += daysInMonth) - daysInMonth}
-                                height={daysInMonth}
-                            >
-                                <p
-                                    style={{
-                                        color: 'lightgrey',
-                                    }}
+                                    <p
+                                        style={{
+                                            color: 'white',
+                                            opacity: '0%',
+                                        }}
+                                    >
+                                        {mndFormat}
+                                    </p>
+                                </YAkseElement>
+                            );
+                        } else {
+                            return (
+                                <YAkseElement
+                                    key={guid()}
+                                    startPos={(currentPos += daysInMonth) - daysInMonth}
+                                    height={daysInMonth}
                                 >
-                                    {mndFormat}
-                                </p>
-                            </YAkseElement>
-                        );
+                                    <p
+                                        style={{
+                                            color: 'lightgrey',
+                                        }}
+                                    >
+                                        {mndFormat}
+                                    </p>
+                                </YAkseElement>
+                            );
+                        }
                     }
-                })}
+                )}
             </YAkseAlleElementer>
             <AlleBaner antall={timelineData!.length.toString()} height={alleBanerHeight}>
                 {timelineData!.map((bane, index) => {
@@ -188,21 +210,26 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         oversteDato,
                         'fom: ',
                         fomDato,
-                        'termin: ',
-                        sak.familiehendelse?.termindato,
+                        'termin-21dager: ',
+                        getTerminMinus21Dager(sak.familiehendelse?.termindato),
                         'startDatoBakgrunn: ',
-                      startDatoBakgrunnSoyle,
+                        startDatoBakgrunnSoyle,
                         'antall dager fra termin:',
-                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()
+                        getAntallSvangerskapsDager(
+                            getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                            antallMnd
+                        ).toString()
                     );
 
                     return (
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
-                            height={getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd).toString()}
+                            height={getAntallSvangerskapsDager(
+                                getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                                antallMnd
+                            ).toString()}
                             bakgrunnFarge={arbeidsgiverFarger[index]}
-
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -221,18 +248,29 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                             />
                                         </>
                                     );
-                                } else return <></>;
+                                } // return <></>;
+                                else
+                                    return (
+                                        <>
+                                            <Soyle
+                                                key={guid()}
+                                                start={periode.start.toString()}
+                                                slutt={periode.slutt.toString()}
+                                                farge={'lightgrey'}
+                                                opacity="100%"
+                                            />
+                                        </>
+                                    );
                             })}
                             <SoyleBakgrunn
                                 key={guid()}
                                 start={startDatoBakgrunnSoyle.toString()}
                                 slutt={getAntallSvangerskapsDager(
-                                    sak.familiehendelse?.termindato,
+                                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
                                     antallMnd
                                 ).toString()}
                                 farge={'light' + arbeidsgiverFarger[index]}
-
-                                opacity="100%"
+                                opacity="50%"
                             />
                         </Bane>
                     );
@@ -242,8 +280,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 <DatoPil
                     key={guid()}
                     nr={
-                        getAntallSvangerskapsDager(sak.familiehendelse?.termindato, antallMnd) -
-                        dayjs(sak.familiehendelse?.termindato).diff(dayjs(), 'day')
+                        getAntallSvangerskapsDager(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd) -
+                        dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).diff(dayjs(), 'day')
                     }
                     nrColumns={timelineData!.length}
                 >

@@ -4,8 +4,6 @@ import './periodeTimelineView.css';
 
 import { useState } from 'react';
 import '../../img/transparent-background-pattern.jpg';
-import { renderToStaticMarkup } from 'react-dom/server';
-
 declare module '*.module.css';
 declare module '*.module.scss';
 
@@ -13,7 +11,6 @@ const repeatPx = '2px';
 const borderTykkelse = '2px';
 const yAksePadding = '50px';
 const gridTemplate = yAksePadding + ' auto';
-
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -126,9 +123,8 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 gridColumn: '1/4',
                 gridRow: '2',
 
-                gridTemplateRows: `repeat(${height}, 1fr)`, 
+                gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
-
             }}
         >
             {children}
@@ -205,7 +201,6 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
                 gridTemplateRows: `repeat(${height}, 1fr)`,
-
             }}
         >
             {children}
@@ -228,7 +223,6 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
 
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
-
             }}
         >
             {children}

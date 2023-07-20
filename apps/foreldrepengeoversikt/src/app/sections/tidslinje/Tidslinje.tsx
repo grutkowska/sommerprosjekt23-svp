@@ -92,7 +92,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
     return (
         <div>
             <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
-            <ContentSection padding="none" className="svartBorder">
+            <ContentSection padding="none" margin="none" className="svartBorder">
                 {hendelserForVisning.map((hendelse, index) => {
                     const isActiveStep = index === aktivtStegIndex;
                     const alleDokumenter = hendelse.dokumenter.map((dokument) => {

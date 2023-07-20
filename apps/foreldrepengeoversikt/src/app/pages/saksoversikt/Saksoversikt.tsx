@@ -23,13 +23,14 @@ import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import './saksoversikt.css';
 import { RequestStatus } from 'app/types/RequestStatus';
-import SeHeleProsessen from 'app/components/se-hele-prosessen/SeHeleProsessen';
 import { SammendragSoknad } from 'app/sections/sammendragSoknad/SammendragSoknad';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import classNames from 'classnames';
 import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
 import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
+import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
+import { DatoContext, ArbeidsgiverFargerContext } from 'app/context/periodeTimelineContext';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -47,10 +48,11 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     const params = useParams();
     const alleSaker = getAlleYtelser(saker);
     const [storSkjerm, setStorSkjerm] = useState(() => window.innerWidth > 800);
+    const [valgtDato, setValgtDato] = useState(dayjs());
+    const [arbeidsgiverFarger, setArbeidsgiverFarger] = useState([]);
     const gjeldendeSak = alleSaker.find((sak) => sak.saksnummer === params.saksnummer)!;
     useSetSelectedSak(gjeldendeSak);
     const navnAnnenForelder = getNavnAnnenForelder(søkerinfo, gjeldendeSak);
-
     const aktiveMinidialogerForSaken = minidialogerData
         ? minidialogerData.filter(
               ({ gyldigTil, aktiv, hendelse, saksnr }) =>
@@ -102,30 +104,24 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     }
     return (
         <div className={classNames(bem.block)}>
-            {
-                <SvangerskapDashboardwrapper
-                    svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
-                    skjermStørreEnn800={storSkjerm}
-                    componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
-                    componentB={
-                        <ContentSection padding="none" className="svartBorder">
-                            <SeHeleProsessen />
-                        </ContentSection>
-                    }
-                    componentC={
-                        <PeriodeTimeline
-                            sak={gjeldendeSak as SvangerskapspengeSak}
-                            søkerArbeidsforhold={søkerinfo.arbeidsforhold}
-                        />
-                    }
-                    componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
-                    componentE={
-                        <ContentSection padding="none" className="svartBorder">
-                            <SeDokumenter />
-                        </ContentSection>
-                    }
-                />
-            }
+            <SvangerskapDashboardwrapper
+                svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
+                skjermStørreEnn800={storSkjerm}
+                componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
+                componentB={<SeHeleProsessenLink />}
+                componentC={
+                    <PeriodeTimeline
+                        sak={gjeldendeSak as SvangerskapspengeSak}
+                        søkerArbeidsforhold={søkerinfo.arbeidsforhold}
+                    />
+                }
+                componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
+                componentE={
+                    <ContentSection padding="none" className="svartBorder">
+                        <SeDokumenter />
+                    </ContentSection>
+                }
+            />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>
                     <Oppgaver

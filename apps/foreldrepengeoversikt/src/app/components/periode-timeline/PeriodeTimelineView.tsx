@@ -2,6 +2,8 @@ import { bemUtils } from '@navikt/fp-common';
 import { Tag, TagProps } from '@navikt/ds-react';
 import './periodeTimelineView.css';
 import { useState } from 'react';
+import '../../img/transparent-background-pattern.jpg';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -86,9 +88,9 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
         <div
             style={{
                 display: 'grid',
-                gridColumn: '1/3',
+                gridColumn: '1/4',
                 gridRow: '2',
-                gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: '50px auto 20px',
             }}
         >
@@ -162,7 +164,7 @@ export const AlleBaner: React.FC<AlleBanerProps> = ({ children, antall, height }
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${antall}, 1fr)`,
-                gridTemplateRows: `repeat(${height}, 1px)`,
+                gridTemplateRows: `repeat(${height}, 1fr)`,
             }}
         >
             {children}
@@ -182,8 +184,8 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             id="pilBanen"
             style={{
                 display: 'grid',
-                gridTemplateRows: `repeat(${height}, 1px)`,
-                gridTemplateColumns: `50px auto 20px`,
+                gridTemplateRows: `repeat(${height}, 1fr)`,
+                gridTemplateColumns: `70px auto 20px`,
             }}
         >
             {children}
@@ -194,35 +196,47 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
 interface DatoPilProps extends PeriodeTimelineViewProps {
     nr: number;
     nrColumns?: number;
-    onPosChange: (posX: number, posY: number) => void;
+    onPosChange?: (posX: number, posY: number) => void;
+    relBaneHeight: number;
+    handleTeksBoks: (relativePos: number) => string;
 }
 
-export const DatoPil: React.FC<DatoPilProps> = ({ nr, children, onPosChange }) => {
+export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksBoks }) => {
     const bem = bemUtils('periodeTimelineView');
-    const [yPos, setYPos] = useState(nr - 9);
-
-    function handleDrag(ev: React.DragEvent<HTMLDivElement>): void {
-        ev.preventDefault();
-        const newYPos = ev.clientY - document.getElementById('pilBanen').getBoundingClientRect().top;
-        const calculatedYPos = newYPos < 1 ? 1 : newYPos > 304 ? 304 : newYPos;
-
-        setYPos((prev) => {
-            console.log('HandleDrag; Inne i callback: ', calculatedYPos);
-            return prev < 1 ? prev : Math.round(calculatedYPos);
-        });
+    const [yPos, setYPos] = useState<number | undefined>(nr - 8);
+    const baneHeightInPx = document.getElementById('pilBanen')?.getBoundingClientRect().height;
+    const relBanePx = relBaneHeight / baneHeightInPx!;
+    console.log(
+        'Utsiden: relBanePx: ',
+        relBanePx,
+        'baneHeightInPx: ',
+        baneHeightInPx,
+        ' relBaneHeight: ',
+        relBaneHeight
+    );
+    function handleDrag(e: React.DragEvent<HTMLDivElement>): void {
+        console.log(
+            'Innsiden: Mouseypos: ',
+            e.clientY,
+            'rammeTop',
+            document.getElementById('pilBanen')!.getBoundingClientRect().top
+        );
+        e.dataTransfer.effectAllowed = 'none';
+        const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
+        const boundYPos = newYPos < 1 ? 1 : newYPos > baneHeightInPx! ? baneHeightInPx! : newYPos;
+        const gridBanePos = boundYPos * relBanePx;
+        setYPos(Math.round(gridBanePos!));
+        //console.log('Innsiden: ypos: ', yPos, 'calculatedYPos: ', boundYPos, 'newYPos: ', newYPos);
     }
-    function handleDragEnd(ev: React.DragEvent<HTMLDivElement>): void {
-        ev.preventDefault();
-        const newYPos = ev.clientY - document.getElementById('pilBanen').getBoundingClientRect().top;
-        const calculatedYPos = newYPos < 1 ? 1 : newYPos > 304 ? 304 : newYPos;
-
-        setYPos((prev) => {
-            console.log('HandleDrag; Inne i callback: ', calculatedYPos);
-            return prev < 1 ? prev : Math.round(calculatedYPos);
-        });
-        onPosChange(ev.clientX, yPos);
+    function handleDragEnd(e: React.DragEvent<HTMLDivElement>): void {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
+        const boundYPos = newYPos < 1 ? 1 : newYPos > baneHeightInPx! ? baneHeightInPx! : newYPos;
+        const gridBanePos = boundYPos * relBanePx;
+        setYPos(Math.round(gridBanePos!));
     }
-    console.log('ypos: ', yPos, 'Nr input: ', nr);
+    //console.log('Utsiden: relBanePx: ', relBanePx, 'Nr input: ', nr);
 
     return (
         <div
@@ -231,20 +245,27 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, children, onPosChange }) =
                 display: 'grid',
                 gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
-                gridTemplateColumns: `50px auto 20px`,
-                cursor: 'move',
+                gridTemplateColumns: `70px auto 20px`,
             }}
             draggable={true}
+            onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = 'none';
+            }}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
         >
-            <div>{children}</div>
+            <div className={bem.element('datoPilTekst')}>
+                <p>{handleTeksBoks(yPos!)}</p>
+            </div>
             <div className={bem.element('datoPilStrek')}></div>
             <div
                 style={{
                     backgroundColor: 'black',
                     borderRadius: '50%',
                     gridColumn: 3,
+                    width: '20px',
+                    height: '20px',
+                    cursor: 'move',
                 }}
             ></div>
         </div>

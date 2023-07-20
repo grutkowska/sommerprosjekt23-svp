@@ -1,19 +1,17 @@
-import { createContext, useContext } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-
+import { createContext, useContext, useRef } from 'react';
+import dayjs from 'dayjs';
+/*
 type DatoContext = {
     valgtDato: Dayjs;
     setValgtDato: (c: Dayjs) => void;
-};
+};*/
 type ArbeidsgiverFargerContext = {
     arbeidsgiverFarger: string[];
     setArbeidsgiverFarger: (c: string[]) => void;
 };
+//const valgtDatoRef = useRef(dayjs());
+export const DatoContext = createContext('');
 
-export const DatoContext = createContext<DatoContext>({
-    valgtDato: dayjs(),
-    setValgtDato: () => {},
-});
 export const ArbeidsgiverFargerContext = createContext<ArbeidsgiverFargerContext>({
     arbeidsgiverFarger: [],
     setArbeidsgiverFarger: () => {},

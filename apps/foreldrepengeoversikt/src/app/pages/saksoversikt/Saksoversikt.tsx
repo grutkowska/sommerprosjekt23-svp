@@ -104,31 +104,24 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     }
     return (
         <div className={classNames(bem.block)}>
-            <DatoContext.Provider
-                value={{
-                    valgtDato,
-                    setValgtDato,
-                }}
-            >
-                <SvangerskapDashboardwrapper
-                    svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
-                    skjermStørreEnn800={storSkjerm}
-                    componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
-                    componentB={<SeHeleProsessenLink />}
-                    componentC={
-                        <PeriodeTimeline
-                            sak={gjeldendeSak as SvangerskapspengeSak}
-                            søkerArbeidsforhold={søkerinfo.arbeidsforhold}
-                        />
-                    }
-                    componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
-                    componentE={
-                        <ContentSection padding="none" className="svartBorder">
-                            <SeDokumenter />
-                        </ContentSection>
-                    }
-                />
-            </DatoContext.Provider>
+            <SvangerskapDashboardwrapper
+                svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
+                skjermStørreEnn800={storSkjerm}
+                componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
+                componentB={<SeHeleProsessenLink />}
+                componentC={
+                    <PeriodeTimeline
+                        sak={gjeldendeSak as SvangerskapspengeSak}
+                        søkerArbeidsforhold={søkerinfo.arbeidsforhold}
+                    />
+                }
+                componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
+                componentE={
+                    <ContentSection padding="none" className="svartBorder">
+                        <SeDokumenter />
+                    </ContentSection>
+                }
+            />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>
                     <Oppgaver

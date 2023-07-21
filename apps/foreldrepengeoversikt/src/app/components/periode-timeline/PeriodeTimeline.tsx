@@ -11,6 +11,7 @@ import {
     DatoPil,
     DatoPilBane,
     SoyleBakgrunn,
+    SluttInfo,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
@@ -214,6 +215,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     handleTeksBoks={changeDatoTekst}
                 />
             </DatoPilBane>
+            <SluttInfo>
+                <p>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</p>
+            </SluttInfo>
         </PeriodeTimelineView>
     ) : (
         <div></div>

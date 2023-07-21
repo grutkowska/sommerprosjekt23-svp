@@ -187,6 +187,12 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
         </div>
     );
 };
+interface SluttInfoProps extends PeriodeTimelineViewProps {}
+
+export const SluttInfo: React.FC<SluttInfoProps> = ({ children }) => {
+    const bem = bemUtils('periodeTimelineView');
+    return <div className={bem.element('sluttInfo')}>{children}</div>;
+};
 
 interface AlleBanerProps extends PeriodeTimelineViewProps {
     antall: string;

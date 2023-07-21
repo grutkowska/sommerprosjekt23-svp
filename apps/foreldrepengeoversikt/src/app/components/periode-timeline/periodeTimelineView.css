@@ -8,7 +8,8 @@
     padding: 1rem;
     border: 0.01rem solid;
     border-radius: 0.5rem;
-    gap: 20px;
+    column-gap: 20px;
+    row-gap: 5px;
     position: relative;
 }
 .periodeTimelineView__alleBaner {
@@ -62,5 +63,17 @@
 .periodeTimelineView__yAkseElement > p {
     padding: 0%;
     margin: 0%;
+}
+.periodeTimelineView__sluttInfo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-row:  3 / 4 ;
+    grid-column: 1 / 4;
+}
+.periodeTimelineView__sluttInfo > p {
+    margin: 0%;
+    padding: 0%;
+    color: gray;
 }
 

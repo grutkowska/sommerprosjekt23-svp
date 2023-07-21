@@ -7,8 +7,8 @@ export const PeriodeOversikt = () => {
     const valgtDatoRef = useRef(dayjs());
     return (
         <>
-            <PeriodeTimeline />
             <SammendragSoknad />
+            <PeriodeTimeline />
         </>
     );
 };

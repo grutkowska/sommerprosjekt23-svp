@@ -210,7 +210,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
                         alleBanerHeight
                     )}
-                    nrColumns={timelineData!.length}
                     relBaneHeight={alleBanerHeight}
                     handleTeksBoks={changeDatoTekst}
                 />

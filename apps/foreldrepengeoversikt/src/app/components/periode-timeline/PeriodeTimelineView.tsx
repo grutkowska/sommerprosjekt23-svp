@@ -122,7 +122,7 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 height: '100%',
                 display: 'grid',
                 gridColumn: '1/4',
-                gridRow: '2/ span 2',
+                gridRow: '2/  2',
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
             }}
@@ -221,7 +221,6 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             id="pilBanen"
             style={{
                 display: 'grid',
-                gridRow: `2`,
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
             }}
@@ -241,9 +240,9 @@ interface DatoPilProps extends PeriodeTimelineViewProps {
 
 export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksBoks }) => {
     const bem = bemUtils('periodeTimelineView');
-    const [yPos, setYPos] = useState<number | undefined>(nr - 8);
     const baneHeightInPx = document.getElementById('pilBanen')?.getBoundingClientRect().height;
     const relBanePx = relBaneHeight / baneHeightInPx!;
+    const [yPos, setYPos] = useState<number>(Math.round(nr - 14));
     console.log(
         'Utsiden: relBanePx: ',
         relBanePx,
@@ -253,18 +252,11 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
         relBaneHeight
     );
     function handleDrag(e: React.DragEvent<HTMLDivElement>): void {
-        console.log(
-            'Innsiden: Mouseypos: ',
-            e.clientY,
-            'rammeTop',
-            document.getElementById('pilBanen')!.getBoundingClientRect().top
-        );
         e.dataTransfer.effectAllowed = 'none';
         const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
         const boundYPos = newYPos < 1 ? 1 : newYPos > baneHeightInPx! ? baneHeightInPx! : newYPos;
         const gridBanePos = boundYPos * relBanePx;
         setYPos(Math.round(gridBanePos!));
-        //console.log('Innsiden: ypos: ', yPos, 'calculatedYPos: ', boundYPos, 'newYPos: ', newYPos);
     }
     function handleDragEnd(e: React.DragEvent<HTMLDivElement>): void {
         e.preventDefault();
@@ -274,8 +266,7 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
         const gridBanePos = boundYPos * relBanePx;
         setYPos(Math.round(gridBanePos!));
     }
-    //console.log('Utsiden: relBanePx: ', relBanePx, 'Nr input: ', nr);
-
+    console.log(yPos, ' ', nr - 10 * relBanePx, ' ', nr - 10 * relBanePx);
     return (
         <div
             className={bem.element('datoPil')}
@@ -286,7 +277,7 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
                 //gridTemplateRows: `repeat(${height}, ${repeatPx})`
             }}
-            draggable={true}
+            draggable={false}
             onDragStart={(e) => {
                 e.dataTransfer.effectAllowed = 'none';
             }}

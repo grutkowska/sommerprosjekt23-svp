@@ -168,19 +168,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                             />
                                         </>
                                     );
-                                } // return <></>;
-                                else
-                                    return (
-                                        <>
-                                            <Soyle
-                                                key={guid()}
-                                                start={periode.start.toString()}
-                                                slutt={periode.slutt.toString()}
-                                                farge={'lightgrey'}
-                                                opacity="100%"
-                                            />
-                                        </>
-                                    );
+                                }
+                                return <></>;
                             })}
                             <SoyleBakgrunn
                                 key={guid()}

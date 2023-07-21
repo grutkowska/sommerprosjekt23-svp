@@ -14,4 +14,10 @@ export interface Tidslinjehendelse {
     eksternalUrl?: string;
     internalUrl?: string;
     tidligstBehandlingsDato?: Date;
+    utbetalingsInfo?: {
+        arbeidsgiver: string;
+        farge: string;
+        utbetaling: string;
+        utbetalingsMnd: string;
+    };
 }

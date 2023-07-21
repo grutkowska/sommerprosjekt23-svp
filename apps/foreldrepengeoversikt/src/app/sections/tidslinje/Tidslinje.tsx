@@ -18,7 +18,7 @@ import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import NoeGikkGalt from 'app/components/noe-gikk-galt/NoeGikkGalt';
 import dayjs from 'dayjs';
 import { Ytelse } from 'app/types/Ytelse';
-import { SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
+import { SøkerinfoDTO, SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
 import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepengesaken } from 'app/utils/sakerUtils';
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
@@ -29,13 +29,14 @@ import ContentSection from 'app/components/content-section/ContentSection';
 interface Params {
     saker: SakOppslag;
     visHeleTidslinjen: boolean;
-    søkersBarn: SøkerinfoDTOBarn[] | undefined;
+    søker: SøkerinfoDTO | undefined;
 }
 
-const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, søkersBarn }) => {
+const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, søker }) => {
     const params = useParams();
     const intl = useIntl();
     const sakPath = location.pathname.replace(`/${OversiktRoutes.TIDSLINJEN}`, '');
+    const søkersBarn = søker?.søker.barn;
 
     const bem = bemUtils('tidslinje-hendelse');
     const alleSaker = getAlleYtelser(saker);
@@ -72,6 +73,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
         åpenBehandlingPåVent,
         manglendeVedleggData,
         sak,
+        søker,
         barnFraSak,
         erAvslåttForeldrepengesøknad,
         intl

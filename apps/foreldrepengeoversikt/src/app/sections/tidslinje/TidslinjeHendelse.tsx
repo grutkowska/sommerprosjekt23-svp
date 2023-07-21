@@ -104,9 +104,12 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
             </div>
 
             <div className={bem.element('tekst')}>
-                <BodyShort size="small" className={bem.element('tittle')}>
-                    {title}
-                </BodyShort>
+                <div>
+                    <BodyShort size="small" className={bem.element('tittle')}>
+                        {title}
+                    </BodyShort>
+                    {}
+                </div>
                 <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
                 {children}
             </div>

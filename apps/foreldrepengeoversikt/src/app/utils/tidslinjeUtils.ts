@@ -16,6 +16,7 @@ import { getFamiliehendelseDato, getNavnPåBarna } from './sakerUtils';
 import { BarnGruppering } from 'app/types/BarnGruppering';
 import { Sak } from 'app/types/Sak';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
+import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 
 export const VENTEÅRSAKER = [
     BehandlingTilstand.VENTER_PÅ_INNTEKTSMELDING,
@@ -185,7 +186,7 @@ export const getTidslinjehendelseTittel = (
         return getTidslinjeTittelForBarnTreÅr(barnFraSak, antallBarn, familiehendelse?.omsorgsovertakelse, intl);
     }
     if (ytelse === Ytelse.SVANGERSKAPSPENGER && hendelsetype === TidslinjehendelseType.UTBETALING) {
-        return 'Førstkommende utbetaling fra NAV';
+        return 'Utbetaling for X';
     }
     return intlUtils(intl, `tidslinje.tittel.${hendelsetype}`);
 };
@@ -439,7 +440,12 @@ export const getHendelserForVisning = (
     }
     return hendelserForVisning;
 };
-export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (sak: SvangerskapspengeSak): Tidslinjehendelse => {
+export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
+    sak: SvangerskapspengeSak,
+    arbeidsgiver: string,
+    utbetaling: number,
+    måned: string
+): Tidslinjehendelse => {
     let arbeidsgiverString = ' ';
     sak.gjeldendeVedtak?.arbeidsforhold.forEach((arbeidsforhold) => {
         arbeidsforhold.tilrettelegginger.some((i) => {
@@ -461,14 +467,19 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (sak: Svangerska
         type: 'søknad',
         opprettet: dayjs(
             dayjs().date() < 20
-                ? dayjs().year() + '-' + (dayjs().month() + 1) + '-20'
-                : dayjs().year() + '-' + (dayjs().month() + 2) + '-20'
+                ? dayjs().year() + '-' + (dayjs().month() + 1) + '-25'
+                : dayjs().year() + '-' + (dayjs().month() + 2) + '-25'
         ).toDate(),
         aktørType: AktørType.BRUKER,
         tidslinjeHendelseType: TidslinjehendelseType.UTBETALING,
         dokumenter: [],
         manglendeVedlegg: [],
-        merInformasjon: `Får du stønad fra ${arbeidsgiverString}`,
+        utbetalingsInfo: {
+            arbeidsgiver: arbeidsgiver,
+            farge: '',
+            utbetaling: utbetaling,
+            utbetalingsMnd: måned,
+        },
     };
 };
 
@@ -477,10 +488,12 @@ export const getAlleTidslinjehendelser = (
     åpenBehandlingPåVent: ÅpenBehandling | undefined,
     manglendeVedleggData: Skjemanummer[],
     sak: Sak,
+    søker: SøkerinfoDTO,
     barnFraSak: BarnGruppering,
     erAvslåttForeldrepengesøknad: boolean,
     intl: IntlShape
 ): Tidslinjehendelse[] => {
+    console.log('getter');
     const tidslinjeHendelser = getTidslinjehendelserDetaljer(tidslinjeHendelserData, intl);
     const venteHendelser = åpenBehandlingPåVent
         ? getTidslinjehendelserFraBehandlingPåVent(åpenBehandlingPåVent, manglendeVedleggData, intl)
@@ -517,8 +530,32 @@ export const getAlleTidslinjehendelser = (
         tidslinjeHendelser.push(vedtakHendelse);
     }
     if (sak.ytelse === Ytelse.SVANGERSKAPSPENGER && sak.gjeldendeVedtak) {
+        sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold) => {
+            arbeidsforhold.tilrettelegginger.map((periode) => {
+                let telleMnd = dayjs(periode.fom);
+                console.log('Før løkke: ', telleMnd.toString());
+                while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
+                    console.log('while løkke: ', telleMnd.toString());
+                    if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
+                        const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
+                        tidslinjeHendelser.push(
+                            getTidslinjeSvangerskapspengerUtbetalingHendelse(
+                                sak as SvangerskapspengeSak,
+                                arbeidsforhold.aktivitet.arbeidsgiver.id.toString(),
+                                periode.arbeidstidprosent * dager,
+                                telleMnd.toString()
+                            )
+                        );
+                        console.log('if løkke: ', dager);
+                    }
+                    telleMnd = telleMnd.add(2, 'M');
+                }
+            });
+        });
+        /*
         const utbetalindHendelse = getTidslinjeSvangerskapspengerUtbetalingHendelse(sak as SvangerskapspengeSak);
         tidslinjeHendelser.push(utbetalindHendelse);
+        */
     }
 
     return [...tidslinjeHendelser].sort(sorterTidslinjehendelser);

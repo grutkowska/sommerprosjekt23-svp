@@ -187,9 +187,9 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
         </div>
     );
 };
-interface SluttInfoProps extends PeriodeTimelineViewProps {}
+//interface SluttInfoProps extends PeriodeTimelineViewProps {}
 
-export const SluttInfo: React.FC<SluttInfoProps> = ({ children }) => {
+export const SluttInfo: React.FC<PeriodeTimelineViewProps> = ({ children }) => {
     const bem = bemUtils('periodeTimelineView');
     return <div className={bem.element('sluttInfo')}>{children}</div>;
 };

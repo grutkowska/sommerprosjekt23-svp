@@ -11,6 +11,7 @@ import {
     DatoPil,
     DatoPilBane,
     SoyleBakgrunn,
+    SluttInfo,
 } from './PeriodeTimelineView';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
@@ -22,6 +23,7 @@ import dayjs, { Dayjs } from 'dayjs';
 export const arbeidsgiverFarger = ['blue', 'green'];
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
+    //const valgtDatoRef = useDatoContext();
     const antallMnd = 9;
     const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
@@ -36,6 +38,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         );
         */
         //console.log(valgtDatoRef.current.toString());
+        /*
         return formaterDato(
             konverterGridPosTilDato(
                 currentRelPos,
@@ -44,8 +47,11 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             ).toISOString(),
             'DD - MMM'
         );
+        */
+        return formaterDato(dayjs().toDate(), 'DD - MMM');
     };
-    const oversteDato = dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato))
+
+    const oversteDato = dayjs(sak.familiehendelse?.termindato)
         .subtract(
             parseInt(formaterDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), 'D')) -
                 dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() +
@@ -70,7 +76,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 })}
             </BaneHeaderBoks>
 
-            <YAkseAlleElementer className="YAkseAlleElementer" height={antallMnd.toString()}>
+            <YAkseAlleElementer className="YAkseAlleElementer" height={alleBanerHeight.toString()}>
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
@@ -194,11 +200,13 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
                         alleBanerHeight
                     )}
-                    nrColumns={timelineData!.length}
                     relBaneHeight={alleBanerHeight}
                     handleTeksBoks={changeDatoTekst}
                 />
             </DatoPilBane>
+            <SluttInfo>
+                <p>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</p>
+            </SluttInfo>
         </PeriodeTimelineView>
     ) : (
         <div></div>
@@ -303,4 +311,5 @@ const mapSvpSakTilPeriodeTimeline = (
         };
     });
 };
+
 export default PeriodeTimeline;

@@ -213,11 +213,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     );
 };
 
-const konverterGridPosTilDato = (gridPos: number, sluttDato: Dayjs, totalGrid: number) => {
-    //console.log('KonverterGridDato; gridPos: ', gridPos, ' calcGrid: ', totalGrid - gridPos);
-    return sluttDato.subtract(totalGrid - gridPos, 'day');
-};
-
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
     console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
     return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
@@ -268,7 +263,7 @@ export const getArbeidsgiverNavn = (
     }
 };
 
-const getTerminMinus21Dager = (termindato: string | undefined) => {
+export const getTerminMinus21Dager = (termindato: string | undefined) => {
     return dayjs(termindato).subtract(21, 'day').toISOString();
 };
 

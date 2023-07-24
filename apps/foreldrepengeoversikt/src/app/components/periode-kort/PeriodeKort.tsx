@@ -11,7 +11,11 @@ import dayjs from 'dayjs';
 import { getSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
 
 const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
-    if (dayjs(getCurrentDato()).isBetween(dayjs(fom), dayjs(tom), 'day')) {
+    if (
+        dayjs(fom).isSame(getCurrentDato(), 'day') ||
+        dayjs(tom).isSame(getCurrentDato(), 'day') ||
+        dayjs(getCurrentDato()).isBetween(dayjs(fom), dayjs(tom), 'day')
+    ) {
         return arbeidsgiverFargerSekundær[fargeIndex];
     } else return '';
 };
@@ -83,7 +87,9 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
                                     //console.log(periode);
-                                    const fullVisning = seAllePerioder ? true : !dayjs(periode.tom).isBefore(dayjs());
+                                    const fullVisning = seAllePerioder
+                                        ? true
+                                        : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
                                     //if (periode != null) {
                                     if (fullVisning) {
                                         return (
@@ -113,7 +119,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     */}
 
                                                 <Table.DataCell
-
                                                     style={{
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,

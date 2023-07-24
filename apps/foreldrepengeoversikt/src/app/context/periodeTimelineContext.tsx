@@ -1,5 +1,4 @@
-import { createContext, useContext, useRef } from 'react';
-import dayjs from 'dayjs';
+import { createContext, useContext } from 'react';
 /*
 type DatoContext = {
     valgtDato: Dayjs;
@@ -14,6 +13,7 @@ export const DatoContext = createContext('');
 
 export const ArbeidsgiverFargerContext = createContext<ArbeidsgiverFargerContext>({
     arbeidsgiverFarger: [],
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setArbeidsgiverFarger: () => {},
 });
 export const useDatoContext = () => useContext(DatoContext);

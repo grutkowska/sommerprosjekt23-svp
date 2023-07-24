@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const repeatPx = '2px';
 const borderTykkelse = '2px';
 const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';

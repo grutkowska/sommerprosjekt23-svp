@@ -1,6 +1,8 @@
 import { LinkPanel } from '@navikt/ds-react';
 import { bemUtils } from '@navikt/fp-common';
-import { VirusIcon, PencilIcon, HospitalIcon, PiggybankIcon, PersonIcon, ParasolBeachIcon } from '@navikt/aksel-icons';
+
+import { PersonIcon } from '@navikt/aksel-icons';
+
 
 import OversiktRoutes from 'app/routes/routes';
 

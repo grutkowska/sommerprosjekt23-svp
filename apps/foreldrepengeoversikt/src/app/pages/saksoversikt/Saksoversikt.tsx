@@ -31,7 +31,7 @@ import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
 import { SVPAlert } from 'app/components/svp_alert/SVPAlert';
-import { DatoContext, ArbeidsgiverFargerContext } from 'app/context/periodeTimelineContext';
+
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -49,8 +49,8 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
     const params = useParams();
     const alleSaker = getAlleYtelser(saker);
     const [storSkjerm, setStorSkjerm] = useState(() => window.innerWidth > 800);
-    const [valgtDato, setValgtDato] = useState(dayjs());
-    const [arbeidsgiverFarger, setArbeidsgiverFarger] = useState([]);
+    //const [valgtDato, setValgtDato] = useState(dayjs());
+    //const [arbeidsgiverFarger, setArbeidsgiverFarger] = useState([]);
     const gjeldendeSak = alleSaker.find((sak) => sak.saksnummer === params.saksnummer)!;
     useSetSelectedSak(gjeldendeSak);
     const navnAnnenForelder = getNavnAnnenForelder(søkerinfo, gjeldendeSak);
@@ -122,7 +122,9 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                         <SeDokumenter />
                     </ContentSection>
                 }
-                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
+
+                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak}></SVPAlert>}
+
             />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>

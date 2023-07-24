@@ -12,7 +12,7 @@ import { Skjemanummer } from 'app/types/Skjemanummer';
 import { Ytelse } from 'app/types/Ytelse';
 import { formaterDato } from './dateUtils';
 import { Familiehendelse } from 'app/types/Familiehendelse';
-import { getFamiliehendelseDato, getNavnPåBarna } from './sakerUtils';
+import { getArbeidsgiverNavn, getFamiliehendelseDato, getNavnPåBarna } from './sakerUtils';
 import { BarnGruppering } from 'app/types/BarnGruppering';
 import { Sak } from 'app/types/Sak';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
@@ -146,7 +146,10 @@ export const getTidslinjehendelseTittel = (
     tidlistBehandlingsdato: Date | undefined,
     manglendeVedleggData: Skjemanummer[] | undefined,
     barnFraSak: BarnGruppering,
-    sak: Sak
+    sak: Sak,
+    arbeidsgiver?: string,
+    måned?: string,
+    utbetalingsHåndtering?: string
 ): string => {
     const { familiehendelse, ytelse, gjelderAdopsjon } = sak;
     const antallBarn = familiehendelse?.antallBarn;
@@ -186,7 +189,7 @@ export const getTidslinjehendelseTittel = (
         return getTidslinjeTittelForBarnTreÅr(barnFraSak, antallBarn, familiehendelse?.omsorgsovertakelse, intl);
     }
     if (ytelse === Ytelse.SVANGERSKAPSPENGER && hendelsetype === TidslinjehendelseType.UTBETALING) {
-        return 'Utbetaling for X';
+        return utbetalingsHåndtering + ' for ' + måned;
     }
     return intlUtils(intl, `tidslinje.tittel.${hendelsetype}`);
 };
@@ -444,7 +447,8 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
     sak: SvangerskapspengeSak,
     arbeidsgiver: string,
     utbetaling: number,
-    måned: string
+    måned: string,
+    utbetalingsForm: string
 ): Tidslinjehendelse => {
     let arbeidsgiverString = ' ';
     sak.gjeldendeVedtak?.arbeidsforhold.forEach((arbeidsforhold) => {
@@ -465,11 +469,7 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
     });
     return {
         type: 'søknad',
-        opprettet: dayjs(
-            dayjs().date() < 20
-                ? dayjs().year() + '-' + (dayjs().month() + 1) + '-25'
-                : dayjs().year() + '-' + (dayjs().month() + 2) + '-25'
-        ).toDate(),
+        opprettet: dayjs(dayjs(måned).year() + '-' + dayjs(måned).month() + '-25').toDate(),
         aktørType: AktørType.BRUKER,
         tidslinjeHendelseType: TidslinjehendelseType.UTBETALING,
         dokumenter: [],
@@ -477,8 +477,9 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
         utbetalingsInfo: {
             arbeidsgiver: arbeidsgiver,
             farge: '',
-            utbetaling: utbetaling,
+            utbetaling: utbetaling.toString(),
             utbetalingsMnd: måned,
+            utbetalingsForm: utbetalingsForm,
         },
     };
 };
@@ -530,7 +531,12 @@ export const getAlleTidslinjehendelser = (
         tidslinjeHendelser.push(vedtakHendelse);
     }
     if (sak.ytelse === Ytelse.SVANGERSKAPSPENGER && sak.gjeldendeVedtak) {
-        sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold) => {
+        sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
+            const arbeidsgiverNavn = getArbeidsgiverNavn(
+                søker.arbeidsforhold,
+                arbeidsforhold.aktivitet.type,
+                arbeidsforhold.aktivitet.arbeidsgiver.id
+            );
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);
                 console.log('Før løkke: ', telleMnd.toString());
@@ -538,12 +544,14 @@ export const getAlleTidslinjehendelser = (
                     console.log('while løkke: ', telleMnd.toString());
                     if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
                         const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
+                        const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
                         tidslinjeHendelser.push(
                             getTidslinjeSvangerskapspengerUtbetalingHendelse(
                                 sak as SvangerskapspengeSak,
-                                arbeidsforhold.aktivitet.arbeidsgiver.id.toString(),
-                                periode.arbeidstidprosent * dager,
-                                telleMnd.toString()
+                                arbeidsgiverNavn,
+                                Math.round(120 * dager),
+                                telleMnd.toString(),
+                                utbetalingsForm
                             )
                         );
                         console.log('if løkke: ', dager);

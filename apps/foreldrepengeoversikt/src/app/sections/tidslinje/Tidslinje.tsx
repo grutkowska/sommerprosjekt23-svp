@@ -23,6 +23,7 @@ import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepe
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
 import ContentSection from 'app/components/content-section/ContentSection';
+import { formaterDato } from 'app/utils/dateUtils';
 
 //import { S } from '@storybook/react/dist/types-0a347bb9';
 
@@ -73,7 +74,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
         åpenBehandlingPåVent,
         manglendeVedleggData,
         sak,
-        søker,
+        søker!,
         barnFraSak,
         erAvslåttForeldrepengesøknad,
         intl
@@ -113,7 +114,10 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
                                 hendelse.tidligstBehandlingsDato,
                                 manglendeVedleggData,
                                 barnFraSak,
-                                sak
+                                sak,
+                                hendelse.utbetalingsInfo?.arbeidsgiver && hendelse.utbetalingsInfo?.arbeidsgiver,
+                                formaterDato(dayjs(hendelse.utbetalingsInfo?.utbetalingsMnd).toDate(), 'MMMM'),
+                                hendelse.utbetalingsInfo?.utbetalingsForm
                             )}
                             key={guid()}
                             isActiveStep={isActiveStep}
@@ -123,6 +127,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
                             tidligstBehandlingsDato={hendelse.tidligstBehandlingsDato}
                             finnesHendelserFørAktivtSteg={!!finnesHendelserFørAktivtSteg}
                             visHeleTidslinjen={visHeleTidslinjen}
+                            utbetalingsInfo={hendelse.utbetalingsInfo!}
                         >
                             <ul style={{ listStyle: 'none', padding: '0' }}>
                                 {hendelse.tidslinjeHendelseType === TidslinjehendelseType.VENT_DOKUMENTASJON &&

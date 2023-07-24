@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import { getTidligstDatoForInntektsmelding } from 'app/utils/tidslinjeUtils';
+import { UtbetalingsInfo } from 'app/types/Tidslinjehendelse';
 
 interface Props {
     children: React.ReactNode;
@@ -19,6 +20,7 @@ interface Props {
     tidligstBehandlingsDato: Date | undefined;
     finnesHendelserFørAktivtSteg: boolean;
     visHeleTidslinjen: boolean;
+    utbetalingsInfo: UtbetalingsInfo;
 }
 
 const bem = bemUtils('tidslinje-hendelse');
@@ -81,6 +83,7 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
     tidligstBehandlingsDato,
     finnesHendelserFørAktivtSteg,
     visHeleTidslinjen,
+    utbetalingsInfo,
 }) => {
     const tidTekst = visKlokkeslett ? formaterTid(date) : '';
     const dateTekst = getDateTekst(type, date, førsteUttaksdagISaken, tidligstBehandlingsDato);
@@ -104,13 +107,22 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
             </div>
 
             <div className={bem.element('tekst')}>
-                <div>
+                <div className={bem.element('tittleBoks')}>
                     <BodyShort size="small" className={bem.element('tittle')}>
                         {title}
                     </BodyShort>
-                    {}
+                    {utbetalingsInfo && (
+                        <BodyShort size="small" className={bem.element('tittle')}>
+                            {utbetalingsInfo.arbeidsgiver}
+                        </BodyShort>
+                    )}
                 </div>
-                <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
+                <div className={bem.element('tittleBoks')}>
+                    <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
+                    {utbetalingsInfo && (
+                        <Detail className={bem.element('date')}>{`kr ${utbetalingsInfo.utbetaling}`}</Detail>
+                    )}
+                </div>
                 {children}
             </div>
         </div>

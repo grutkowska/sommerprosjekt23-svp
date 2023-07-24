@@ -32,9 +32,10 @@ export const år = (dato: Dayjs): string => {
 
 export const get9månederFraTerminDato = (dato: string | undefined, antMnd: number): string[] => {
     dayjs.extend(customParseFormat);
+    console.log(dato);
     let terminDato = dayjs(dato, 'YYYY-MM-DD');
     const svpMåneder: string[] = [];
-    for (let i = 1; i <= antMnd; i++) {
+    for (let i = 0; i <= antMnd; i++) {
         svpMåneder.push(terminDato.toDate().toISOString());
         terminDato = terminDato.subtract(1, 'M');
     }

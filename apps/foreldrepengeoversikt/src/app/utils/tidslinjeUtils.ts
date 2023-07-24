@@ -538,9 +538,7 @@ export const getAlleTidslinjehendelser = (
             );
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);
-                console.log('Før løkke: ', telleMnd.toString());
                 while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
-                    console.log('while løkke: ', telleMnd.toString());
                     if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
                         const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
                         const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
@@ -553,7 +551,6 @@ export const getAlleTidslinjehendelser = (
                                 utbetalingsForm
                             )
                         );
-                        console.log('if løkke: ', dager);
                     }
                     telleMnd = telleMnd.add(2, 'M');
                 }

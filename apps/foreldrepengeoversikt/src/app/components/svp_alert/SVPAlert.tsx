@@ -10,7 +10,6 @@ interface Props {
 }
 
 export const SVPAlert: React.FC<Props> = ({ sak, søker }) => {
-    console.log(sak, søker);
     const terminMinus21DagerTilTekst = formaterDato(
         getTerminMinus21Dager(sak.familiehendelse?.termindato),
         'D. MMMM YYYY'

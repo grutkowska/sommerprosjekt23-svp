@@ -16,7 +16,10 @@ const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
     } else return '';
 };
 
-let fargeIndex = -1;
+let seAllePerioder = false;
+export const setAllePerioder = () => {
+    seAllePerioder = !seAllePerioder;
+};
 
 interface Props {
     arbeidsgiverNavn: string;
@@ -35,13 +38,13 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     oppholdsPerioder,
 }: Props) => {
     const datoFormat = 'DD. MMM';
-    //const intl = useIntl();
+    let fargeIndex = -1;
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
     fargeIndex++;
     return (
         <div className="periodeKort">
-            <ExpansionCard aria-label="Small-variant">
+            <ExpansionCard defaultOpen={true} aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
                     <div>
                         {getSirkelkomponent(arbeidsgiverFarge)}
@@ -79,9 +82,13 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    return (
-                                        <Table.Row key={guid()} className="row">
-                                            {/*
+                                    //console.log(periode);
+                                    const fullVisning = seAllePerioder ? true : !dayjs(periode.tom).isBefore(dayjs());
+                                    //if (periode != null) {
+                                    if (fullVisning) {
+                                        return (
+                                            <Table.Row key={guid()} className="row">
+                                                {/*
                                             {ferdigBehandlet && (
                                                 <Table.DataCell className="cell">
                                                     {periode.resultat ? (
@@ -104,53 +111,56 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                 </Table.DataCell>
                                             )}
                                                     */}
-                                            <Table.DataCell
-                                                style={{
-                                                    backgroundColor: getFargetBakgrunn(
-                                                        periode.fom,
-                                                        periode.tom,
-                                                        fargeIndex
-                                                    ),
-                                                    mixBlendMode: `multiply`,
-                                                }}
-                                            >
-                                                <h4
+
+                                                <Table.DataCell
+
                                                     style={{
-                                                        margin: '5px',
-                                                        paddingLeft: '40px',
+                                                        backgroundColor: getFargetBakgrunn(
+                                                            periode.fom,
+                                                            periode.tom,
+                                                            fargeIndex
+                                                        ),
+                                                        mixBlendMode: `multiply`,
                                                     }}
                                                 >
-                                                    {' '}
-                                                    <b>{formaterDato(periode.fom, datoFormat)}</b> til{' '}
-                                                    <b>{formaterDato(periode.tom, datoFormat)}</b>
-                                                </h4>
-
-                                                {periode.resultat ? (
-                                                    <p
+                                                    <h4
                                                         style={{
                                                             margin: '5px',
                                                             paddingLeft: '40px',
                                                         }}
                                                     >
-                                                        {`Trenger ${periode.type} tilrettelegging`}{' '}
-                                                        {periode.type !== 'INGEN' &&
-                                                            `på en
+                                                        {' '}
+                                                        <b>{formaterDato(periode.fom, datoFormat)}</b> til{' '}
+                                                        <b>{formaterDato(periode.tom, datoFormat)}</b>
+                                                    </h4>
+
+                                                    {periode.resultat ? (
+                                                        <p
+                                                            style={{
+                                                                margin: '5px',
+                                                                paddingLeft: '40px',
+                                                            }}
+                                                        >
+                                                            {`Trenger ${periode.type} tilrettelegging`}{' '}
+                                                            {periode.type !== 'INGEN' &&
+                                                                `på en
                                                             ${periode.arbeidstidprosent} prosent stilling. `}
-                                                        {ferdigBehandlet &&
-                                                            (periode.resultat.resultatType === 'INNVILGET'
-                                                                ? periode.type !== 'INGEN' &&
-                                                                  `Du vil motta${' '}
+                                                            {ferdigBehandlet &&
+                                                                (periode.resultat.resultatType === 'INNVILGET'
+                                                                    ? periode.type !== 'INGEN' &&
+                                                                      `Du vil motta${' '}
                                                                 ${
                                                                     periode.resultat.utbetalingsgrad
                                                                 } prosent svangerskapspenger. `
-                                                                : ` ${periode.resultat.resultatType}`)}
-                                                    </p>
-                                                ) : (
-                                                    <p>Du har ferie</p>
-                                                )}
-                                            </Table.DataCell>
-                                        </Table.Row>
-                                    );
+                                                                    : ` ${periode.resultat.resultatType}`)}
+                                                        </p>
+                                                    ) : (
+                                                        <p>Du har ferie</p>
+                                                    )}
+                                                </Table.DataCell>
+                                            </Table.Row>
+                                        );
+                                    } else return null;
                                 })}
                             </Table.Body>
                         </Table>

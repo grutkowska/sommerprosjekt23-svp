@@ -95,6 +95,7 @@ interface SoyleBakgrunnProps extends PeriodeTimelineViewProps {
 }
 export const SoyleBakgrunn: React.FC<SoyleBakgrunnProps> = ({ start, slutt, farge, opacity }) => {
     const bem = bemUtils('periodeTimelineView');
+    console.log('startDatoSoyle: ', start);
     return (
         <div
             className={bem.element('periode')}

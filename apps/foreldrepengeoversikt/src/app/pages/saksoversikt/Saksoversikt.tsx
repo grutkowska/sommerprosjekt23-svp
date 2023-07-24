@@ -30,6 +30,7 @@ import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
 import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
+import { SVPAlert } from 'app/components/svp_alert/SVPAlert';
 import { DatoContext, ArbeidsgiverFargerContext } from 'app/context/periodeTimelineContext';
 
 interface Props {
@@ -121,6 +122,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                         <SeDokumenter />
                     </ContentSection>
                 }
+                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
             />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>

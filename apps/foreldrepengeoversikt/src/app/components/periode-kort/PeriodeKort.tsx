@@ -5,7 +5,17 @@ import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
+import { arbeidsgiverFarger, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
+import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
+import dayjs from 'dayjs';
+
+const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
+    if (dayjs(getCurrentDato()).isBetween(dayjs(fom), dayjs(tom), 'day')) {
+        return arbeidsgiverFarger[fargeIndex];
+    } else return '';
+};
+
+let fargeIndex = -1;
 
 interface Props {
     arbeidsgiverNavn: string;
@@ -27,6 +37,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     //const intl = useIntl();
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
+    fargeIndex++;
     return (
         <div className="periodeKort">
             <ExpansionCard aria-label="Small-variant">
@@ -44,7 +55,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <div
                             style={{
                                 width: '20px',
-                                // Bedre måte å gjøre dette på?? Spacinga
+                                // Bedre måte å gjøre spacinga på??
                             }}
                         ></div>
 
@@ -72,7 +83,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                 </ExpansionCard.Header>
                 {allePerioder && (
                     <ExpansionCard.Content className="eksapansjonsKort">
-                        <Table zebraStripes>
+                        <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
                                     return (
@@ -100,8 +111,15 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                 </Table.DataCell>
                                             )}
                                                     */}
-
-                                            <Table.DataCell>
+                                            <Table.DataCell
+                                                style={{
+                                                    backgroundColor: getFargetBakgrunn(
+                                                        periode.fom,
+                                                        periode.tom,
+                                                        fargeIndex
+                                                    ),
+                                                }}
+                                            >
                                                 <h4
                                                     style={{
                                                         margin: '5px',

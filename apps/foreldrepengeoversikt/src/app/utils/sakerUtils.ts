@@ -7,7 +7,7 @@ import { SakOppslag, SakOppslagDTO } from 'app/types/SakOppslag';
 import { SvangerskapspengeSak, SvangerskapspengeSakDTO } from 'app/types/SvangerskapspengeSak';
 import { Ytelse } from 'app/types/Ytelse';
 import dayjs from 'dayjs';
-import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
+import { SøkerinfoDTO, SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
 import { Sak } from 'app/types/Sak';
 import { Person } from 'app/types/Person';
 import { getErDatoInnenEnDagFraAnnenDato, ISOStringToDate } from './dateUtils';

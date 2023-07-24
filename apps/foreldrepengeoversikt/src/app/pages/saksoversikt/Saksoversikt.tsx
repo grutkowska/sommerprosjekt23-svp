@@ -32,6 +32,7 @@ import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
 import { SVPAlert } from 'app/components/svp_alert/SVPAlert';
 
+
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
     minidialogerError: AxiosError | null;
@@ -121,7 +122,9 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                         <SeDokumenter />
                     </ContentSection>
                 }
+
                 componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak}></SVPAlert>}
+
             />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>

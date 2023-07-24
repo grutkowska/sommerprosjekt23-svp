@@ -43,30 +43,32 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
         <>
             {skjermStørreEnn800 && svangerskapSak ? (
                 <div className="dashboard">
-                    <div style={{ minWidth: '100%' }}>
+                    <div className="dasboardSeksjon">
+                        {komponenter[3]}
+                        {komponenter[4]}
+                    </div>
+                    <div className="dasboardSeksjon">
+                        <h2>Innsyn</h2>
+                        {komponenter[2]}
+                    </div>
+
+                    <div style={{ gridColumn: '1 / 3' }}>
                         <h2>Dine Svangerskapspenger</h2>
+
                     </div>
-                    <div className="dashboardMain">
-                        <div className="dasboardSeksjon" style={{ width: '100%' }}>
-                            {komponenter[1]}
-                            {komponenter[3]}
-                            {komponenter[4]}
-                        </div>
-                        <div className="dasboardSeksjon" style={{ maxWidth: '360px' }}>
-                            {komponenter[0]}
-                            {komponenter[2]}
-                            {komponenter[5]}
-                        </div>
-                    </div>
+                    <div className="dasboardSeksjon">{komponenter[1]}</div>
+                    <div className="dasboardSeksjon">{komponenter[0]}</div>
                 </div>
             ) : (
                 <>
                     {komponenter[0]}
                     {komponenter[1]}
+                    <h2>Innsyn</h2>
+                    {komponenter[4]}
+                    <h2>Dine Svangerskapspenger</h2>
                     {komponenter[2]}
                     {komponenter[3]}
-                    {komponenter[4]}
-                    {komponenter[5]}
+
                 </>
             )}
         </>

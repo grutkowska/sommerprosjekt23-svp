@@ -30,8 +30,6 @@ import PeriodeTimeline from 'app/components/periode-timeline/PeriodeTimeline';
 import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
-import { DatoContext, ArbeidsgiverFargerContext } from 'app/context/periodeTimelineContext';
-
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
     minidialogerError: AxiosError | null;

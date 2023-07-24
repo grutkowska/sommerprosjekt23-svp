@@ -108,7 +108,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
             <SvangerskapDashboardwrapper
                 svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
                 skjermStørreEnn800={storSkjerm}
-                componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søkersBarn={søkerinfo.søker.barn} />}
+                componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søker={søkerinfo} />}
                 componentB={<SeHeleProsessenLink />}
                 componentC={
                     <PeriodeTimeline

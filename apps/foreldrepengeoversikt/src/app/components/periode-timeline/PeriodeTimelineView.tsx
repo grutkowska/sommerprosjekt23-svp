@@ -302,11 +302,12 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
             <div className={bem.element('datoPilStrek')}></div>
             <div
                 style={{
+                    alignSelf: 'center',
                     backgroundColor: 'black',
-                    borderRadius: '50%',
+                    borderRadius: '5px',
                     gridColumn: 3,
-                    width: '20px',
-                    height: '20px',
+                    width: '10px',
+                    height: '10px',
                     cursor: 'move',
                 }}
             ></div>

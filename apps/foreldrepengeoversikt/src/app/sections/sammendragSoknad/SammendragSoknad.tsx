@@ -3,47 +3,10 @@ import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 import { guid } from '@navikt/fp-common';
 import { arbeidsgiverFarger, getArbeidsgiverNavn } from 'app/components/periode-timeline/PeriodeTimeline';
-import { fargeRekkefølgeForTag } from 'app/components/periode-timeline/PeriodeTimelineView';
-
 interface Props {
     sak: SvangerskapspengeSak;
     søker: SøkerinfoDTO;
 }
-
-/*
-const getArbeidsgiverNavn = (
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
-    gjeldendeVedtakArbeidsforhold: Arbeidsforhold
-): ArbeidsgiverInfo => {
-    if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
-        const arbeidsforhold = søkerArbeidsforhold
-            ? søkerArbeidsforhold.find(
-                  (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
-              )
-            : undefined;
-        return {
-            navn: arbeidsforhold?.arbeidsgiverNavn || '',
-            id: arbeidsforhold?.arbeidsgiverId,
-            type: ArbeidsgiverInfoType.ORGANISASJON,
-        };
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
-        return {
-            navn: 'Frilanser',
-            type: ArbeidsgiverInfoType.PRIVAT,
-        };
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return {
-            navn: 'Selvstendig næringsdrivende',
-            type: ArbeidsgiverInfoType.PRIVAT,
-        };
-    } else {
-        return {
-            navn: 'Type not found',
-            type: ArbeidsgiverInfoType.PRIVAT,
-        };
-    }
-};
-*/
 
 export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
     //const intl = useIntl();

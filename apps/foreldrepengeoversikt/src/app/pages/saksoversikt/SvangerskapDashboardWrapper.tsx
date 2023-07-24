@@ -54,10 +54,11 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
 
                     <div style={{ gridColumn: '1 / 3' }}>
                         <h2>Dine Svangerskapspenger</h2>
-
                     </div>
                     <div className="dasboardSeksjon">{komponenter[1]}</div>
-                    <div className="dasboardSeksjon">{komponenter[0]}</div>
+                    <div className="dasboardSeksjon">
+                        {komponenter[0]} {komponenter[5]}
+                    </div>
                 </div>
             ) : (
                 <>
@@ -68,7 +69,6 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
                     <h2>Dine Svangerskapspenger</h2>
                     {komponenter[2]}
                     {komponenter[3]}
-
                 </>
             )}
         </>

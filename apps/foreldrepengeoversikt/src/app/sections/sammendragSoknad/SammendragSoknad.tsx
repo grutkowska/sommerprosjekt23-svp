@@ -3,6 +3,7 @@ import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 import { guid } from '@navikt/fp-common';
 import { arbeidsgiverFargerPrimær, getArbeidsgiverNavn } from 'app/components/periode-timeline/PeriodeTimeline';
+import SeAllePerioder from 'app/components/se-alle-perioder/seAllePerioder';
 interface Props {
     sak: SvangerskapspengeSak;
     søker: SøkerinfoDTO;
@@ -76,6 +77,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                             ></PeriodeKort>
                         );
                     })}
+                <div>{SeAllePerioder()}</div>
             </div>
         );
     } else return <></>;

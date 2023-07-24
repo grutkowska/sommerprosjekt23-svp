@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const repeatPx = '2px';
 const borderTykkelse = '2px';
 const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';
@@ -192,7 +191,6 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
 //interface SluttInfoProps extends PeriodeTimelineViewProps {}
 
 export const SluttInfo: React.FC<PeriodeTimelineViewProps> = ({ children }) => {
-
     const bem = bemUtils('periodeTimelineView');
     return <div className={bem.element('sluttInfo')}>{children}</div>;
 };

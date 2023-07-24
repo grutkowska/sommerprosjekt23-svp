@@ -18,7 +18,7 @@ import { SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 export const arbeidsgiverFarger = ['blue', 'green'];
 
@@ -28,7 +28,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
     const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
-    const changeDatoTekst = (currentRelPos: number) => {
+    const changeDatoTekst = () => {
+        //(currentRelPos: number) => {
         //setValgtDato(konverterGridPosTilDato(currentRelPos, sluttDatoForSVP, baneHoyde));
         /*
         valgtDatoRef.current = konverterGridPosTilDato(

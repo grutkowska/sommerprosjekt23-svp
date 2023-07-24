@@ -20,7 +20,8 @@ import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
 
-export const arbeidsgiverFarger = ['blue', 'green'];
+export const arbeidsgiverFargerPrimær = ['blue', 'green'];
+export const arbeidsgiverFargerSekundær = ['lightblue', 'lightgreen'];
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     //const valgtDatoRef = useDatoContext();
@@ -156,7 +157,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 getTerminMinus21Dager(sak.familiehendelse?.termindato),
                                 antallMnd
                             ).toString()}
-                            bakgrunnFarge={arbeidsgiverFarger[index]}
+                            bakgrunnFarge={arbeidsgiverFargerPrimær[index]}
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -171,7 +172,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                                 key={guid()}
                                                 start={periode.start.toString()}
                                                 slutt={periode.slutt.toString()}
-                                                farge={arbeidsgiverFarger[index]}
+                                                farge={arbeidsgiverFargerPrimær[index]}
                                             />
                                         </>
                                     );
@@ -185,7 +186,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     getTerminMinus21Dager(sak.familiehendelse?.termindato),
                                     antallMnd
                                 ).toString()}
-                                farge={'light' + arbeidsgiverFarger[index]}
+                                farge={arbeidsgiverFargerSekundær[index]}
                                 opacity="50%"
                             />
                         </Bane>

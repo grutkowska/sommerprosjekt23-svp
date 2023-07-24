@@ -2,7 +2,7 @@ import PeriodeKort from 'app/components/periode-kort/PeriodeKort';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 import { guid } from '@navikt/fp-common';
-import { arbeidsgiverFarger, getArbeidsgiverNavn } from 'app/components/periode-timeline/PeriodeTimeline';
+import { arbeidsgiverFargerPrimær, getArbeidsgiverNavn } from 'app/components/periode-timeline/PeriodeTimeline';
 interface Props {
     sak: SvangerskapspengeSak;
     søker: SøkerinfoDTO;
@@ -25,7 +25,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                     arbeidsforhold.aktivitet.type,
                                     arbeidsforhold?.aktivitet?.arbeidsgiver?.id
                                 )}
-                                arbeidsgiverFarge={arbeidsgiverFarger[index]}
+                                arbeidsgiverFarge={arbeidsgiverFargerPrimær[index]}
                                 ferdigBehandlet={false}
                                 svpPerioder={arbeidsforhold.tilrettelegginger}
                                 oppholdsPerioder={arbeidsforhold.oppholdsperioder}
@@ -68,7 +68,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                     arbeidsforhold.aktivitet.type,
                                     arbeidsforhold?.aktivitet?.arbeidsgiver?.id
                                 )}
-                                arbeidsgiverFarge={arbeidsgiverFarger[index]}
+                                arbeidsgiverFarge={arbeidsgiverFargerPrimær[index]}
                                 ferdigBehandlet={true}
                                 svpPerioder={arbeidsforhold.tilrettelegginger}
                                 oppholdsPerioder={arbeidsforhold.oppholdsperioder}

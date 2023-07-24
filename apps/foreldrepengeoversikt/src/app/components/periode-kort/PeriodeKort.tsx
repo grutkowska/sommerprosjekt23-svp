@@ -5,13 +5,13 @@ import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { arbeidsgiverFarger, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
+import { arbeidsgiverFargerSekundær, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
 import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
 import dayjs from 'dayjs';
 
 const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
     if (dayjs(getCurrentDato()).isBetween(dayjs(fom), dayjs(tom), 'day')) {
-        return arbeidsgiverFarger[fargeIndex];
+        return arbeidsgiverFargerSekundær[fargeIndex];
     } else return '';
 };
 
@@ -118,6 +118,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         periode.tom,
                                                         fargeIndex
                                                     ),
+                                                    mixBlendMode: `multiply`,
                                                 }}
                                             >
                                                 <h4

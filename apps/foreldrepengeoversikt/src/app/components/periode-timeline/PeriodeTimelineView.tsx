@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const borderTykkelse = '2px';
+const borderTykkelse = '1px';
 const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';
 
@@ -82,6 +82,7 @@ export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, opacity }) =>
                 borderColor: `${farge}`,
                 opacity: `${opacity}`,
                 zIndex: 2,
+                mixBlendMode: `multiply`,
             }}
         ></div>
     );
@@ -293,11 +294,12 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
             <div className={bem.element('datoPilStrek')}></div>
             <div
                 style={{
+                    alignSelf: 'center',
                     backgroundColor: 'black',
-                    borderRadius: '50%',
+                    borderRadius: '5px',
                     gridColumn: 3,
-                    width: '20px',
-                    height: '20px',
+                    width: '10px',
+                    height: '10px',
                     cursor: 'move',
                 }}
             ></div>

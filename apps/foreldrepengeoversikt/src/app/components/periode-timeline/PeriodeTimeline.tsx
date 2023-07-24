@@ -20,8 +20,8 @@ import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
 
-export const arbeidsgiverFargerPrimær = ['blue', 'green'];
-export const arbeidsgiverFargerSekundær = ['lightblue', 'lightgreen'];
+export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B2D2', '#F68282', '#D9E366'];
+export const arbeidsgiverFargerSekundær = ['#E0FAFF', '#FFF4E0', '#E3F8E7', '#EFECF4', '#FFE6E6', '#F9FCCC'];
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     //const valgtDatoRef = useDatoContext();
@@ -121,7 +121,11 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 >
                                     <p
                                         style={{
-                                            color: 'lightgrey',
+                                            textSizeAdjust: '10px',
+                                            textTransform: 'uppercase',
+                                            fontWeight: 'lighter',
+                                            color: '#000000',
+                                            opacity: '44%',
                                         }}
                                     >
                                         {mndFormat}
@@ -177,7 +181,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 farge={arbeidsgiverFargerSekundær[index]}
 
                                 slutt={alleBanerHeight.toString()}
-                                opacity="50%"
+                                opacity="100%"
                             />
                         </Bane>
                     );

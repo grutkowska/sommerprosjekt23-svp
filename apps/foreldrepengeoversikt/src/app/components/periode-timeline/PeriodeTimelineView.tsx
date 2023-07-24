@@ -96,6 +96,7 @@ interface SoyleBakgrunnProps extends PeriodeTimelineViewProps {
 }
 export const SoyleBakgrunn: React.FC<SoyleBakgrunnProps> = ({ start, slutt, farge, opacity }) => {
     const bem = bemUtils('periodeTimelineView');
+    console.log('startDatoSoyle: ', start);
     return (
         <div
             className={bem.element('periode')}
@@ -254,15 +255,7 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
     const bem = bemUtils('periodeTimelineView');
     const baneHeightInPx = document.getElementById('pilBanen')?.getBoundingClientRect().height;
     const relBanePx = relBaneHeight / baneHeightInPx!;
-    const [yPos, setYPos] = useState<number>(Math.round(nr - 14));
-    console.log(
-        'Utsiden: relBanePx: ',
-        relBanePx,
-        'baneHeightInPx: ',
-        baneHeightInPx,
-        ' relBaneHeight: ',
-        relBaneHeight
-    );
+    const [yPos, setYPos] = useState<number>(Math.round(nr - 10));
     function handleDrag(e: React.DragEvent<HTMLDivElement>): void {
         e.dataTransfer.effectAllowed = 'none';
         const newYPos = e.clientY - document.getElementById('pilBanen')!.getBoundingClientRect().top;
@@ -278,7 +271,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
         const gridBanePos = boundYPos * relBanePx;
         setYPos(Math.round(gridBanePos!));
     }
-    console.log(yPos, ' ', nr - 10 * relBanePx, ' ', nr - 10 * relBanePx);
     return (
         <div
             className={bem.element('datoPil')}

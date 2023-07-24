@@ -141,8 +141,10 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
+
                             bakgrunnFarge={arbeidsgiverFargerPrimær[index]}
                             height={alleBanerHeight.toString()}
+
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -166,12 +168,14 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             })}
                             <SoyleBakgrunn
                                 key={guid()}
+
                                 start={behovFromkoordinat(
                                     sak.familiehendelse?.termindato,
                                     behovFromDato!,
                                     alleBanerHeight
                                 ).toString()}
                                 farge={arbeidsgiverFargerSekundær[index]}
+
                                 slutt={alleBanerHeight.toString()}
                                 opacity="50%"
                             />

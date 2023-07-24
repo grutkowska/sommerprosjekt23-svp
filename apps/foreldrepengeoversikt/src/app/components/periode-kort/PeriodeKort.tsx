@@ -111,7 +111,9 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                 </Table.DataCell>
                                             )}
                                                     */}
+
                                                 <Table.DataCell
+
                                                     style={{
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,

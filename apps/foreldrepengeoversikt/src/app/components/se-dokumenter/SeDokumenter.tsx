@@ -1,6 +1,8 @@
 import { LinkPanel } from '@navikt/ds-react';
 import { bemUtils } from '@navikt/fp-common';
+
 import { PersonIcon } from '@navikt/aksel-icons';
+
 
 import OversiktRoutes from 'app/routes/routes';
 

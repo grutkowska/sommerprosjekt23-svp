@@ -8,14 +8,11 @@
 }
 
 .dashboard {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 360px;
+    grid-template-rows: auto auto auto;
 }
 
-.dashboardMain {
-    display: flex;
-    flex-direction: row;
-}
 
 .dasboardSeksjon {
     margin-right: 10px;

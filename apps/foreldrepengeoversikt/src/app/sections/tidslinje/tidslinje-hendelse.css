@@ -11,6 +11,8 @@
 
 .tidslinje-hendelse__tekst{
     padding-left: 7px;
+    width: 100%;
+    padding-right: 1rem;
 }
 
 .tidslinje-hendelse__ikon svg{
@@ -86,8 +88,15 @@
 .tidslinje-hendelse__date {
     color: var(--a-gray-500);
 }
-
+.tidslinje-hendelse__tittleBoks {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
 .tidslinje-hendelse__tittle {
+    font-weight: bold;
+}
+.tidslinje-hendelse__arbeidsgiverTittle {
     font-weight: bold;
 }
 

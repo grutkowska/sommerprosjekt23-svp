@@ -320,3 +320,22 @@ export const getSakTittel = (
     }
     return '';
 };
+export const getArbeidsgiverNavn = (
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
+): string => {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
+        const arbeidsforhold = søkerArbeidsforhold
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
+            : undefined;
+        //return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
+        return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
+    } else if (arbeidsForholdType === 'FRILANS') {
+        return 'Frilanser';
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+        return 'Selvstendig næringsdrivende';
+    } else {
+        return 'Type not found';
+    }
+};

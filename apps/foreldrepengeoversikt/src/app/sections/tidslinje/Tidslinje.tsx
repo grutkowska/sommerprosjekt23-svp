@@ -18,24 +18,26 @@ import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import NoeGikkGalt from 'app/components/noe-gikk-galt/NoeGikkGalt';
 import dayjs from 'dayjs';
 import { Ytelse } from 'app/types/Ytelse';
-import { SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
+import { SøkerinfoDTO, SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
 import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepengesaken } from 'app/utils/sakerUtils';
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
 import ContentSection from 'app/components/content-section/ContentSection';
+import { formaterDato } from 'app/utils/dateUtils';
 
 //import { S } from '@storybook/react/dist/types-0a347bb9';
 
 interface Params {
     saker: SakOppslag;
     visHeleTidslinjen: boolean;
-    søkersBarn: SøkerinfoDTOBarn[] | undefined;
+    søker: SøkerinfoDTO | undefined;
 }
 
-const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, søkersBarn }) => {
+const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, søker }) => {
     const params = useParams();
     const intl = useIntl();
     const sakPath = location.pathname.replace(`/${OversiktRoutes.TIDSLINJEN}`, '');
+    const søkersBarn = søker?.søker.barn;
 
     const bem = bemUtils('tidslinje-hendelse');
     const alleSaker = getAlleYtelser(saker);
@@ -72,6 +74,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
         åpenBehandlingPåVent,
         manglendeVedleggData,
         sak,
+        søker!,
         barnFraSak,
         erAvslåttForeldrepengesøknad,
         intl
@@ -111,7 +114,10 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
                                 hendelse.tidligstBehandlingsDato,
                                 manglendeVedleggData,
                                 barnFraSak,
-                                sak
+                                sak,
+                                hendelse.utbetalingsInfo?.arbeidsgiver && hendelse.utbetalingsInfo?.arbeidsgiver,
+                                formaterDato(dayjs(hendelse.utbetalingsInfo?.utbetalingsMnd).toDate(), 'MMMM'),
+                                hendelse.utbetalingsInfo?.utbetalingsForm
                             )}
                             key={guid()}
                             isActiveStep={isActiveStep}
@@ -121,6 +127,7 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
                             tidligstBehandlingsDato={hendelse.tidligstBehandlingsDato}
                             finnesHendelserFørAktivtSteg={!!finnesHendelserFørAktivtSteg}
                             visHeleTidslinjen={visHeleTidslinjen}
+                            utbetalingsInfo={hendelse.utbetalingsInfo!}
                         >
                             <ul style={{ listStyle: 'none', padding: '0' }}>
                                 {hendelse.tidslinjeHendelseType === TidslinjehendelseType.VENT_DOKUMENTASJON &&

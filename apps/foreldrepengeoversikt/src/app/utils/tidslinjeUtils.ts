@@ -12,10 +12,11 @@ import { Skjemanummer } from 'app/types/Skjemanummer';
 import { Ytelse } from 'app/types/Ytelse';
 import { formaterDato } from './dateUtils';
 import { Familiehendelse } from 'app/types/Familiehendelse';
-import { getFamiliehendelseDato, getNavnPåBarna } from './sakerUtils';
+import { getArbeidsgiverNavn, getFamiliehendelseDato, getNavnPåBarna } from './sakerUtils';
 import { BarnGruppering } from 'app/types/BarnGruppering';
 import { Sak } from 'app/types/Sak';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
+import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 
 export const VENTEÅRSAKER = [
     BehandlingTilstand.VENTER_PÅ_INNTEKTSMELDING,
@@ -145,7 +146,10 @@ export const getTidslinjehendelseTittel = (
     tidlistBehandlingsdato: Date | undefined,
     manglendeVedleggData: Skjemanummer[] | undefined,
     barnFraSak: BarnGruppering,
-    sak: Sak
+    sak: Sak,
+    arbeidsgiver?: string,
+    måned?: string,
+    utbetalingsHåndtering?: string
 ): string => {
     const { familiehendelse, ytelse, gjelderAdopsjon } = sak;
     const antallBarn = familiehendelse?.antallBarn;
@@ -185,7 +189,7 @@ export const getTidslinjehendelseTittel = (
         return getTidslinjeTittelForBarnTreÅr(barnFraSak, antallBarn, familiehendelse?.omsorgsovertakelse, intl);
     }
     if (ytelse === Ytelse.SVANGERSKAPSPENGER && hendelsetype === TidslinjehendelseType.UTBETALING) {
-        return 'Førstkommende utbetaling fra NAV';
+        return utbetalingsHåndtering + ' for ' + måned;
     }
     return intlUtils(intl, `tidslinje.tittel.${hendelsetype}`);
 };
@@ -439,7 +443,13 @@ export const getHendelserForVisning = (
     }
     return hendelserForVisning;
 };
-export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (sak: SvangerskapspengeSak): Tidslinjehendelse => {
+export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
+    sak: SvangerskapspengeSak,
+    arbeidsgiver: string,
+    utbetaling: number,
+    måned: string,
+    utbetalingsForm: string
+): Tidslinjehendelse => {
     let arbeidsgiverString = ' ';
     sak.gjeldendeVedtak?.arbeidsforhold.forEach((arbeidsforhold) => {
         arbeidsforhold.tilrettelegginger.some((i) => {
@@ -459,16 +469,18 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (sak: Svangerska
     });
     return {
         type: 'søknad',
-        opprettet: dayjs(
-            dayjs().date() < 20
-                ? dayjs().year() + '-' + (dayjs().month() + 1) + '-20'
-                : dayjs().year() + '-' + (dayjs().month() + 2) + '-20'
-        ).toDate(),
+        opprettet: dayjs(dayjs(måned).year() + '-' + dayjs(måned).month() + '-25').toDate(),
         aktørType: AktørType.BRUKER,
         tidslinjeHendelseType: TidslinjehendelseType.UTBETALING,
         dokumenter: [],
         manglendeVedlegg: [],
-        merInformasjon: `Får du stønad fra ${arbeidsgiverString}`,
+        utbetalingsInfo: {
+            arbeidsgiver: arbeidsgiver,
+            farge: '',
+            utbetaling: utbetaling.toString(),
+            utbetalingsMnd: måned,
+            utbetalingsForm: utbetalingsForm,
+        },
     };
 };
 
@@ -477,10 +489,12 @@ export const getAlleTidslinjehendelser = (
     åpenBehandlingPåVent: ÅpenBehandling | undefined,
     manglendeVedleggData: Skjemanummer[],
     sak: Sak,
+    søker: SøkerinfoDTO,
     barnFraSak: BarnGruppering,
     erAvslåttForeldrepengesøknad: boolean,
     intl: IntlShape
 ): Tidslinjehendelse[] => {
+    console.log('getter');
     const tidslinjeHendelser = getTidslinjehendelserDetaljer(tidslinjeHendelserData, intl);
     const venteHendelser = åpenBehandlingPåVent
         ? getTidslinjehendelserFraBehandlingPåVent(åpenBehandlingPåVent, manglendeVedleggData, intl)
@@ -517,8 +531,39 @@ export const getAlleTidslinjehendelser = (
         tidslinjeHendelser.push(vedtakHendelse);
     }
     if (sak.ytelse === Ytelse.SVANGERSKAPSPENGER && sak.gjeldendeVedtak) {
+        sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
+            const arbeidsgiverNavn = getArbeidsgiverNavn(
+                søker.arbeidsforhold,
+                arbeidsforhold.aktivitet.type,
+                arbeidsforhold.aktivitet.arbeidsgiver.id
+            );
+            arbeidsforhold.tilrettelegginger.map((periode) => {
+                let telleMnd = dayjs(periode.fom);
+                console.log('Før løkke: ', telleMnd.toString());
+                while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
+                    console.log('while løkke: ', telleMnd.toString());
+                    if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
+                        const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
+                        const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
+                        tidslinjeHendelser.push(
+                            getTidslinjeSvangerskapspengerUtbetalingHendelse(
+                                sak as SvangerskapspengeSak,
+                                arbeidsgiverNavn,
+                                Math.round(120 * dager),
+                                telleMnd.toString(),
+                                utbetalingsForm
+                            )
+                        );
+                        console.log('if løkke: ', dager);
+                    }
+                    telleMnd = telleMnd.add(2, 'M');
+                }
+            });
+        });
+        /*
         const utbetalindHendelse = getTidslinjeSvangerskapspengerUtbetalingHendelse(sak as SvangerskapspengeSak);
         tidslinjeHendelser.push(utbetalindHendelse);
+        */
     }
 
     return [...tidslinjeHendelser].sort(sorterTidslinjehendelser);

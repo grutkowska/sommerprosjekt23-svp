@@ -26,7 +26,7 @@ export const arbeidsgiverFargerSekundær = ['lightblue', 'lightgreen'];
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
     //const valgtDatoRef = useDatoContext();
     const antallMnd = 9;
-    const alleBanerHeight = allebanerHeightFunc(sak, antallMnd);
+    const alleBanerHeight = allebanerHeightFunc(dayjs(sak.familiehendelse?.termindato).toDate(), antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
     let currentPos = 0;
     const changeDatoTekst = () => {
@@ -83,7 +83,6 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
 
-                        //console.log(månedNavn);
                         let mndFormat = '';
                         {
                             if (dayjs().isSame(månedNavn, 'month'))
@@ -133,31 +132,16 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {timelineData!.map((bane, index) => {
                     fomDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
                     startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
-                    console.log(
-                        'oversteDato; ',
-                        oversteDato,
-                        'fom: ',
-                        fomDato,
-                        'termin-21dager: ',
-                        getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                        'startDatoBakgrunn: ',
-                        startDatoBakgrunnSoyle,
-                        'antall dager fra termin:',
-                        getAntallSvangerskapsDager(
-                            getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                            antallMnd
-                        ).toString()
-                    );
 
                     return (
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
-                            height={getAntallSvangerskapsDager(
-                                getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                                antallMnd
-                            ).toString()}
+
                             bakgrunnFarge={arbeidsgiverFargerPrimær[index]}
+
+                            height={alleBanerHeight.toString()}
+
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -182,11 +166,10 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             <SoyleBakgrunn
                                 key={guid()}
                                 start={startDatoBakgrunnSoyle.toString()}
-                                slutt={getAntallSvangerskapsDager(
-                                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                                    antallMnd
-                                ).toString()}
+
                                 farge={arbeidsgiverFargerSekundær[index]}
+
+                                slutt={alleBanerHeight.toString()}
                                 opacity="50%"
                             />
                         </Bane>
@@ -216,18 +199,24 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
 };
 
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
-    console.log('Init grispos: ', totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day'));
-    return totalGrid - dayjs(sluttDato).diff(dayjs(dato), 'day');
+    const sisteDagIMnd = dayjs(sluttDato).daysInMonth();
+    console.log(
+        'Init grispos: ',
+        totalGrid - (dayjs(sluttDato).diff(dayjs(dato), 'day') + (sisteDagIMnd - dayjs(sluttDato).date())),
+        'Total height: ',
+        totalGrid
+    );
+    return totalGrid - (dayjs(sluttDato).diff(dayjs(dato), 'day') + (sisteDagIMnd - dayjs(sluttDato).date()));
 };
 
-const allebanerHeightFunc = (sak: SvangerskapspengeSak, antallMnd: number): number => {
+const allebanerHeightFunc = (sluttDato: Date, antallMnd: number): number => {
+    const startDatoSVP = dayjs(getTerminMinus21Dager(sluttDato.toString())).subtract(antallMnd, 'M');
+    console.log('allebaner height kalk: ', startDatoSVP.toString(), 'fra 1. ', startDatoSVP.date());
     return (
-        getAntallSvangerskapsDager(
-            dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(),
-            antallMnd
-        ) +
-        (dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() -
-            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toString(), 'D')))
+        startDatoSVP.date() +
+        getAntallSvangerskapsDager(dayjs(getTerminMinus21Dager(sluttDato.toString())).toString(), antallMnd) +
+        (dayjs(getTerminMinus21Dager(sluttDato.toString())).daysInMonth() -
+            parseInt(formaterDato(dayjs(getTerminMinus21Dager(sluttDato.toString())).toString(), 'D')))
     );
 };
 
@@ -269,21 +258,30 @@ export const getTerminMinus21Dager = (termindato: string | undefined) => {
     return dayjs(termindato).subtract(21, 'day').toISOString();
 };
 
-const getAntallSvangerskapsDager = (terminDato: string | undefined, antallMåneder: number) => {
-    return dayjs(terminDato).diff(dayjs(terminDato).subtract(antallMåneder, 'M'), 'day');
+const getAntallSvangerskapsDager = (sluttDato: string | undefined, antallMåneder: number) => {
+    console.log(
+        'slutt dato: ',
+        sluttDato?.toString(),
+        ' start dato: ',
+        dayjs(sluttDato).subtract(antallMåneder, 'M').toString(),
+        ' diff: ',
+        dayjs(sluttDato).diff(dayjs(sluttDato).subtract(antallMåneder, 'M'), 'day')
+    );
+    return dayjs(sluttDato).diff(dayjs(sluttDato).subtract(antallMåneder, 'M'), 'day');
 };
 const getPeriodeDag = (terminDato: string | undefined, dato: string) => {
-    return dayjs(terminDato).diff(dayjs(dato), 'day');
+    const restDager = dayjs(terminDato).daysInMonth() - dayjs(terminDato).date();
+    return dayjs(terminDato).diff(dayjs(dato), 'day') + restDager;
 };
 //termindato - et absolut tall å regne ut ifra
 const mapTilretteleggingTilPeriode = (
     periode: svpPerioder,
-    termin: string | undefined,
+    termin: Date | undefined,
     antallMnd: number
 ): { start: number; slutt: number } => {
     return {
-        start: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.fom),
-        slutt: getAntallSvangerskapsDager(termin, antallMnd) - getPeriodeDag(termin, periode.tom),
+        start: allebanerHeightFunc(termin!, antallMnd) - getPeriodeDag(termin?.toString(), periode.fom),
+        slutt: allebanerHeightFunc(termin!, antallMnd) - getPeriodeDag(termin?.toString(), periode.tom),
     };
 };
 const mapSvpSakTilPeriodeTimeline = (
@@ -301,7 +299,7 @@ const mapSvpSakTilPeriodeTimeline = (
             perioder: arbeidsgiver.tilrettelegginger.map((periode): { start: number; slutt: number } => {
                 return mapTilretteleggingTilPeriode(
                     periode,
-                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
+                    dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).toDate(),
                     antallMnd
                 );
             }),

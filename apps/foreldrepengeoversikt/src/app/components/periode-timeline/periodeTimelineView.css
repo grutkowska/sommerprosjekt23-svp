@@ -27,9 +27,11 @@
     position: absolute;
     grid-column: 1/ 4;
     grid-row: 2/ 2;
+    min-height: 0%;
 }
 .periodeTimelineView__datoPil {
     z-index: 2;
+    min-height: 0%;
 }
 .periodeTimelineView__datoPilTekst > p {
     margin: 0%;

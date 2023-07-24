@@ -18,7 +18,7 @@ import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import NoeGikkGalt from 'app/components/noe-gikk-galt/NoeGikkGalt';
 import dayjs from 'dayjs';
 import { Ytelse } from 'app/types/Ytelse';
-import { SøkerinfoDTO, SøkerinfoDTOBarn } from 'app/types/SøkerinfoDTO';
+import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
 import { getAlleYtelser, getBarnGrupperingFraSak, getFørsteUttaksdagIForeldrepengesaken } from 'app/utils/sakerUtils';
 import { SakOppslag } from 'app/types/SakOppslag';
 import OversiktRoutes from 'app/routes/routes';
@@ -115,7 +115,6 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
                                 manglendeVedleggData,
                                 barnFraSak,
                                 sak,
-                                hendelse.utbetalingsInfo?.arbeidsgiver && hendelse.utbetalingsInfo?.arbeidsgiver,
                                 formaterDato(dayjs(hendelse.utbetalingsInfo?.utbetalingsMnd).toDate(), 'MMMM'),
                                 hendelse.utbetalingsInfo?.utbetalingsForm
                             )}

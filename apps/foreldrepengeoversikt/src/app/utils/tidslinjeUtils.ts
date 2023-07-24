@@ -147,7 +147,6 @@ export const getTidslinjehendelseTittel = (
     manglendeVedleggData: Skjemanummer[] | undefined,
     barnFraSak: BarnGruppering,
     sak: Sak,
-    arbeidsgiver?: string,
     måned?: string,
     utbetalingsHåndtering?: string
 ): string => {
@@ -535,7 +534,7 @@ export const getAlleTidslinjehendelser = (
             const arbeidsgiverNavn = getArbeidsgiverNavn(
                 søker.arbeidsforhold,
                 arbeidsforhold.aktivitet.type,
-                arbeidsforhold.aktivitet.arbeidsgiver.id
+                arbeidsforhold?.aktivitet?.arbeidsgiver?.id
             );
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);

@@ -7,6 +7,7 @@ interface Props {
     componentC: JSX.Element;
     componentD: JSX.Element;
     componentE: JSX.Element;
+    componentF: JSX.Element;
 }
 
 export const SvangerskapDashboardwrapper: React.FC<Props> = ({
@@ -17,11 +18,26 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
     componentC,
     componentD,
     componentE,
+    componentF,
 }) => {
     const komponenter =
         skjermStørreEnn800 && svangerskapSak
-            ? [svangerskapSak && componentC, svangerskapSak && componentD, componentE, componentA, componentB]
-            : [componentA, componentB, svangerskapSak && componentC, svangerskapSak && componentD, componentE];
+            ? [
+                  svangerskapSak && componentC,
+                  svangerskapSak && componentD,
+                  componentE,
+                  componentA,
+                  componentB,
+                  componentF,
+              ]
+            : [
+                  componentA,
+                  componentB,
+                  svangerskapSak && componentC,
+                  svangerskapSak && componentD,
+                  componentE,
+                  componentF,
+              ];
 
     return (
         <>

@@ -4,6 +4,7 @@ import './periodeTimelineView.css';
 
 import { useState } from 'react';
 import '../../img/transparent-background-pattern.jpg';
+import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
@@ -191,7 +192,6 @@ export const Bane: React.FC<BaneProps> = ({ children, nr, height }) => {
 //interface SluttInfoProps extends PeriodeTimelineViewProps {}
 
 export const SluttInfo: React.FC<PeriodeTimelineViewProps> = ({ children }) => {
-
     const bem = bemUtils('periodeTimelineView');
     return <div className={bem.element('sluttInfo')}>{children}</div>;
 };
@@ -236,6 +236,10 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
             {children}
         </div>
     );
+};
+
+export const getCurrentDato = () => {
+    return dayjs().toISOString();
 };
 
 interface DatoPilProps extends PeriodeTimelineViewProps {

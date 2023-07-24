@@ -5,13 +5,14 @@ import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { arbeidsgiverFarger, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
+import { arbeidsgiverFargerSekundær, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
 import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
 import dayjs from 'dayjs';
+import { getSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
 
 const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
     if (dayjs(getCurrentDato()).isBetween(dayjs(fom), dayjs(tom), 'day')) {
-        return arbeidsgiverFarger[fargeIndex];
+        return arbeidsgiverFargerSekundær[fargeIndex];
     } else return '';
 };
 
@@ -43,15 +44,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
             <ExpansionCard aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
                     <div>
-                        <div
-                            style={{
-                                backgroundColor: `${arbeidsgiverFarge}`,
-                                borderRadius: '50%',
-                                width: '20px',
-                                height: '20px',
-                                alignSelf: 'center',
-                            }}
-                        ></div>
+                        {getSirkelkomponent(arbeidsgiverFarge)}
                         <div
                             style={{
                                 width: '20px',
@@ -118,6 +111,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         periode.tom,
                                                         fargeIndex
                                                     ),
+                                                    mixBlendMode: `multiply`,
                                                 }}
                                             >
                                                 <h4

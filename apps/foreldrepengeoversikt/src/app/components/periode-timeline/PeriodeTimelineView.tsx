@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const borderTykkelse = '2px';
+const borderTykkelse = '1px';
 const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';
 
@@ -82,6 +82,7 @@ export const Soyle: React.FC<SoyleProps> = ({ start, slutt, farge, opacity }) =>
                 borderColor: `${farge}`,
                 opacity: `${opacity}`,
                 zIndex: 2,
+                mixBlendMode: `multiply`,
             }}
         ></div>
     );

@@ -18,6 +18,7 @@ import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
 import { Detail } from '@navikt/ds-react';
+import { FeedingBottleIcon } from '@navikt/aksel-icons';
 
 export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B2D2', '#F68282', '#D9E366'];
 export const arbeidsgiverFargerSekundær = ['#E0FAFF', '#FFF4E0', '#E3F8E7', '#EFECF4', '#FFE6E6', '#F9FCCC'];
@@ -184,7 +185,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 />
             </DatoPilBane>
             <SluttInfo>
-                <Detail>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</Detail>
+                <FeedingBottleIcon aria-hidden />{' '}
+                {formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY').toUpperCase()}
             </SluttInfo>
         </PeriodeTimelineView>
     ) : (

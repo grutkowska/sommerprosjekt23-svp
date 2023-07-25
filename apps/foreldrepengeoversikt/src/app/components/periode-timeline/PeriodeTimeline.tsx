@@ -48,8 +48,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             'DD - MMM'
         );
         */
-        return formaterDato(dayjs().toDate(), 'DD - MMM');
+        return formaterDato(dayjs().toDate(), 'DD MMM');
     };
+
     let behovFromDato: string | undefined;
     let utbetalingsGrad: number;
 
@@ -59,7 +60,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
+
                         let isMånedNavnSameAsTermindatoMnd = '1px';
+
                         let mndFormat = '';
                         {
                             if (dayjs().isSame(månedNavn, 'month'))
@@ -101,17 +104,15 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     height={daysInMonth}
                                     borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
-                                    <p
+                                    <Detail
                                         style={{
-                                            textSizeAdjust: '10px',
                                             textTransform: 'uppercase',
-                                            fontWeight: 'lighter',
                                             color: '#000000',
                                             opacity: '44%',
                                         }}
                                     >
                                         {mndFormat}
-                                    </p>
+                                    </Detail>
                                 </YAkseElement>
                             );
                         }
@@ -158,11 +159,13 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     alleBanerHeight
                                 ).toString()}
                                 farge={arbeidsgiverFargerSekundær[index]}
+
                                 slutt={getGridPos(
                                     getTerminMinus21Dager(sak.familiehendelse?.termindato),
                                     sak.familiehendelse?.termindato,
                                     alleBanerHeight
                                 ).toString()}
+
                                 opacity="100%"
                             />
                         </Bane>
@@ -183,10 +186,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 />
             </DatoPilBane>
             <SluttInfo>
-                <p>
-                    <FeedingBottleIcon aria-hidden />{' '}
-                    {formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY').toUpperCase()}
-                </p>
+
+                <Detail>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</Detail>
+
             </SluttInfo>
         </PeriodeTimelineView>
     ) : (

@@ -1,5 +1,6 @@
 import { bemUtils } from '@navikt/fp-common';
 import { Tag, TagProps } from '@navikt/ds-react';
+import { Detail } from '@navikt/ds-react';
 import './periodeTimelineView.css';
 
 import { useState } from 'react';
@@ -7,7 +8,10 @@ import '../../img/transparent-background-pattern.jpg';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const yAksePadding = '70px';
+
+const borderTykkelse = '1px';
+const yAksePadding = '45px';
+
 const gridTemplate = yAksePadding + ' auto';
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -273,7 +277,10 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                 display: 'grid',
                 gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
-                gridTemplateColumns: `${gridTemplate}` + ' 20px',
+
+                gridTemplateColumns: `${gridTemplate}` + ' 0px',
+                //gridTemplateRows: `repeat(${height}, ${repeatPx})`
+
             }}
             draggable={false}
             onDragStart={(e) => {
@@ -283,9 +290,22 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
             onDragEnd={handleDragEnd}
         >
             <div className={bem.element('datoPilTekst')}>
-                <p>{handleTeksBoks(yPos!)}</p>
+                <Detail
+                    style={{
+                        fontWeight: 'bolder',
+                        textTransform: 'uppercase',
+                        color: '#262626',
+                    }}
+                >
+                    {handleTeksBoks(yPos!)}
+                </Detail>
             </div>
-            <div className={bem.element('datoPilStrek')}></div>
+            <div
+                style={{
+                    height: '1.5px',
+                }}
+                className={bem.element('datoPilStrek')}
+            ></div>
             <div
                 style={{
                     alignSelf: 'center',

@@ -1,9 +1,6 @@
 import { LinkPanel } from '@navikt/ds-react';
 import { bemUtils } from '@navikt/fp-common';
 
-import { PersonIcon } from '@navikt/aksel-icons';
-
-
 import OversiktRoutes from 'app/routes/routes';
 
 import { Link } from 'react-router-dom';
@@ -16,11 +13,9 @@ const SeDokumenter = () => {
     return (
         <LinkPanel as={Link} to={OversiktRoutes.DOKUMENTER} border={false} className={bem.element('linkPanel')}>
             <LinkPanel.Title as="h2">
-                <div className={bem.block}>
-                    <PersonIcon aria-hidden /> Se dokumentene i saken
-                </div>
+                <div className={bem.block}>Se dokumenter</div>
             </LinkPanel.Title>
-            <LinkPanel.Description>Hei test</LinkPanel.Description>
+            <LinkPanel.Description>Alle opplysninger brukt i saken din</LinkPanel.Description>
         </LinkPanel>
     );
 };

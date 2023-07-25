@@ -86,14 +86,21 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
-
+                        let isMånedNavnSameAsTermindatoMnd = '1px';
                         let mndFormat = '';
                         {
                             if (dayjs().isSame(månedNavn, 'month'))
                                 mndFormat = ' fkfkf '; //formaterDato(dayjs().toString(), 'DD-MMM');
                             else mndFormat = formaterDato(månedNavn, 'MMM');
                         }
-                        //console.log((currentPos1 += daysInMonth) - daysInMonth);
+                        {
+                            if (
+                                dayjs(sak.familiehendelse?.termindato).isSame(månedNavn, 'month') &&
+                                dayjs(sak.familiehendelse?.termindato).date() > 21 // <-- Kan være unødvendig sjekk dette
+                            ) {
+                                isMånedNavnSameAsTermindatoMnd = '0px';
+                            }
+                        }
                         if (dayjs().isSame(månedNavn, 'month')) {
                             //console.log('if løkke');
                             return (
@@ -101,6 +108,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     key={guid()}
                                     startPos={(currentPos += daysInMonth) - daysInMonth}
                                     height={daysInMonth}
+                                    borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
                                     <p
                                         style={{
@@ -118,6 +126,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     key={guid()}
                                     startPos={(currentPos += daysInMonth) - daysInMonth}
                                     height={daysInMonth}
+                                    borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
                                     <p
                                         style={{

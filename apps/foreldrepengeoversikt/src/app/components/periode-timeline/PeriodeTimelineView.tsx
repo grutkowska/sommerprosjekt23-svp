@@ -8,10 +8,8 @@ import dayjs from 'dayjs';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-const borderTykkelse = '1px';
 const yAksePadding = '70px';
 const gridTemplate = yAksePadding + ' auto';
-
 interface PeriodeTimelineViewProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
 }
@@ -137,9 +135,11 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
 interface YAkseElementProps extends PeriodeTimelineViewProps {
     height: number;
     startPos: number;
+    borderTykkelse: string;
 }
-export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos }) => {
+export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos, borderTykkelse }) => {
     //console.log(`${startPos} / ${startPos + height}`);
+    console.log('bordertykkelse: ', borderTykkelse);
 
     const bem = bemUtils('periodeTimelineView');
     return (

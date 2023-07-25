@@ -1,3 +1,4 @@
+import { Heading } from '@navikt/ds-react';
 import './saksoversikt.css';
 interface Props {
     svangerskapSak: boolean;
@@ -48,12 +49,16 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
                         {komponenter[4]}
                     </div>
                     <div className="dasboardSeksjon">
-                        <h2>Ressurser</h2>
+                        <Heading size="medium" spacing>
+                            Ressurser
+                        </Heading>
                         {komponenter[2]}
                     </div>
 
                     <div style={{ gridColumn: '1 / 3' }}>
-                        <h2>Dine Svangerskapspenger</h2>
+                        <Heading size="medium" spacing>
+                            Dine Svangerskapspenger
+                        </Heading>
                     </div>
                     <div className="dasboardSeksjon">{komponenter[1]}</div>
                     <div className="dasboardSeksjon">
@@ -66,7 +71,9 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
                     {komponenter[1]}
                     <h2>Innsyn</h2>
                     {komponenter[4]}
-                    <h2>Dine Svangerskapspenger</h2>
+                    <Heading size="medium" spacing>
+                        Dine Svangerskapspenger
+                    </Heading>
                     {komponenter[2]}
                     {komponenter[3]}
                 </>

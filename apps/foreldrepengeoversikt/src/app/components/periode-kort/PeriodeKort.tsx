@@ -1,4 +1,4 @@
-import { ExpansionCard, Table } from '@navikt/ds-react';
+import { BodyShort, Detail, ExpansionCard, Heading, Table } from '@navikt/ds-react';
 
 import './periodeKort.css';
 import { guid } from '@navikt/fp-common';
@@ -59,19 +59,15 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <ArbeidsgiverSirkelkomponent arbeidsgiverFarge={arbeidsgiverFarge} />
                         <div
                             style={{
-                                width: '20px',
+                                width: '12px',
                                 // Bedre måte å gjøre spacinga på??
                             }}
                         ></div>
 
                         <div>
-                            <h3
-                                style={{
-                                    margin: '0px',
-                                }}
-                            >
+                            <Heading level="4" size="small">
                                 {førsteBokstavToUppercase(arbeidsgiverNavn)}
-                            </h3>
+                            </Heading>
                         </div>
                     </div>
                     {/*ferdigBehandlet ? (
@@ -140,7 +136,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         mixBlendMode: `multiply`,
                                                     }}
                                                 >
-                                                    <h4
+                                                    <BodyShort
+                                                        size="small"
                                                         style={{
                                                             margin: '5px',
                                                             paddingLeft: '10px',
@@ -150,8 +147,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         {' '}
                                                         <b>{formaterDato(periode.fom, datoFormat)}</b> -{' '}
                                                         <b>{formaterDato(periode.tom, datoFormat)}</b>
-                                                    </h4>
-                                                    <p
+                                                    </BodyShort>
+                                                    <Detail
                                                         style={{
                                                             margin: '5px',
                                                             paddingLeft: '10px',
@@ -190,7 +187,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                             : periode.årsak == 'SYKEPENGER'
                                                             ? 'Du får sykepenger og får derfor ikke svangerskapspenger i denne perioden.'
                                                             : null}
-                                                    </p>
+                                                    </Detail>
                                                     {/*
                                                     periode.resultat ? (
                                                         <p

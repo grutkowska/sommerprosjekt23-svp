@@ -1,4 +1,4 @@
-import { BodyShort, Button, Link, Loader, ReadMore } from '@navikt/ds-react';
+import { BodyShort, Button, Heading, Link, Loader, ReadMore } from '@navikt/ds-react';
 import { Link as LinkInternal, useParams } from 'react-router-dom';
 import { bemUtils, guid, intlUtils } from '@navikt/fp-common';
 import Api from 'app/api/api';
@@ -94,7 +94,9 @@ const Tidslinje: React.FunctionComponent<Params> = ({ saker, visHeleTidslinjen, 
 
     return (
         <div>
-            <h2>{intlUtils(intl, 'saksoversikt.tidslinje')}</h2>
+            <Heading size="medium" spacing>
+                {intlUtils(intl, 'saksoversikt.tidslinje')}
+            </Heading>
             <ContentSection padding="none" margin="none" className="svartBorder">
                 {hendelserForVisning.map((hendelse, index) => {
                     const isActiveStep = index === aktivtStegIndex;

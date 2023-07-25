@@ -24,7 +24,6 @@ export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B
 export const arbeidsgiverFargerSekundær = ['#E0FAFF', '#FFF4E0', '#E3F8E7', '#EFECF4', '#FFE6E6', '#F9FCCC'];
 
 const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, søkerArbeidsforhold }) => {
-    //const valgtDatoRef = useDatoContext();
     const antallMnd = 9;
     const alleBanerHeight = allebanerHeightFunc(dayjs(sak.familiehendelse?.termindato).toDate(), antallMnd);
     const timelineData = mapSvpSakTilPeriodeTimeline(sak, søkerArbeidsforhold, antallMnd);
@@ -52,48 +51,30 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
         */
         return formaterDato(dayjs().toDate(), 'DD - MMM');
     };
-    /*
-    const oversteDato = dayjs(sak.familiehendelse?.termindato)
-        .subtract(
-            parseInt(formaterDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), 'D')) -
-                dayjs(getTerminMinus21Dager(sak.familiehendelse?.termindato)).daysInMonth() +
-                getAntallSvangerskapsDager(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd),
-            'day'
-        )
-        .toISOString();
-*/
-
-    //console.log('overstedato: ', oversteDato);
     let behovFromDato: string | undefined;
-    //let startDatoBakgrunnSoyle = 0;
-    //let arbeidsType: string | undefined;
     let utbetalingsGrad: number;
-    //console.log('Allebaner: ', alleBanerHeight);
 
     return timelineData ? (
         <PeriodeTimelineView>
-            <BaneHeaderBoks antall={timelineData?.length}>
-                {timelineData?.map((arbeidsforhold, index) => {
-                    return (
-                        <BaneHeader key={guid()} nr={index + 1}>
-                            {arbeidsforhold.navn}
-                        </BaneHeader>
-                    );
-                })}
-            </BaneHeaderBoks>
-
             <YAkseAlleElementer className="YAkseAlleElementer" height={alleBanerHeight.toString()}>
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
-
+                        let isMånedNavnSameAsTermindatoMnd = '1px';
                         let mndFormat = '';
                         {
                             if (dayjs().isSame(månedNavn, 'month'))
                                 mndFormat = ' fkfkf '; //formaterDato(dayjs().toString(), 'DD-MMM');
                             else mndFormat = formaterDato(månedNavn, 'MMM');
                         }
-                        //console.log((currentPos1 += daysInMonth) - daysInMonth);
+                        {
+                            if (
+                                dayjs(sak.familiehendelse?.termindato).isSame(månedNavn, 'month') &&
+                                dayjs(sak.familiehendelse?.termindato).date() > 21 // <-- Kan være unødvendig sjekk dette
+                            ) {
+                                isMånedNavnSameAsTermindatoMnd = '0px';
+                            }
+                        }
                         if (dayjs().isSame(månedNavn, 'month')) {
                             //console.log('if løkke');
                             return (
@@ -101,6 +82,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     key={guid()}
                                     startPos={(currentPos += daysInMonth) - daysInMonth}
                                     height={daysInMonth}
+                                    borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
                                     <p
                                         style={{
@@ -118,6 +100,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     key={guid()}
                                     startPos={(currentPos += daysInMonth) - daysInMonth}
                                     height={daysInMonth}
+                                    borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
                                     <p
                                         style={{

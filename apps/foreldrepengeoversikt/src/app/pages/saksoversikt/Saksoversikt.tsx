@@ -1,4 +1,4 @@
-import { Loader } from '@navikt/ds-react';
+import { BodyShort, Detail, Loader } from '@navikt/ds-react';
 import { bemUtils, intlUtils } from '@navikt/fp-common';
 import Api from 'app/api/api';
 import ContentSection from 'app/components/content-section/ContentSection';
@@ -31,6 +31,7 @@ import { SvangerskapDashboardwrapper } from './SvangerskapDashboardWrapper';
 import useDebounceOnWindowEvent from 'app/hooks/useDebounceOnWindowEvent';
 import SeHeleProsessenLink from 'app/components/se-hele-prosessen/SeHeleProsessenLink';
 import { SVPAlert } from 'app/components/svp_alert/SVPAlert';
+import { AvslagsMelding } from 'app/sections/avslags-melding/AvslagsMelding';
 
 interface Props {
     minidialogerData: MinidialogInnslag[] | undefined;
@@ -102,27 +103,43 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
             </div>
         );
     }
+    const gjeldendeSVPSak: SvangerskapspengeSak = gjeldendeSak as SvangerskapspengeSak;
     return (
         <div className={classNames(bem.block)}>
-            <SvangerskapDashboardwrapper
-                svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
-                skjermStørreEnn800={storSkjerm}
-                componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søker={søkerinfo} />}
-                componentB={<SeHeleProsessenLink />}
-                componentC={
-                    <PeriodeTimeline
-                        sak={gjeldendeSak as SvangerskapspengeSak}
-                        søkerArbeidsforhold={søkerinfo.arbeidsforhold}
-                    />
-                }
-                componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
-                componentE={
-                    <ContentSection padding="none" className="svartBorder">
-                        <SeDokumenter />
-                    </ContentSection>
-                }
-                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
-            />
+            {!gjeldendeSVPSak.gjeldendeVedtak?.avslagÅrsak ? (
+                <SvangerskapDashboardwrapper
+                    svangerskapSak={gjeldendeSak.ytelse === Ytelse.SVANGERSKAPSPENGER}
+                    skjermStørreEnn800={storSkjerm}
+                    componentA={<Tidslinje saker={saker} visHeleTidslinjen={false} søker={søkerinfo} />}
+                    componentB={<SeHeleProsessenLink />}
+                    componentC={
+                        <PeriodeTimeline
+                            sak={gjeldendeSak as SvangerskapspengeSak}
+                            søkerArbeidsforhold={søkerinfo.arbeidsforhold}
+                        />
+                    }
+                    componentD={<SammendragSoknad sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo} />}
+                    componentE={
+                        <ContentSection padding="none" className="svartBorder">
+                            <SeDokumenter />
+                        </ContentSection>
+                    }
+                    componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
+                />
+            ) : (
+                <AvslagsMelding>
+                    <BodyShort>
+                        {gjeldendeSVPSak.gjeldendeVedtak?.avslagÅrsak === 'ARBEIDSGIVER_KAN_TILRETTELEGGE' ? (
+                            <BodyShort>
+                                Din arbeidsgiver kan tilrettelegge og du trenger derfor ikke svangerskapenger. Se
+                                vedtaksbrev for mer informasjon.
+                            </BodyShort>
+                        ) : (
+                            <BodyShort>Se vedtaksbrev</BodyShort>
+                        )}
+                    </BodyShort>
+                </AvslagsMelding>
+            )}
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>
                     <Oppgaver

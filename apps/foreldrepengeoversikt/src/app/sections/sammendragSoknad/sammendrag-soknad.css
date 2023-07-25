@@ -1,0 +1,17 @@
+.periodeKort-felles-div__periodekort {
+    border-Color: white;
+    background-color: white;
+    border: 1px solid #8F8F8F;
+    padding: 5px;
+    border-radius: 8px ;
+}
+
+.periodeKort-felles-div__skillelinje {
+    border-Color: black;
+    border-top: 1px solid var(--a-border-default);
+    border-radius: 8px ;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

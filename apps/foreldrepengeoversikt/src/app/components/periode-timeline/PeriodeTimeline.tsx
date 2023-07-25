@@ -124,7 +124,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {timelineData!.map((bane, index) => {
                     behovFromDato = sak.gjeldendeVedtak?.arbeidsforhold[index].behovFrom;
                     //startDatoBakgrunnSoyle = dayjs(fomDato).diff(oversteDato, 'day');
-
+                    let behovTilDato = dayjs(behovFromDato);
                     return (
                         <Bane
                             key={guid()}
@@ -138,6 +138,13 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 utbetalingsGrad =
                                     sak.gjeldendeVedtak!.arbeidsforhold[index].tilrettelegginger[periodeIndex].resultat
                                         .utbetalingsgrad;
+                                const periodeSluttDato = dayjs(
+                                    sak.gjeldendeVedtak?.arbeidsforhold[index].tilrettelegginger[periodeIndex].tom
+                                );
+                                behovTilDato = behovTilDato.isBefore(periodeSluttDato)
+                                    ? periodeSluttDato
+                                    : behovTilDato;
+                                console.log('arbeidsgiver', index, ' til dato: ', behovTilDato);
                                 if (utbetalingsGrad > 0) {
                                     return (
                                         <>
@@ -154,15 +161,15 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             })}
                             <SoyleBakgrunn
                                 key={guid()}
-                                start={behovFromkoordinat(
-                                    sak.familiehendelse?.termindato,
+                                start={getGridPos(
                                     behovFromDato!,
+                                    getTerminMinus21Dager(sak.familiehendelse?.termindato),
                                     alleBanerHeight
                                 ).toString()}
                                 farge={arbeidsgiverFargerSekundær[index]}
                                 slutt={getGridPos(
+                                    behovTilDato.toString(),
                                     getTerminMinus21Dager(sak.familiehendelse?.termindato),
-                                    sak.familiehendelse?.termindato,
                                     alleBanerHeight
                                 ).toString()}
                                 opacity="100%"
@@ -200,14 +207,6 @@ export const getCurrentDato = () => {
 
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {
     const sisteDagIMnd = dayjs(sluttDato).daysInMonth();
-    /*
-    console.log(
-        'Init grispos: ',
-        totalGrid - (dayjs(sluttDato).diff(dayjs(dato), 'day') + (sisteDagIMnd - dayjs(sluttDato).date())),
-        'Total height: ',
-        totalGrid
-    );
-    */
     return totalGrid - (dayjs(sluttDato).diff(dayjs(dato), 'day') + (sisteDagIMnd - dayjs(sluttDato).date()));
 };
 
@@ -259,21 +258,11 @@ export const getArbeidsgiverNavn = (
 export const getTerminMinus21Dager = (termindato: string | undefined) => {
     return dayjs(termindato).subtract(21, 'day').toISOString();
 };
-
+/*
 const getResterendeDager = (terminDato: string | undefined): number => {
     return dayjs(terminDato).daysInMonth() - dayjs(terminDato).date();
 };
-
-const behovFromkoordinat = (termindato: string | undefined, behovFrom: string, allebanerHeight: number) => {
-    console.log('Termin: ', termindato, 'behovFrom: ', behovFrom, 'allebanerHeight: ', allebanerHeight);
-    console.log('getREsteredend: ', dayjs(getTerminMinus21Dager(termindato)).diff(dayjs(behovFrom), 'day'));
-    console.log('getDiffbehofrom: ', dayjs(getTerminMinus21Dager(termindato)).diff(dayjs(behovFrom), 'day'));
-    return (
-        allebanerHeight -
-        (dayjs(getTerminMinus21Dager(termindato)).diff(dayjs(behovFrom), 'day') + getResterendeDager(termindato))
-    );
-};
-
+*/
 const getAntallSvangerskapsDager = (sluttDato: string | undefined, antallMåneder: number) => {
     /*
     console.log(

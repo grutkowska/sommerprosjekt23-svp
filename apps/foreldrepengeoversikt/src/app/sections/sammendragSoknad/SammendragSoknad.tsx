@@ -79,7 +79,7 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                             ></PeriodeKort>
                         );
                     })}
-                <div>{SeAllePerioder()}</div>
+                <div style={{ display: 'flex', justifyContent: 'end' }}>{SeAllePerioder()}</div>
             </div>
         );
     } else return <></>;

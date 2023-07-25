@@ -311,7 +311,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                     gridColumn: 3,
                     width: '10px',
                     height: '10px',
-                    cursor: 'move',
                 }}
             ></div>
         </div>

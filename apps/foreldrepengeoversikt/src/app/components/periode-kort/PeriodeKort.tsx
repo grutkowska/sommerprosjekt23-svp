@@ -90,6 +90,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
                                     //console.log(periode);
+
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
@@ -122,6 +123,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     */}
 
                                                 <Table.DataCell
+
                                                     style={{
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,

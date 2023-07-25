@@ -13,7 +13,7 @@ import { Person } from 'app/types/Person';
 import { getErDatoInnenEnDagFraAnnenDato, ISOStringToDate } from './dateUtils';
 import { getLeverPerson } from './personUtils';
 import { IntlShape } from 'react-intl';
-import { formatDate, intlUtils } from '@navikt/fp-common';
+import { formatDate, formatDateExtended, intlUtils } from '@navikt/fp-common';
 import { Situasjon } from 'app/types/Situasjon';
 
 export const getAlleYtelser = (saker: SakOppslag): Sak[] => {
@@ -265,7 +265,7 @@ export const getTittelBarnNårNavnSkalIkkeVises = (
     if ((antallBarn === 0 && fødselsdatoer === undefined) || type === 'termin') {
         return intlUtils(intl, 'barnHeader.terminBarn', {
             barnTekst,
-            termindato: formatDate(familiehendelsedato),
+            termindato: formatDateExtended(familiehendelsedato).toUpperCase(),
         });
     }
 

@@ -122,7 +122,7 @@ export const YAkseAlleElementer: React.FC<YAkseAlleElementerProps> = ({ children
                 height: '100%',
                 display: 'grid',
                 gridColumn: '1/4',
-                gridRow: '2/  2',
+                gridRow: '1/  2',
                 gridTemplateRows: `repeat(${height}, 1fr)`,
                 gridTemplateColumns: `${gridTemplate}`,
             }}

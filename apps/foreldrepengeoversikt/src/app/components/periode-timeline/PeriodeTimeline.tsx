@@ -189,8 +189,10 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 />
             </DatoPilBane>
             <SluttInfo>
-                <FeedingBottleIcon aria-hidden />{' '}
-                {formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY').toUpperCase()}
+                <Detail>
+                    <FeedingBottleIcon style={{ marginBottom: '-2px' }} aria-hidden />{' '}
+                    {formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY').toUpperCase()}
+                </Detail>
             </SluttInfo>
         </PeriodeTimelineView>
     ) : (

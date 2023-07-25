@@ -10,7 +10,7 @@ const SeHeleProsessenLink = () => {
 
     return (
         <div className={bem.element('linkContainer')}>
-            <Link to={OversiktRoutes.TIDSLINJEN} className={bem.element('link')}>
+            <Link style={{ paddingTop: '8px' }} to={OversiktRoutes.TIDSLINJEN} className={bem.element('link')}>
                 Se hele prosessen
             </Link>
         </div>

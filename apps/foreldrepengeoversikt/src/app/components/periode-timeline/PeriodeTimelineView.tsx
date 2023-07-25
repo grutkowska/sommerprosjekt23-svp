@@ -289,9 +289,9 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
             <div className={bem.element('datoPilTekst')}>
                 <Detail
                     style={{
-                        fontWeight: 'bolder',
+                        fontWeight: 'bold',
                         textTransform: 'uppercase',
-                        color: '#262626',
+                        color: 'var(--a-text-default)',
                     }}
                 >
                     {handleTeksBoks(yPos!)}
@@ -306,11 +306,11 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
             <div
                 style={{
                     alignSelf: 'center',
-                    backgroundColor: 'black',
+                    backgroundColor: 'var(--a-text-default)',
                     borderRadius: '5px',
                     gridColumn: 3,
-                    width: '10px',
-                    height: '10px',
+                    width: '8px',
+                    height: '8px',
                 }}
             ></div>
         </div>

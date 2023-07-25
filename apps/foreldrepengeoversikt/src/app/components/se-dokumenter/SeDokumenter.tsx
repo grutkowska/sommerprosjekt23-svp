@@ -1,4 +1,4 @@
-import { LinkPanel } from '@navikt/ds-react';
+import { BodyShort, Detail, LinkPanel } from '@navikt/ds-react';
 import { bemUtils } from '@navikt/fp-common';
 
 import OversiktRoutes from 'app/routes/routes';
@@ -12,10 +12,12 @@ const SeDokumenter = () => {
 
     return (
         <LinkPanel as={Link} to={OversiktRoutes.DOKUMENTER} border={false} className={bem.element('linkPanel')}>
-            <LinkPanel.Title as="h2">
-                <div className={bem.block}>Se dokumenter</div>
-            </LinkPanel.Title>
-            <LinkPanel.Description>Alle opplysninger brukt i saken din</LinkPanel.Description>
+            <BodyShort size="medium">
+                <div className={bem.block}>
+                    <b>Se dokumenter</b>
+                </div>
+            </BodyShort>
+            <Detail>Alle opplysninger brukt i saken din</Detail>
         </LinkPanel>
     );
 };

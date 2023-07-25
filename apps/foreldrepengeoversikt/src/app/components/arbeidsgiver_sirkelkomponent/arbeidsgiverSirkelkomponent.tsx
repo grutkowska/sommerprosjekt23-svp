@@ -8,8 +8,8 @@ export const ArbeidsgiverSirkelkomponent: React.FC<arbeidsgiverFargeProps> = ({ 
             style={{
                 backgroundColor: `${arbeidsgiverFarge}`,
                 borderRadius: '50%',
-                width: '20px',
-                height: '20px',
+                width: '12px',
+                height: '12px',
                 alignSelf: 'center',
             }}
         ></div>

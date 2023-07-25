@@ -3,7 +3,7 @@
 }
 
 .svartBorder {
-    border: 1px solid;
+    border: 1px var(--a-border-default) solid;
     overflow: hidden;
 }
 

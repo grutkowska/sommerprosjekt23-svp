@@ -542,21 +542,41 @@ export const getAlleTidslinjehendelser = (
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);
                 while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
+                    console.log(
+                        'starten av while: ',
+                        telleMnd.month().toString(),
+                        ' telleMnd: ',
+                        telleMnd.isSame(dayjs(periode.tom), 'month')
+                    );
+                    const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
                     if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
                         const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
-                        const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
                         tidslinjeHendelser.push(
                             getTidslinjeSvangerskapspengerUtbetalingHendelse(
                                 sak as SvangerskapspengeSak,
                                 arbeidsgiverNavn,
-                                Math.round(120 * dager),
+                                Math.round(2000 * dager),
                                 telleMnd.toString(),
                                 utbetalingsForm,
                                 arbeidsgiverFarge
                             )
                         );
                     }
+                    if (telleMnd.isSame(dayjs(periode.tom), 'month')) {
+                        const dager = dayjs(periode.tom).date();
+                        tidslinjeHendelser.push(
+                            getTidslinjeSvangerskapspengerUtbetalingHendelse(
+                                sak as SvangerskapspengeSak,
+                                arbeidsgiverNavn,
+                                Math.round(2000 * dager),
+                                dayjs(periode.tom).toString(),
+                                utbetalingsForm,
+                                arbeidsgiverFarge
+                            )
+                        );
+                    }
                     telleMnd = telleMnd.add(2, 'M');
+                    console.log('slutten av while: ', telleMnd.toString());
                 }
             });
         });

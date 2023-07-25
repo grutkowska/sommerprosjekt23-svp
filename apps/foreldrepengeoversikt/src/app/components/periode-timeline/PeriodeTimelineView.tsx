@@ -8,8 +8,6 @@ import '../../img/transparent-background-pattern.jpg';
 declare module '*.module.css';
 declare module '*.module.scss';
 
-
-const borderTykkelse = '1px';
 const yAksePadding = '45px';
 
 const gridTemplate = yAksePadding + ' auto';
@@ -280,7 +278,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
 
                 gridTemplateColumns: `${gridTemplate}` + ' 0px',
                 //gridTemplateRows: `repeat(${height}, ${repeatPx})`
-
             }}
             draggable={false}
             onDragStart={(e) => {

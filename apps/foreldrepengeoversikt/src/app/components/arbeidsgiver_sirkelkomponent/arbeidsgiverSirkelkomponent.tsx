@@ -1,4 +1,8 @@
-export const getSirkelkomponent = (arbeidsgiverFarge: string | undefined) => {
+interface arbeidsgiverFargeProps {
+    arbeidsgiverFarge: string | undefined;
+}
+
+export const ArbeidsgiverSirkelkomponent: React.FC<arbeidsgiverFargeProps> = ({ arbeidsgiverFarge }) => {
     return (
         <div
             style={{

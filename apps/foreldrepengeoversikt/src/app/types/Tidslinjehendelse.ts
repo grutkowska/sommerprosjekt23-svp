@@ -4,7 +4,7 @@ import { TidslinjehendelseType } from './TidslinjehendelseType';
 
 export type UtbetalingsInfo = {
     arbeidsgiver: string;
-    farge: string;
+    arbeidsgiverFarge: string;
     utbetaling: string;
     utbetalingsMnd: string;
     utbetalingsForm: string;

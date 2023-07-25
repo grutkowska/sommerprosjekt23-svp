@@ -8,6 +8,8 @@ import classNames from 'classnames';
 import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import { getTidligstDatoForInntektsmelding } from 'app/utils/tidslinjeUtils';
 import { UtbetalingsInfo } from 'app/types/Tidslinjehendelse';
+import { ArbeidsgiverSirkelkomponent } from 'app/components/arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
+import { arbeidsgiverFargerPrimær, førsteBokstavToUppercase } from 'app/components/periode-timeline/PeriodeTimeline';
 
 interface Props {
     children: React.ReactNode;
@@ -112,9 +114,12 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
                         {title}
                     </BodyShort>
                     {utbetalingsInfo && (
-                        <BodyShort size="small" className={bem.element('tittle')}>
-                            {utbetalingsInfo.arbeidsgiver}
-                        </BodyShort>
+                        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                            <ArbeidsgiverSirkelkomponent arbeidsgiverFarge={utbetalingsInfo.arbeidsgiverFarge} />
+                            <BodyShort size="small" className={bem.element('tittle')}>
+                                {førsteBokstavToUppercase(utbetalingsInfo.arbeidsgiver)}
+                            </BodyShort>
+                        </div>
                     )}
                 </div>
                 <div className={bem.element('tittleBoks')}>

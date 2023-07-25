@@ -125,7 +125,13 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     */}
 
                                                 <Table.DataCell
+                                                    className="datacell"
                                                     style={{
+                                                        marginLeft: '30px',
+                                                        marginRight: '30px',
+                                                        borderRadius: '8px',
+                                                        border: '5px',
+                                                        borderColor: 'white',
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,
                                                             periode.tom,
@@ -137,7 +143,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     <h4
                                                         style={{
                                                             margin: '5px',
-                                                            paddingLeft: '40px',
+                                                            paddingLeft: '10px',
+                                                            paddingRight: '20px',
                                                         }}
                                                     >
                                                         {' '}
@@ -147,7 +154,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     <p
                                                         style={{
                                                             margin: '5px',
-                                                            paddingLeft: '40px',
+                                                            paddingLeft: '10px',
+                                                            paddingRight: '20px',
                                                         }}
                                                     >
                                                         {!ferdigBehandlet

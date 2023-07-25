@@ -4,7 +4,6 @@ import './periodeTimelineView.css';
 
 import { useState } from 'react';
 import '../../img/transparent-background-pattern.jpg';
-import { FeedingBottleIcon, HospitalIcon } from '@navikt/aksel-icons';
 declare module '*.module.css';
 declare module '*.module.scss';
 

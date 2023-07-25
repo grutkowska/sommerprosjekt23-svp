@@ -54,7 +54,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
             <ExpansionCard defaultOpen={true} aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
                     <div>
-                        {ArbeidsgiverSirkelkomponent(arbeidsgiverFarge)}
+                        <ArbeidsgiverSirkelkomponent arbeidsgiverFarge={arbeidsgiverFarge} />
                         <div
                             style={{
                                 width: '20px',

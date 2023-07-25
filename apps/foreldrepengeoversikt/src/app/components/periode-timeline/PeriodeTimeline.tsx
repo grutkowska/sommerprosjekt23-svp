@@ -17,7 +17,6 @@ import { svpPerioder } from 'app/types/svpTypesSommer';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
-import { Detail } from '@navikt/ds-react';
 import { FeedingBottleIcon } from '@navikt/aksel-icons';
 
 export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B2D2', '#F68282', '#D9E366'];

@@ -1,13 +1,38 @@
 .periodeKort {
     margin: 0px;
+    --ac-expansioncard-header-bg-hover: none;
+    --ac-expansioncard-border-hover-color: none;
+    --ac-expansioncard-border-radius: none;
+    --ac-expansioncard-button-border-radius: none;
+    --ac-expansioncard-header-bg: none;
+    --ac-expansioncard-header-bg-hover: none;
+    --ac-table-row-hover-border: none;
+    --ac-table-row-hover: none;
+
+--ac-expansioncard-bg:  none;
+--ac-expansioncard-header-bg:  none;
+--ac-expansioncard-header-bg-hover:  none;
+--ac-expansioncard-header-open-bg:  none;
+--ac-expansioncard-border-color: none;
+--ac-expansioncard-border-open-color:  none;
+--ac-expansioncard-border-radius:  none;
+--ac-expansioncard-button-border-radius:  none;
+--ac-expansioncard-border-hover-color:  none;
+
 }
 
 .eksapansjonsKort {
     padding: 0%;
     overflow: hidden;
     border-color: white;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
+.datacell {
+    --ac-expansioncard-header-bg-hover: none;
+    --ac-expansioncard-border-hover-color: none;
+}
 .ekspansjonsKortTittel {
     display: flex;    
     align-items: center;

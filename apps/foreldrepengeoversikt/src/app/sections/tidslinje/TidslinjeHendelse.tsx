@@ -125,7 +125,7 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
                 <div className={bem.element('tittleBoks')}>
                     <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
                     {utbetalingsInfo && (
-                        <Detail className={bem.element('date')}>{`kr ${utbetalingsInfo.utbetaling}`}</Detail>
+                        <Detail className={bem.element('date')}>{`${utbetalingsInfo.utbetaling} kr`}</Detail>
                     )}
                 </div>
                 {children}

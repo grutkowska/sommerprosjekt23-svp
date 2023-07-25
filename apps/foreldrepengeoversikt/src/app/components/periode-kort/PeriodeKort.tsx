@@ -126,6 +126,9 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
 
                                                 <Table.DataCell
                                                     style={{
+                                                        borderRadius: '8px',
+                                                        border: '5px',
+                                                        borderColor: 'white',
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,
                                                             periode.tom,

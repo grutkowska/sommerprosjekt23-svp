@@ -1,15 +1,17 @@
 .periodeKort {
-    margin-bottom: 10px;
+    margin: 0px;
 }
 
 .eksapansjonsKort {
     padding: 0%;
     overflow: hidden;
+    border-color: white;
 }
 
 .ekspansjonsKortTittel {
     display: flex;    
     align-items: center;
+    border-color: white;
 }
 
 .ekspansjonsKortTittel div:first-child {

@@ -121,7 +121,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                         <SeDokumenter />
                     </ContentSection>
                 }
-                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
+                componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak}></SVPAlert>}
             />
             {((aktiveMinidialogerForSaken && aktiveMinidialogerForSaken.length > 0) || minidialogerError) && (
                 <ContentSection heading={intlUtils(intl, 'saksoversikt.oppgaver')} backgroundColor={'yellow'}>

@@ -13,7 +13,7 @@ import { MorsAktivitet } from 'app/types/MorsAktivitet';
 import { PeriodeResultatÅrsak } from 'app/types/PeriodeResultatÅrsak';
 import { getTidsperiode, isValidTidsperiode, Tidsperioden } from './tidsperiodeUtils';
 import { Uttaksdagen } from './Uttaksdagen';
-import { svpPerioder } from 'app/types/svpTypesSommer';
+import { oppholdsperioder, svpPerioder } from 'app/types/svpTypesSommer';
 
 export const Periodene = (perioder: Periode[]) => ({
     sort: () => [...perioder].sort(sorterPerioder),
@@ -555,7 +555,8 @@ export const getSvpPeriodeType = (periodeType: svpPerioder, intl: IntlShape, arb
     }
 };
 
-export const alleSvpPerioderSortert = (svpPerioder: svpPerioder[], oppholdsPerioder?: svpPerioder[]) => {
+export const alleSvpPerioderSortert = (svpPerioder: svpPerioder[], oppholdsPerioder: oppholdsperioder[]) => {
+    //console.log(oppholdsPerioder)
     const perioder = oppholdsPerioder ? svpPerioder.concat(oppholdsPerioder) : svpPerioder;
     return perioder.sort(comparePeriodersDato);
 };

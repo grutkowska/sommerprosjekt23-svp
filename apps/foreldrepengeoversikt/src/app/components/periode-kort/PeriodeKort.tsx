@@ -2,7 +2,7 @@ import { ExpansionCard, Table } from '@navikt/ds-react';
 
 import './periodeKort.css';
 import { guid } from '@navikt/fp-common';
-import { svpPerioder } from 'app/types/svpTypesSommer';
+import { oppholdsperioder, svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
 import {
@@ -33,7 +33,7 @@ interface Props {
     arbeidsgiverFarge?: string;
     ferdigBehandlet: boolean;
     svpPerioder?: svpPerioder[];
-    oppholdsPerioder?: svpPerioder[];
+    oppholdsPerioder?: oppholdsperioder[];
     arbeidgiverIndex?: number;
 }
 let fargeIndex = -1;
@@ -48,8 +48,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     oppholdsPerioder,
 }: Props) => {
     const datoFormat = 'DD. MMM. YYYY';
-
-    const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
+    const allePerioder = oppholdsPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
+    //console.log(allePerioder);
     fargeIndex++;
     return (
         <div className="periodeKort">
@@ -91,7 +91,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    console.log(fargeIndex, periode);
+                                    console.log(periode.årsak);
+                                    //console.log(fargeIndex, periode);
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
@@ -143,8 +144,52 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         <b>{formaterDato(periode.fom, datoFormat)}</b> -{' '}
                                                         <b>{formaterDato(periode.tom, datoFormat)}</b>
                                                     </h4>
-
-                                                    {periode.resultat ? (
+                                                    <p
+                                                        style={{
+                                                            margin: '5px',
+                                                            paddingLeft: '40px',
+                                                        }}
+                                                    >
+                                                        {!ferdigBehandlet
+                                                            ? periode.type == 'INGEN'
+                                                                ? 'Du kan ikke jobbe og har søkt om 100 prosent svangerskapspenger. ' +
+                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
+                                                                  ' vil betale dine svangerskapspenger og vil få refundert det du har rett på. Kontakt ' +
+                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
+                                                                  ' for flere detaljer.'
+                                                                : periode.type == 'DELVIS'
+                                                                ? 'Du jobber ' +
+                                                                  periode.arbeidstidprosent +
+                                                                  ' prosent og har søkt om ' +
+                                                                  ' svangerskapspenger. '
+                                                                : periode.type == 'HEL'
+                                                                ? 'Du kan jobbe som vanlig og får derfor ikke svangerskapspenger i denne perioden.'
+                                                                : null
+                                                            : periode.resultat
+                                                            ? periode.type == 'INGEN'
+                                                                ? 'Du kan ikke jobbe og får 100 prosent svangerskapspenger, tilsvarende 2000 kr / dag. ' +
+                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
+                                                                  ' betaler dine svangerskapspenger og får refundert det du har rett på. Kontakt ' +
+                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
+                                                                  ' for flere detaljer.'
+                                                                : periode.type == 'DELVIS'
+                                                                ? 'Du jobber ' +
+                                                                  periode.arbeidstidprosent +
+                                                                  ' prosent og får ' +
+                                                                  periode.resultat.utbetalingsgrad +
+                                                                  ' prosent svangerskapspenger, tilsvarende tilsvarende 1000 kr / dag.' +
+                                                                  ' Pengene beregnes månedlig og betales den 25. hver måned.'
+                                                                : periode.type == 'HEL'
+                                                                ? 'Du kan jobbe som vanlig og får derfor ikke svangerskapspenger i denne perioden.'
+                                                                : null
+                                                            : periode.årsak == 'FERIE'
+                                                            ? 'Du har ferie og får derfor ikke svangerskapspenger i denne perioden.'
+                                                            : periode.årsak == 'SYKEPENGER'
+                                                            ? 'Du får sykepenger og får derfor ikke svangerskapspenger i denne perioden.'
+                                                            : null}
+                                                    </p>
+                                                    {/*
+                                                    periode.resultat ? (
                                                         <p
                                                             style={{
                                                                 margin: '5px',
@@ -152,7 +197,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                             }}
                                                         >
                                                             {`Trenger ${periode.type} tilrettelegging`}{' '}
-                                                            {periode.type !== 'INGEN' &&
+                                                            {periode &&
                                                                 `på en
                                                             ${periode.arbeidstidprosent} prosent stilling. `}
                                                             {ferdigBehandlet &&
@@ -166,7 +211,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         </p>
                                                     ) : (
                                                         <p>Du har ferie</p>
-                                                    )}
+                                                    )
+                                                    */}
                                                 </Table.DataCell>
                                             </Table.Row>
                                         );

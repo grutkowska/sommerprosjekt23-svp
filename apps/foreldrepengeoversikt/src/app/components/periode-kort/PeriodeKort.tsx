@@ -152,22 +152,17 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     >
                                                         {!ferdigBehandlet
                                                             ? periode.type == 'INGEN'
-                                                                ? 'Du kan ikke jobbe og har søkt om 100 prosent svangerskapspenger. ' +
-                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
-                                                                  ' vil betale dine svangerskapspenger og vil få refundert det du har rett på. Kontakt ' +
-                                                                  førsteBokstavToUppercase(arbeidsgiverNavn) +
-                                                                  ' for flere detaljer.'
+                                                                ? 'Du kan ikke jobbe og har søkt om 100 prosent svangerskapspenger. '
                                                                 : periode.type == 'DELVIS'
-                                                                ? 'Du jobber ' +
+                                                                ? 'Du kan jobbe ' +
                                                                   periode.arbeidstidprosent +
-                                                                  ' prosent og har søkt om ' +
-                                                                  ' svangerskapspenger. '
+                                                                  ' prosent og har søkt om svangerskapspenger for å dekke ditt lønnstap. '
                                                                 : periode.type == 'HEL'
-                                                                ? 'Du kan jobbe som vanlig og får derfor ikke svangerskapspenger i denne perioden.'
+                                                                ? 'Du kan jobbe som vanlig og behøver ikke svangerskapspenger i denne perioden.'
                                                                 : null
                                                             : periode.resultat
                                                             ? periode.type == 'INGEN'
-                                                                ? 'Du kan ikke jobbe og får 100 prosent svangerskapspenger, tilsvarende 2000 kr / dag. ' +
+                                                                ? 'Du kan ikke jobbe og får 100 prosent svangerskapspenger, tilsvarende 2000 kr pr dag. ' +
                                                                   førsteBokstavToUppercase(arbeidsgiverNavn) +
                                                                   ' betaler dine svangerskapspenger og får refundert det du har rett på. Kontakt ' +
                                                                   førsteBokstavToUppercase(arbeidsgiverNavn) +
@@ -177,8 +172,8 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                                   periode.arbeidstidprosent +
                                                                   ' prosent og får ' +
                                                                   periode.resultat.utbetalingsgrad +
-                                                                  ' prosent svangerskapspenger, tilsvarende tilsvarende 1000 kr / dag.' +
-                                                                  ' Pengene beregnes månedlig og betales den 25. hver måned.'
+                                                                  ' prosent svangerskapspenger, tilsvarende 1000 kr pr dag.' +
+                                                                  ' Pengene beregnes månedlig og betales av nav den 25. hver måned.'
                                                                 : periode.type == 'HEL'
                                                                 ? 'Du kan jobbe som vanlig og får derfor ikke svangerskapspenger i denne perioden.'
                                                                 : null

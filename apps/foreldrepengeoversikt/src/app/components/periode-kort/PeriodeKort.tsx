@@ -8,7 +8,7 @@ import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
 import { arbeidsgiverFargerSekundær, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
 import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
 import dayjs from 'dayjs';
-import { getSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
+import { ArbeidsgiverSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
 
 const getFargetBakgrunn = (fom: string, tom: string, fargeIndex: number) => {
     if (
@@ -51,7 +51,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
             <ExpansionCard defaultOpen={true} aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
                     <div>
-                        {getSirkelkomponent(arbeidsgiverFarge)}
+                        {ArbeidsgiverSirkelkomponent(arbeidsgiverFarge)}
                         <div
                             style={{
                                 width: '20px',

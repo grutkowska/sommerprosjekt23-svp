@@ -17,6 +17,7 @@ import { BarnGruppering } from 'app/types/BarnGruppering';
 import { Sak } from 'app/types/Sak';
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
 import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
+import { arbeidsgiverFargerPrimær } from 'app/components/periode-timeline/PeriodeTimeline';
 
 export const VENTEÅRSAKER = [
     BehandlingTilstand.VENTER_PÅ_INNTEKTSMELDING,
@@ -447,7 +448,8 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
     arbeidsgiver: string,
     utbetaling: number,
     måned: string,
-    utbetalingsForm: string
+    utbetalingsForm: string,
+    arbeidsgiverFarge: string
 ): Tidslinjehendelse => {
     let arbeidsgiverString = ' ';
     sak.gjeldendeVedtak?.arbeidsforhold.forEach((arbeidsforhold) => {
@@ -475,7 +477,7 @@ export const getTidslinjeSvangerskapspengerUtbetalingHendelse = (
         manglendeVedlegg: [],
         utbetalingsInfo: {
             arbeidsgiver: arbeidsgiver,
-            farge: '',
+            arbeidsgiverFarge: arbeidsgiverFarge,
             utbetaling: utbetaling.toString(),
             utbetalingsMnd: måned,
             utbetalingsForm: utbetalingsForm,
@@ -536,6 +538,7 @@ export const getAlleTidslinjehendelser = (
                 arbeidsforhold.aktivitet.type,
                 arbeidsforhold?.aktivitet?.arbeidsgiver?.id
             );
+            const arbeidsgiverFarge = arbeidsgiverFargerPrimær[index];
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);
                 while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
@@ -548,7 +551,8 @@ export const getAlleTidslinjehendelser = (
                                 arbeidsgiverNavn,
                                 Math.round(120 * dager),
                                 telleMnd.toString(),
-                                utbetalingsForm
+                                utbetalingsForm,
+                                arbeidsgiverFarge
                             )
                         );
                     }

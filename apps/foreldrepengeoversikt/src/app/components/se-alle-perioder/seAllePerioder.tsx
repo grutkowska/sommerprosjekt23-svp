@@ -4,7 +4,7 @@ import { bemUtils } from '@navikt/fp-common';
 import { Link } from 'react-router-dom';
 
 import './se-alle-perioder.css';
-import { setAllePerioder } from '../periode-kort/PeriodeKort';
+import { setAllePerioder, setFargeIndex } from '../periode-kort/PeriodeKort';
 
 const SeAllePerioder = () => {
     const bem = bemUtils('se-alle-perioder');
@@ -15,6 +15,7 @@ const SeAllePerioder = () => {
             className={bem.element('linkContainer')}
             onClick={() => {
                 setAllePerioder();
+                setFargeIndex();
             }}
         >
             Se alle perioder

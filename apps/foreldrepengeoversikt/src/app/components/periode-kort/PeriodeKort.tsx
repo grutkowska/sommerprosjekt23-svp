@@ -36,7 +36,10 @@ interface Props {
     oppholdsPerioder?: svpPerioder[];
     arbeidgiverIndex?: number;
 }
-
+let fargeIndex = -1;
+export const setFargeIndex = () => {
+    fargeIndex = -1;
+};
 const PeriodeKort: React.FunctionComponent<Props> = ({
     arbeidsgiverNavn,
     arbeidsgiverFarge,
@@ -45,9 +48,9 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     oppholdsPerioder,
 }: Props) => {
     const datoFormat = 'DD. MMM. YYYY';
-    let fargeIndex = -1;
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
+    fargeIndex++;
     return (
         <div className="periodeKort">
             <ExpansionCard defaultOpen={true} aria-label="Small-variant">
@@ -88,7 +91,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    fargeIndex++;
+                                    console.log(fargeIndex, periode);
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));

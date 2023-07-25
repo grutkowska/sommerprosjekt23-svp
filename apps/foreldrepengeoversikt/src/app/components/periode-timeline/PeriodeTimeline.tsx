@@ -144,17 +144,14 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                 behovTilDato = behovTilDato.isBefore(periodeSluttDato)
                                     ? periodeSluttDato
                                     : behovTilDato;
-                                console.log('arbeidsgiver', index, ' til dato: ', behovTilDato);
                                 if (utbetalingsGrad > 0) {
                                     return (
-                                        <>
-                                            <Soyle
-                                                key={guid()}
-                                                start={periode.start.toString()}
-                                                slutt={periode.slutt.toString()}
-                                                farge={arbeidsgiverFargerPrimær[index]}
-                                            />
-                                        </>
+                                        <Soyle
+                                            key={guid()}
+                                            start={periode.start.toString()}
+                                            slutt={periode.slutt.toString()}
+                                            farge={arbeidsgiverFargerPrimær[index]}
+                                        />
                                     );
                                 }
                                 return <></>;

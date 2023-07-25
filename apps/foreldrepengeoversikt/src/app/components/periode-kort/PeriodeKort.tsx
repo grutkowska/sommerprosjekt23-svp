@@ -48,7 +48,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     let fargeIndex = -1;
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
-    fargeIndex++;
     return (
         <div className="periodeKort">
             <ExpansionCard defaultOpen={true} aria-label="Small-variant">
@@ -89,8 +88,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    //console.log(periode);
-
+                                    fargeIndex++;
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
@@ -123,7 +121,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                     */}
 
                                                 <Table.DataCell
-
                                                     style={{
                                                         backgroundColor: getFargetBakgrunn(
                                                             periode.fom,

@@ -5,8 +5,9 @@
     background-color: white;
     grid-template-columns: [start] 60px [header] auto 20px [end];
     grid-template-rows: [start] 40px [header] auto [banerSlutt] 30px [end];
-    padding: 1rem;
-    border: 0.01rem solid;
+    padding: 20px;
+    padding-right: 30px;
+    border: 1px solid #8F8F8F;
     border-radius: 0.5rem;
     column-gap: 20px;
     row-gap: 5px;
@@ -38,8 +39,8 @@
     padding: 0%;
 }
 .periodeTimelineView__datoPilStrek {
-    background-color: black;
-    height: 2px;
+    background-color: #262626;
+    height: 1px;
     grid-column: 2; 
     margin-top: 9px;
 }
@@ -77,6 +78,7 @@
 .periodeTimelineView__sluttInfo > p {
     margin: 0%;
     padding: 0%;
-    color: gray;
+    color: black;
+    opacity: 65%;
 }
 

@@ -19,6 +19,7 @@ import { svpPerioder } from 'app/types/svpTypesSommer';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
+import { Detail } from '@navikt/ds-react';
 
 export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B2D2', '#F68282', '#D9E366'];
 export const arbeidsgiverFargerSekundær = ['#E0FAFF', '#FFF4E0', '#E3F8E7', '#EFECF4', '#FFE6E6', '#F9FCCC'];
@@ -50,7 +51,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             'DD - MMM'
         );
         */
-        return formaterDato(dayjs().toDate(), 'DD - MMM');
+        return formaterDato(dayjs().toDate(), 'DD MMM');
     };
     /*
     const oversteDato = dayjs(sak.familiehendelse?.termindato)
@@ -119,17 +120,15 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     startPos={(currentPos += daysInMonth) - daysInMonth}
                                     height={daysInMonth}
                                 >
-                                    <p
+                                    <Detail
                                         style={{
-                                            textSizeAdjust: '10px',
                                             textTransform: 'uppercase',
-                                            fontWeight: 'lighter',
                                             color: '#000000',
                                             opacity: '44%',
                                         }}
                                     >
                                         {mndFormat}
-                                    </p>
+                                    </Detail>
                                 </YAkseElement>
                             );
                         }
@@ -145,10 +144,8 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                         <Bane
                             key={guid()}
                             nr={(index + 1).toString()}
-
                             bakgrunnFarge={arbeidsgiverFargerPrimær[index]}
                             height={alleBanerHeight.toString()}
-
                         >
                             {bane.perioder.map((periode, periodeIndex) => {
                                 //arbeidsType =
@@ -172,14 +169,12 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                             })}
                             <SoyleBakgrunn
                                 key={guid()}
-
                                 start={behovFromkoordinat(
                                     sak.familiehendelse?.termindato,
                                     behovFromDato!,
                                     alleBanerHeight
                                 ).toString()}
                                 farge={arbeidsgiverFargerSekundær[index]}
-
                                 slutt={alleBanerHeight.toString()}
                                 opacity="100%"
                             />
@@ -201,7 +196,7 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 />
             </DatoPilBane>
             <SluttInfo>
-                <p>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</p>
+                <Detail>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</Detail>
             </SluttInfo>
         </PeriodeTimelineView>
     ) : (

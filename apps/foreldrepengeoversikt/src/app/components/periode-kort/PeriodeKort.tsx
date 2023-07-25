@@ -5,8 +5,11 @@ import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { arbeidsgiverFargerSekundær, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
-import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
+import {
+    arbeidsgiverFargerSekundær,
+    førsteBokstavToUppercase,
+    getCurrentDato,
+} from '../periode-timeline/PeriodeTimeline';
 import dayjs from 'dayjs';
 import { ArbeidsgiverSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
 
@@ -33,7 +36,10 @@ interface Props {
     oppholdsPerioder?: svpPerioder[];
     arbeidgiverIndex?: number;
 }
-
+let fargeIndex = -1;
+export const setFargeIndex = () => {
+    fargeIndex = -1;
+};
 const PeriodeKort: React.FunctionComponent<Props> = ({
     arbeidsgiverNavn,
     arbeidsgiverFarge,
@@ -41,8 +47,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     svpPerioder,
     oppholdsPerioder,
 }: Props) => {
-    const datoFormat = 'DD. MMM';
-    let fargeIndex = -1;
+    const datoFormat = 'DD. MMM. YYYY';
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
     fargeIndex++;
@@ -51,7 +56,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
             <ExpansionCard defaultOpen={true} aria-label="Small-variant">
                 <ExpansionCard.Header className="ekspansjonsKortTittel">
                     <div>
-                        {ArbeidsgiverSirkelkomponent(arbeidsgiverFarge)}
+                        <ArbeidsgiverSirkelkomponent arbeidsgiverFarge={arbeidsgiverFarge} />
                         <div
                             style={{
                                 width: '20px',
@@ -86,7 +91,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    //console.log(periode);
+                                    console.log(fargeIndex, periode);
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
@@ -135,7 +140,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         }}
                                                     >
                                                         {' '}
-                                                        <b>{formaterDato(periode.fom, datoFormat)}</b> til{' '}
+                                                        <b>{formaterDato(periode.fom, datoFormat)}</b> -{' '}
                                                         <b>{formaterDato(periode.tom, datoFormat)}</b>
                                                     </h4>
 

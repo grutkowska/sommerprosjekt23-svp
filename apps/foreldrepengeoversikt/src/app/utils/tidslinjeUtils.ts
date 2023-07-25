@@ -534,8 +534,8 @@ export const getAlleTidslinjehendelser = (
     if (sak.ytelse === Ytelse.SVANGERSKAPSPENGER && sak.gjeldendeVedtak) {
         sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
             const arbeidsgiverNavn = getArbeidsgiverNavn(
-                søker.arbeidsforhold,
-                arbeidsforhold.aktivitet.type,
+                søker?.arbeidsforhold,
+                arbeidsforhold?.aktivitet?.type,
                 arbeidsforhold?.aktivitet?.arbeidsgiver?.id
             );
             const arbeidsgiverFarge = arbeidsgiverFargerPrimær[index];

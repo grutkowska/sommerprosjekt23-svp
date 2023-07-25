@@ -6,8 +6,6 @@ import {
     AlleBaner,
     YAkseAlleElementer,
     YAkseElement,
-    BaneHeaderBoks,
-    BaneHeader,
     DatoPil,
     DatoPilBane,
     SoyleBakgrunn,
@@ -19,6 +17,8 @@ import { svpPerioder } from 'app/types/svpTypesSommer';
 import { guid } from '@navikt/fp-common';
 import { formaterDato, get9månederFraTerminDato } from 'app/utils/dateUtils';
 import dayjs from 'dayjs';
+import { Detail } from '@navikt/ds-react';
+import { FeedingBottleIcon } from '@navikt/aksel-icons';
 
 export const arbeidsgiverFargerPrimær = ['#66CBEC', '#FFC166', '#66C786', '#C0B2D2', '#F68282', '#D9E366'];
 export const arbeidsgiverFargerSekundær = ['#E0FAFF', '#FFF4E0', '#E3F8E7', '#EFECF4', '#FFE6E6', '#F9FCCC'];
@@ -49,8 +49,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
             'DD - MMM'
         );
         */
-        return formaterDato(dayjs().toDate(), 'DD - MMM');
+        return formaterDato(dayjs().toDate(), 'DD MMM');
     };
+
     let behovFromDato: string | undefined;
     let utbetalingsGrad: number;
 
@@ -60,7 +61,9 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 {get9månederFraTerminDato(getTerminMinus21Dager(sak.familiehendelse?.termindato), antallMnd).map(
                     (månedNavn) => {
                         const daysInMonth = dayjs(månedNavn).daysInMonth();
+
                         let isMånedNavnSameAsTermindatoMnd = '1px';
+
                         let mndFormat = '';
                         {
                             if (dayjs().isSame(månedNavn, 'month'))
@@ -102,17 +105,15 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                                     height={daysInMonth}
                                     borderTykkelse={isMånedNavnSameAsTermindatoMnd}
                                 >
-                                    <p
+                                    <Detail
                                         style={{
-                                            textSizeAdjust: '10px',
                                             textTransform: 'uppercase',
-                                            fontWeight: 'lighter',
                                             color: '#000000',
                                             opacity: '44%',
                                         }}
                                     >
                                         {mndFormat}
-                                    </p>
+                                    </Detail>
                                 </YAkseElement>
                             );
                         }
@@ -191,12 +192,17 @@ const PeriodeTimeline: React.FunctionComponent<PeriodeTimelineProps> = ({ sak, s
                 />
             </DatoPilBane>
             <SluttInfo>
-                <p>{formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY')}</p>
+                <FeedingBottleIcon aria-hidden />{' '}
+                {formaterDato(sak.familiehendelse?.termindato, 'DD. MMMM YYYY').toUpperCase()}
             </SluttInfo>
         </PeriodeTimelineView>
     ) : (
         <div></div>
     );
+};
+
+export const getCurrentDato = () => {
+    return dayjs().toISOString();
 };
 
 const getGridPos = (dato: string, sluttDato: string | undefined, totalGrid: number) => {

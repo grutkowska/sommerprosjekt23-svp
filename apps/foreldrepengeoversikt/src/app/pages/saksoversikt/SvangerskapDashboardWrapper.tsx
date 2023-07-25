@@ -48,7 +48,7 @@ export const SvangerskapDashboardwrapper: React.FC<Props> = ({
                         {komponenter[4]}
                     </div>
                     <div className="dasboardSeksjon">
-                        <h2>Innsyn</h2>
+                        <h2>Ressurser</h2>
                         {komponenter[2]}
                     </div>
 

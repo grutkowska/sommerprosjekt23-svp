@@ -4,7 +4,7 @@ import './periodeTimelineView.css';
 
 import { useState } from 'react';
 import '../../img/transparent-background-pattern.jpg';
-import dayjs from 'dayjs';
+import { FeedingBottleIcon, HospitalIcon } from '@navikt/aksel-icons';
 declare module '*.module.css';
 declare module '*.module.scss';
 
@@ -239,10 +239,6 @@ export const DatoPilBane: React.FC<DatoPilBaneProps> = ({ children, height }) =>
     );
 };
 
-export const getCurrentDato = () => {
-    return dayjs().toISOString();
-};
-
 interface DatoPilProps extends PeriodeTimelineViewProps {
     nr: number;
     nrColumns?: number;
@@ -279,7 +275,6 @@ export const DatoPil: React.FC<DatoPilProps> = ({ nr, relBaneHeight, handleTeksB
                 gridRow: `${yPos}`,
                 gridColumn: `1/${4}`,
                 gridTemplateColumns: `${gridTemplate}` + ' 20px',
-                //gridTemplateRows: `repeat(${height}, ${repeatPx})`
             }}
             draggable={false}
             onDragStart={(e) => {

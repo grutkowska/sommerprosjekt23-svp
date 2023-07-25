@@ -5,8 +5,11 @@ import { guid } from '@navikt/fp-common';
 import { svpPerioder } from 'app/types/svpTypesSommer';
 import { formaterDato } from 'app/utils/dateUtils';
 import { alleSvpPerioderSortert } from 'app/utils/periodeUtils';
-import { arbeidsgiverFargerSekundær, førsteBokstavToUppercase } from '../periode-timeline/PeriodeTimeline';
-import { getCurrentDato } from '../periode-timeline/PeriodeTimelineView';
+import {
+    arbeidsgiverFargerSekundær,
+    førsteBokstavToUppercase,
+    getCurrentDato,
+} from '../periode-timeline/PeriodeTimeline';
 import dayjs from 'dayjs';
 import { getSirkelkomponent } from '../arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
 
@@ -41,7 +44,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
     svpPerioder,
     oppholdsPerioder,
 }: Props) => {
-    const datoFormat = 'DD. MMM';
+    const datoFormat = 'DD. MMM. YYYY';
     let fargeIndex = -1;
 
     const allePerioder = svpPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
@@ -135,7 +138,7 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                         }}
                                                     >
                                                         {' '}
-                                                        <b>{formaterDato(periode.fom, datoFormat)}</b> til{' '}
+                                                        <b>{formaterDato(periode.fom, datoFormat)}</b> -{' '}
                                                         <b>{formaterDato(periode.tom, datoFormat)}</b>
                                                     </h4>
 

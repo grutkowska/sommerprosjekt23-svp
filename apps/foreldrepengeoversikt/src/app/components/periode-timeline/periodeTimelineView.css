@@ -5,7 +5,7 @@
     background-color: white;
     grid-template-columns: [start] 60px [header] auto 20px [end];
 
-    grid-template-rows: [start] 40px [header] auto [banerSlutt] 30px [end];
+    grid-template-rows: [start]  auto [banerSlutt] 30px [end];
     padding: 20px;
     padding-right: 30px;
     border: 1px solid #8F8F8F;

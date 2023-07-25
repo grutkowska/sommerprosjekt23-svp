@@ -17,6 +17,13 @@ export interface svpPerioder {
     type: string; // Enums??
     arbeidstidprosent: number;
     resultat: ResultatSammendrag;
+    årsak: string; // Enums??
+    oppholdKilde: string;
+}
+
+export interface oppholdsperioder extends svpPerioder {
+    årsak: string; // Enums??
+    oppholdKilde: string;
 }
 
 interface Aktivitet {

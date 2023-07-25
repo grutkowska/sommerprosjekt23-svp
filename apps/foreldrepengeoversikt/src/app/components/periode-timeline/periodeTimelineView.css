@@ -3,8 +3,7 @@
     height: 500px;
     display: grid;
     background-color: white;
-    grid-template-columns: [start] 60px [header] auto 20px [end];
-
+    grid-template-columns: [start] 60px [marg] auto 20px [end];
     grid-template-rows: [start]  auto [banerSlutt] 30px [end];
     padding: 20px;
     padding-right: 30px;
@@ -52,7 +51,7 @@
 .periodeTimelineView__baneHeaderBoks {
     display: grid;
     grid-template-columns: [start] auto [end];
-    grid-column: header / end;
+    grid-column: marg / end;
     grid-row: start;
 }
 .periodeTimelineView__bane {

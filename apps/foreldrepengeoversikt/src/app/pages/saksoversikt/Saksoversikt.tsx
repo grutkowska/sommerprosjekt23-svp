@@ -1,4 +1,4 @@
-import { BodyShort, Detail, Loader } from '@navikt/ds-react';
+import { BodyShort, Loader } from '@navikt/ds-react';
 import { bemUtils, intlUtils } from '@navikt/fp-common';
 import Api from 'app/api/api';
 import ContentSection from 'app/components/content-section/ContentSection';
@@ -124,7 +124,7 @@ const Saksoversikt: React.FunctionComponent<Props> = ({ minidialogerData, minidi
                             <SeDokumenter />
                         </ContentSection>
                     }
-                    componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak} søker={søkerinfo}></SVPAlert>}
+                    componentF={<SVPAlert sak={gjeldendeSak as SvangerskapspengeSak}></SVPAlert>}
                 />
             ) : (
                 <AvslagsMelding>

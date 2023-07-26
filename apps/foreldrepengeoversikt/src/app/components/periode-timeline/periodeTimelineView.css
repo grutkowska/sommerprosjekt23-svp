@@ -44,7 +44,7 @@
 }
 .periodeTimelineView__datoPilStrek {
     background-color: var(--a-text-default);
-    height: 1px;
+    height: 1.25px;
     grid-column: 2; 
     margin-top: 9px;
 }

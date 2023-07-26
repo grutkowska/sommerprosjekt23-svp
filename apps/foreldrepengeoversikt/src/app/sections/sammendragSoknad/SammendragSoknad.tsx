@@ -75,7 +75,9 @@ export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
                                         arbeidgiverIndex={index + 1}
                                     ></PeriodeKort>
                                     {sak!.gjeldendeVedtak!.arbeidsforhold.length > index + 1 ? (
-                                        <div className={bem.element('skillelinje')}> </div>
+                                        <div key={guid()} className={bem.element('skillelinje')}>
+                                            {' '}
+                                        </div>
                                     ) : null}
                                 </>
                             );

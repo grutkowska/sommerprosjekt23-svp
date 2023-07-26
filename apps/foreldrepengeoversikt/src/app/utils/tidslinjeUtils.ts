@@ -495,7 +495,6 @@ export const getAlleTidslinjehendelser = (
     erAvslåttForeldrepengesøknad: boolean,
     intl: IntlShape
 ): Tidslinjehendelse[] => {
-    console.log('getter');
     const tidslinjeHendelser = getTidslinjehendelserDetaljer(tidslinjeHendelserData, intl);
     const venteHendelser = åpenBehandlingPåVent
         ? getTidslinjehendelserFraBehandlingPåVent(åpenBehandlingPåVent, manglendeVedleggData, intl)
@@ -542,12 +541,6 @@ export const getAlleTidslinjehendelser = (
             arbeidsforhold.tilrettelegginger.map((periode) => {
                 let telleMnd = dayjs(periode.fom);
                 while (telleMnd.isSameOrBefore(dayjs(periode.tom))) {
-                    console.log(
-                        'starten av while: ',
-                        telleMnd.month().toString(),
-                        ' telleMnd: ',
-                        telleMnd.isSame(dayjs(periode.tom), 'month')
-                    );
                     const utbetalingsForm = index % 2 ? 'Utbetaling' : 'Refusjon';
                     if (telleMnd.isSame(dayjs(periode.fom), 'month')) {
                         const dager = telleMnd.daysInMonth() - telleMnd.subtract(1, 'D').date();
@@ -576,7 +569,6 @@ export const getAlleTidslinjehendelser = (
                         );
                     }
                     telleMnd = telleMnd.add(2, 'M');
-                    console.log('slutten av while: ', telleMnd.toString());
                 }
             });
         });

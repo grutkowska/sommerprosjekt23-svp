@@ -95,7 +95,6 @@ interface SoyleBakgrunnProps extends PeriodeTimelineViewProps {
 }
 export const SoyleBakgrunn: React.FC<SoyleBakgrunnProps> = ({ start, slutt, farge, opacity }) => {
     const bem = bemUtils('periodeTimelineView');
-    console.log('startDatoSoyle: ', start);
     return (
         <div
             className={bem.element('periode')}
@@ -139,9 +138,6 @@ interface YAkseElementProps extends PeriodeTimelineViewProps {
     borderTykkelse: string;
 }
 export const YAkseElement: React.FC<YAkseElementProps> = ({ children, height, startPos, borderTykkelse }) => {
-    //console.log(`${startPos} / ${startPos + height}`);
-    console.log('bordertykkelse: ', borderTykkelse);
-
     const bem = bemUtils('periodeTimelineView');
     return (
         <>

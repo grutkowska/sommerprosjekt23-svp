@@ -49,7 +49,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
 }: Props) => {
     const datoFormat = 'DD. MMM. YYYY';
     const allePerioder = oppholdsPerioder ? alleSvpPerioderSortert(svpPerioder!, oppholdsPerioder) : [];
-    //console.log(allePerioder);
     fargeIndex++;
     return (
         <div className="periodeKort">
@@ -70,25 +69,12 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                             </Heading>
                         </div>
                     </div>
-                    {/*ferdigBehandlet ? (
-                        <Tag variant="success" size="small">
-                            <CheckmarkIcon title="a11y-title" className="statusTag" />
-                            {window.innerWidth > 900 && 'Ferdig behandlet'}
-                        </Tag>
-                    ) : (
-                        <Tag variant="info" size="small">
-                            <ClockIcon title="a11y-title" className="statusTag" />
-                            {window.innerWidth > 900 && 'Under behandlet'}
-                        </Tag>
-                    )*/}
                 </ExpansionCard.Header>
                 {allePerioder && (
                     <ExpansionCard.Content className="eksapansjonsKort">
                         <Table>
                             <Table.Body>
                                 {allePerioder?.map((periode) => {
-                                    console.log(periode.årsak);
-                                    //console.log(fargeIndex, periode);
                                     const fullVisning = seAllePerioder
                                         ? true
                                         : !dayjs(periode.tom).isSameOrBefore(dayjs().subtract(1, 'day'));
@@ -96,30 +82,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                     if (fullVisning) {
                                         return (
                                             <Table.Row key={guid()} className="row">
-                                                {/*
-                                            {ferdigBehandlet && (
-                                                <Table.DataCell className="cell">
-                                                    {periode.resultat ? (
-                                                        periode.resultat.resultatType === 'INNVILGET' ? (
-                                                            <CheckmarkCircleIcon
-                                                                title="a11y-title"
-                                                                fontSize="1.7rem"
-                                                                color="green"
-                                                            />
-                                                        ) : (
-                                                            <XMarkOctagonIcon
-                                                                title="a11y-title"
-                                                                fontSize="1.7rem"
-                                                                color="red"
-                                                            />
-                                                        )
-                                                    ) : (
-                                                        <ParasolBeachIcon title="a11y-title" />
-                                                    )}
-                                                </Table.DataCell>
-                                            )}
-                                                    */}
-
                                                 <Table.DataCell
                                                     className="datacell"
                                                     style={{
@@ -188,31 +150,6 @@ const PeriodeKort: React.FunctionComponent<Props> = ({
                                                             ? 'Du får sykepenger og får derfor ikke svangerskapspenger i denne perioden.'
                                                             : null}
                                                     </Detail>
-                                                    {/*
-                                                    periode.resultat ? (
-                                                        <p
-                                                            style={{
-                                                                margin: '5px',
-                                                                paddingLeft: '40px',
-                                                            }}
-                                                        >
-                                                            {`Trenger ${periode.type} tilrettelegging`}{' '}
-                                                            {periode &&
-                                                                `på en
-                                                            ${periode.arbeidstidprosent} prosent stilling. `}
-                                                            {ferdigBehandlet &&
-                                                                (periode.resultat.resultatType === 'INNVILGET'
-                                                                    ? periode.type !== 'INGEN' &&
-                                                                      `Du vil motta${' '}
-                                                                ${
-                                                                    periode.resultat.utbetalingsgrad
-                                                                } prosent svangerskapspenger. `
-                                                                    : ` ${periode.resultat.resultatType}`)}
-                                                        </p>
-                                                    ) : (
-                                                        <p>Du har ferie</p>
-                                                    )
-                                                    */}
                                                 </Table.DataCell>
                                             </Table.Row>
                                         );

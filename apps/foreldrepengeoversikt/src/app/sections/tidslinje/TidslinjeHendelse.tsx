@@ -9,7 +9,7 @@ import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import { getTidligstDatoForInntektsmelding } from 'app/utils/tidslinjeUtils';
 import { UtbetalingsInfo } from 'app/types/Tidslinjehendelse';
 import { ArbeidsgiverSirkelkomponent } from 'app/components/arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
-import { arbeidsgiverFargerPrimær, førsteBokstavToUppercase } from 'app/components/periode-timeline/PeriodeTimeline';
+import { førsteBokstavToUppercase } from 'app/components/periode-timeline/PeriodeTimeline';
 
 interface Props {
     children: React.ReactNode;

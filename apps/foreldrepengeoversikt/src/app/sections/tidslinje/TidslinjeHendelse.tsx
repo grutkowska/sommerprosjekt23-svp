@@ -7,6 +7,9 @@ import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { TidslinjehendelseType } from 'app/types/TidslinjehendelseType';
 import { getTidligstDatoForInntektsmelding } from 'app/utils/tidslinjeUtils';
+import { UtbetalingsInfo } from 'app/types/Tidslinjehendelse';
+import { ArbeidsgiverSirkelkomponent } from 'app/components/arbeidsgiver_sirkelkomponent/arbeidsgiverSirkelkomponent';
+import { arbeidsgiverFargerPrimær, førsteBokstavToUppercase } from 'app/components/periode-timeline/PeriodeTimeline';
 
 interface Props {
     children: React.ReactNode;
@@ -19,6 +22,7 @@ interface Props {
     tidligstBehandlingsDato: Date | undefined;
     finnesHendelserFørAktivtSteg: boolean;
     visHeleTidslinjen: boolean;
+    utbetalingsInfo: UtbetalingsInfo;
 }
 
 const bem = bemUtils('tidslinje-hendelse');
@@ -81,6 +85,7 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
     tidligstBehandlingsDato,
     finnesHendelserFørAktivtSteg,
     visHeleTidslinjen,
+    utbetalingsInfo,
 }) => {
     const tidTekst = visKlokkeslett ? formaterTid(date) : '';
     const dateTekst = getDateTekst(type, date, førsteUttaksdagISaken, tidligstBehandlingsDato);
@@ -104,10 +109,25 @@ const TidslinjeHendelse: React.FunctionComponent<Props> = ({
             </div>
 
             <div className={bem.element('tekst')}>
-                <BodyShort size="small" className={bem.element('tittle')}>
-                    {title}
-                </BodyShort>
-                <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
+                <div className={bem.element('tittleBoks')}>
+                    <BodyShort size="small" className={bem.element('tittle')}>
+                        {title}
+                    </BodyShort>
+                    {utbetalingsInfo && (
+                        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+                            <ArbeidsgiverSirkelkomponent arbeidsgiverFarge={utbetalingsInfo.arbeidsgiverFarge} />
+                            <BodyShort size="small" className={bem.element('tittle')}>
+                                {førsteBokstavToUppercase(utbetalingsInfo.arbeidsgiver)}
+                            </BodyShort>
+                        </div>
+                    )}
+                </div>
+                <div className={bem.element('tittleBoks')}>
+                    <Detail className={bem.element('date')}>{`${dateTekst} ${tidTekst}`}</Detail>
+                    {utbetalingsInfo && (
+                        <Detail className={bem.element('date')}>{`${utbetalingsInfo.utbetaling} kr`}</Detail>
+                    )}
+                </div>
                 {children}
             </div>
         </div>

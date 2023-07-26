@@ -4,6 +4,12 @@
     padding-bottom: 10rem;
 }
 
+.routesWrapperDashboard {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding:0 1rem 10rem 1rem;
+}
+
 @media (max-width: 768px) {
     .routesWrapper {
         max-width: 100%;

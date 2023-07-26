@@ -1,7 +1,7 @@
 import { ArbeidsgiverInfoType } from './ArbeidsgiverInfoType';
 
 export interface ArbeidsgiverInfo {
-    id: string;
+    id?: string;
     type: ArbeidsgiverInfoType;
     navn: string;
 }

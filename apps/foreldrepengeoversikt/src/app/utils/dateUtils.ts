@@ -6,6 +6,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isBetween from 'dayjs/plugin/isBetween';
 import { isISODateString } from '@navikt/ds-datepicker';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isoWeek);
 dayjs.extend(isSameOrAfter);
@@ -27,6 +28,18 @@ export const måned3bokstaver = (dato: Dayjs): string => {
 
 export const år = (dato: Dayjs): string => {
     return dato.format('YYYY');
+};
+
+export const get9månederFraTerminDato = (dato: string | undefined, antMnd: number): string[] => {
+    dayjs.extend(customParseFormat);
+    console.log(dato);
+    let terminDato = dayjs(dato, 'YYYY-MM-DD');
+    const svpMåneder: string[] = [];
+    for (let i = 0; i <= antMnd; i++) {
+        svpMåneder.push(terminDato.toDate().toISOString());
+        terminDato = terminDato.subtract(1, 'M');
+    }
+    return svpMåneder.reverse();
 };
 
 export const getUkerOgDagerFromDager = (dager: number): { dager: number; uker: number } => {

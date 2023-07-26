@@ -11,6 +11,8 @@
 
 .tidslinje-hendelse__tekst{
     padding-left: 7px;
+    width: 100%;
+    padding-right: 1rem;
 }
 
 .tidslinje-hendelse__ikon svg{
@@ -24,7 +26,7 @@
 
 .tidslinje-hendelse__ikon_active svg{
     color: var(--a-deepblue-300);
-    background-color: var(--a-deepblue-50);
+    background-color: var(--a-deepblue-100);
 }
 
 .tidslinje-hendelse__ikon_completed svg{
@@ -37,7 +39,7 @@
 }
 
 .tidslinje-hendelse--active {
-    background-color: var(--a-deepblue-50);
+    background-color: var(--a-deepblue-100);
     border-radius: 4px;
 }
 
@@ -86,8 +88,15 @@
 .tidslinje-hendelse__date {
     color: var(--a-gray-500);
 }
-
+.tidslinje-hendelse__tittleBoks {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
 .tidslinje-hendelse__tittle {
+    font-weight: bold;
+}
+.tidslinje-hendelse__arbeidsgiverTittle {
     font-weight: bold;
 }
 

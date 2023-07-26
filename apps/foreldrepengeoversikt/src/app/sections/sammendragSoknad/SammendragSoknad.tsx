@@ -1,159 +1,88 @@
 import PeriodeKort from 'app/components/periode-kort/PeriodeKort';
-
 import { SvangerskapspengeSak } from 'app/types/SvangerskapspengeSak';
-import { SøkerinfoDTO, SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
-import { formaterDato } from 'app/utils/dateUtils';
-import { XMarkIcon, CheckmarkIcon } from '@navikt/aksel-icons';
-import { Arbeidsforhold } from 'app/types/svpTypesSommer';
+import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
+import { bemUtils, guid } from '@navikt/fp-common';
+import { arbeidsgiverFargerPrimær, getArbeidsgiverNavn } from 'app/components/periode-timeline/PeriodeTimeline';
+
+import SeAllePerioder from 'app/components/se-alle-perioder/seAllePerioder';
+
+import './sammendrag-soknad.css';
 
 interface Props {
     sak: SvangerskapspengeSak;
     søker: SøkerinfoDTO;
 }
 
-const getArbeidsgiverNavn = (
-    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[],
-    gjeldendeVedtakArbeidsforhold: Arbeidsforhold
-) => {
-    if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'ORDINÆRT_ARBEID') {
-        const arbeidsforhold = søkerArbeidsforhold.find(
-            (i) => i.arbeidsgiverId === gjeldendeVedtakArbeidsforhold.aktivitet.arbeidsgiver.id
-        );
-        return arbeidsforhold?.arbeidsgiverNavn.toLowerCase();
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'FRILANS') {
-        return 'frilanser';
-    } else if (gjeldendeVedtakArbeidsforhold.aktivitet.type === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
-        return 'selvstendig næringsdrivende';
-    } else {
-        return 'Type not found';
-    }
-};
-
 export const SammendragSoknad: React.FC<Props> = ({ sak, søker }) => {
-    const datoFormat = 'DD. MMMM';
-    let melding;
-    console.log(sak);
+    //const intl = useIntl();
+    const bem = bemUtils('periodeKort-felles-div');
+
     if ('åpenBehandling' in sak) {
         return (
-            <>
-                <h2>Din søknad</h2>
+            <div>
                 {sak.åpenBehandling &&
                     sak.åpenBehandling.søknad &&
-                    sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold) => {
-                        return arbeidsforhold.tilrettelegginger.map((periode) => {
-                            melding = (
-                                <p>
-                                    <b>
-                                        {formaterDato(periode.fom, datoFormat)} -{' '}
-                                        {formaterDato(periode.tom, datoFormat)}
-                                    </b>{' '}
-                                    jobber du hos{' '}
-                                    {søker.arbeidsforhold
-                                        ? søker.arbeidsforhold.find(
-                                              (i) => i.arbeidsgiverId === arbeidsforhold.aktivitet.arbeidsgiver.id
-                                          )?.arbeidsgiverNavn
-                                        : 'undefined'}{' '}
-                                    og har søkt om {periode.type} svangerskapspenger
-                                </p>
-                            );
-                            return (
-                                <PeriodeKort
-                                    key={
-                                        sak.åpenBehandling &&
-                                        sak.åpenBehandling.søknad &&
-                                        sak.åpenBehandling.søknad.arbeidsforhold.indexOf(arbeidsforhold)
-                                    }
-                                >
-                                    {melding}
-                                </PeriodeKort>
-                            );
-                        });
+                    sak.åpenBehandling.søknad.arbeidsforhold.map((arbeidsforhold, index) => {
+                        return (
+                            <PeriodeKort
+                                key={guid()}
+                                arbeidsgiverNavn={getArbeidsgiverNavn(
+                                    søker.arbeidsforhold,
+                                    arbeidsforhold.aktivitet.type,
+                                    arbeidsforhold?.aktivitet?.arbeidsgiver?.id
+                                )}
+                                arbeidsgiverFarge={arbeidsgiverFargerPrimær[index]}
+                                ferdigBehandlet={false}
+                                svpPerioder={arbeidsforhold.tilrettelegginger}
+                                oppholdsPerioder={arbeidsforhold.oppholdsperioder}
+                                arbeidgiverIndex={index + 1}
+                            ></PeriodeKort>
+                        );
                     })}
-            </>
+            </div>
+        );
+    } else if (sak.sakAvsluttet) {
+        return (
+            <div>
+                <h2>Din søknad er avslått</h2>
+                {
+                    <PeriodeKort
+                        arbeidsgiverNavn={'Avslags årsak: ' + sak.gjeldendeVedtak?.avslagÅrsak.toString()}
+                        ferdigBehandlet={true}
+                    ></PeriodeKort>
+                }
+            </div>
         );
     } else if ('gjeldendeVedtak' in sak) {
         return (
             <>
-                <h2>Dine vedtak</h2>
-                {sak.gjeldendeVedtak &&
-                    sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold) => {
-                        return arbeidsforhold.tilrettelegginger.map((periode) => {
-                            melding = (
+                <div className={bem.element('periodekort')}>
+                    {sak.gjeldendeVedtak &&
+                        sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold, index) => {
+                            return (
                                 <>
-                                    <p>
-                                        <b>
-                                            {' '}
-                                            {formaterDato(periode.fom, datoFormat)} -{' '}
-                                            {formaterDato(periode.tom, datoFormat)}{' '}
-                                        </b>
-                                        jobber du hos{' '}
-                                        {søker.arbeidsforhold &&
-                                            getArbeidsgiverNavn(søker.arbeidsforhold, arbeidsforhold)}{' '}
-                                        og mottar {100 - periode.arbeidstidprosent}% svangerskapspenger
-                                        {periode.resultat.resultatType === 'INNVILGET' ? (
-                                            <CheckmarkIcon title="a11y-title" fontSize="1rem" />
-                                        ) : (
-                                            <XMarkIcon title="a11y-title" fontSize="1rem" />
+                                    <PeriodeKort
+                                        key={guid()}
+                                        arbeidsgiverNavn={getArbeidsgiverNavn(
+                                            søker.arbeidsforhold,
+                                            arbeidsforhold.aktivitet.type,
+                                            arbeidsforhold?.aktivitet?.arbeidsgiver?.id
                                         )}
-                                    </p>
+                                        arbeidsgiverFarge={arbeidsgiverFargerPrimær[index]}
+                                        ferdigBehandlet={true}
+                                        svpPerioder={arbeidsforhold.tilrettelegginger}
+                                        oppholdsPerioder={arbeidsforhold.oppholdsperioder}
+                                        arbeidgiverIndex={index + 1}
+                                    ></PeriodeKort>
+                                    {sak!.gjeldendeVedtak!.arbeidsforhold.length > index + 1 ? (
+                                        <div className={bem.element('skillelinje')}> </div>
+                                    ) : null}
                                 </>
                             );
-                            return (
-                                <PeriodeKort
-                                    key={
-                                        sak.åpenBehandling &&
-                                        sak.åpenBehandling.søknad &&
-                                        sak.åpenBehandling.søknad.arbeidsforhold.indexOf(arbeidsforhold)
-                                    }
-                                >
-                                    {melding}
-                                </PeriodeKort>
-                            );
-                        });
-                    })}
-            </>
-        );
-    } else if ('sakAvsluttet' in sak) {
-        return (
-            <>
-                <h2>Dine vedtak</h2>
-                {sak.gjeldendeVedtak &&
-                    sak.gjeldendeVedtak.arbeidsforhold.map((arbeidsforhold) => {
-                        return arbeidsforhold.tilrettelegginger.map((periode) => {
-                            melding = (
-                                <>
-                                    <p>
-                                        <b>
-                                            {formaterDato(periode.fom, datoFormat)} -{' '}
-                                            {formaterDato(periode.tom, datoFormat)}
-                                        </b>{' '}
-                                        jobber du hos{' '}
-                                        {søker.arbeidsforhold &&
-                                            søker.arbeidsforhold.find(
-                                                (i) => i.arbeidsgiverId === arbeidsforhold.aktivitet.arbeidsgiver.id
-                                            )?.arbeidsgiverNavn}{' '}
-                                        og mottar {100 - periode.arbeidstidprosent}% svangerskapspenger{' '}
-                                        {periode.resultat.resultatType === 'INNVILGET' ? (
-                                            <CheckmarkIcon title="a11y-title" fontSize="1rem" />
-                                        ) : (
-                                            <XMarkIcon title="a11y-title" fontSize="1rem" />
-                                        )}
-                                    </p>
-                                </>
-                            );
-                            return (
-                                <PeriodeKort
-                                    key={
-                                        sak.åpenBehandling &&
-                                        sak.åpenBehandling.søknad &&
-                                        sak.åpenBehandling.søknad.arbeidsforhold.indexOf(arbeidsforhold)
-                                    }
-                                >
-                                    {melding}
-                                </PeriodeKort>
-                            );
-                        });
-                    })}
+                        })}
+                </div>
+                <div style={{ margin: '10px' }}></div>
+                <div style={{ display: 'flex', justifyContent: 'end' }}>{SeAllePerioder()}</div>
             </>
         );
     } else return <></>;

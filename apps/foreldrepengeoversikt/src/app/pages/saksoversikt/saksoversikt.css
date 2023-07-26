@@ -1,3 +1,20 @@
 .saksoversikt__oppgaver {
     background-color: var(--a-orange-100);
 }
+
+.svartBorder {
+    border: 1px var(--a-border-default) solid;
+    overflow: hidden;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: auto 360px;
+    grid-template-rows: auto auto auto;
+}
+
+
+.dasboardSeksjon {
+    margin-right: 10px;
+    margin-bottom: 15px;
+}

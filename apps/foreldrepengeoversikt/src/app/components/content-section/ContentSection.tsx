@@ -15,6 +15,8 @@ interface Props {
     cornerStyle?: CornerStyle;
     heading?: string;
     padding?: Padding;
+    margin?: string;
+    className?: string;
 }
 
 const ContentSection: FunctionComponent<Props> = ({
@@ -23,6 +25,8 @@ const ContentSection: FunctionComponent<Props> = ({
     backgroundColor = 'white',
     cornerStyle = 'rounded',
     padding = 'default',
+    margin = 'default',
+    className,
 }) => {
     const bem = bemUtils('content-section');
 
@@ -32,7 +36,9 @@ const ContentSection: FunctionComponent<Props> = ({
                 bem.block,
                 bem.modifier(`bg-${backgroundColor}`),
                 bem.modifier(`padding-${padding}`),
-                bem.modifier(`corner-style-${cornerStyle}`)
+                bem.modifier(`corner-style-${cornerStyle}`),
+                bem.modifier(`margin-${margin}`),
+                className
             )}
         >
             {heading && (

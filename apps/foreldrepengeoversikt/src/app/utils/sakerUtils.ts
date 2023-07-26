@@ -7,13 +7,13 @@ import { SakOppslag, SakOppslagDTO } from 'app/types/SakOppslag';
 import { SvangerskapspengeSak, SvangerskapspengeSakDTO } from 'app/types/SvangerskapspengeSak';
 import { Ytelse } from 'app/types/Ytelse';
 import dayjs from 'dayjs';
-import { SøkerinfoDTO } from 'app/types/SøkerinfoDTO';
+import { SøkerinfoDTO, SøkerinfoDTOArbeidsforhold } from 'app/types/SøkerinfoDTO';
 import { Sak } from 'app/types/Sak';
 import { Person } from 'app/types/Person';
 import { getErDatoInnenEnDagFraAnnenDato, ISOStringToDate } from './dateUtils';
 import { getLeverPerson } from './personUtils';
 import { IntlShape } from 'react-intl';
-import { formatDate, intlUtils } from '@navikt/fp-common';
+import { formatDate, formatDateExtended, intlUtils } from '@navikt/fp-common';
 import { Situasjon } from 'app/types/Situasjon';
 
 export const getAlleYtelser = (saker: SakOppslag): Sak[] => {
@@ -33,6 +33,14 @@ export function sorterPersonEtterEldstOgNavn(p1: Person, p2: Person) {
 export const getFørsteUttaksdagIForeldrepengesaken = (sak: Foreldrepengesak): Date | undefined => {
     if (sak.gjeldendeVedtak && sak.gjeldendeVedtak.perioder.length > 0) {
         return ISOStringToDate(sak.gjeldendeVedtak.perioder[0].fom)!;
+    } else if (sak.åpenBehandling && sak.åpenBehandling.søknadsperioder) {
+        return ISOStringToDate(sak.åpenBehandling?.søknadsperioder[0].fom);
+    }
+    return undefined;
+};
+export const getFørsteUttaksdagISvangerskapspenger = (sak: SvangerskapspengeSak): Date | undefined => {
+    if (sak.gjeldendeVedtak) {
+        return ISOStringToDate(sak.gjeldendeVedtak.arbeidsforhold[0].tilrettelegginger[0].fom)!;
     } else if (sak.åpenBehandling && sak.åpenBehandling.søknadsperioder) {
         return ISOStringToDate(sak.åpenBehandling?.søknadsperioder[0].fom);
     }
@@ -257,7 +265,7 @@ export const getTittelBarnNårNavnSkalIkkeVises = (
     if ((antallBarn === 0 && fødselsdatoer === undefined) || type === 'termin') {
         return intlUtils(intl, 'barnHeader.terminBarn', {
             barnTekst,
-            termindato: formatDate(familiehendelsedato),
+            termindato: formatDateExtended(familiehendelsedato).toUpperCase(),
         });
     }
 
@@ -311,4 +319,23 @@ export const getSakTittel = (
         return `${navn} adoptert ${formatDate(familiehendelsesdato)}`;
     }
     return '';
+};
+export const getArbeidsgiverNavn = (
+    søkerArbeidsforhold: SøkerinfoDTOArbeidsforhold[] | undefined,
+    arbeidsForholdType: string,
+    arbeidsgiverID?: string
+): string => {
+    if (arbeidsForholdType === 'ORDINÆRT_ARBEID') {
+        const arbeidsforhold = søkerArbeidsforhold
+            ? søkerArbeidsforhold.find((i) => i.arbeidsgiverId === arbeidsgiverID)
+            : undefined;
+        //return førsteBokstavToUppercase(arbeidsforhold!.arbeidsgiverNavn) || '';
+        return arbeidsforhold?.arbeidsgiverNavn.toLowerCase() || '';
+    } else if (arbeidsForholdType === 'FRILANS') {
+        return 'Frilanser';
+    } else if (arbeidsForholdType === 'SELVSTENDIG_NÆRINGSDRIVENDE') {
+        return 'Selvstendig næringsdrivende';
+    } else {
+        return 'Type not found';
+    }
 };

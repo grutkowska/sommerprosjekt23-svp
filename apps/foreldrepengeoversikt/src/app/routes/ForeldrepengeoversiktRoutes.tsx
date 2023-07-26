@@ -114,7 +114,7 @@ const ForeldrepengeoversiktRoutes: React.FunctionComponent<Props> = ({
                         />
                         <Route
                             path={OversiktRoutes.TIDSLINJEN}
-                            element={<TidslinjePage saker={saker} søkersBarn={søkerinfo.søker.barn} />}
+                            element={<TidslinjePage saker={saker} søker={søkerinfo} />}
                         />
                         <Route
                             path={`${OversiktRoutes.OPPGAVER}/:oppgaveId`}

@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 
-function debounce(fn, ms) {
-    let timer;
-    return (_) => {
+function debounce(fn: any, ms: number) {
+    let timer: any;
+    return () => {
         clearTimeout(timer);
-        timer = setTimeout((_) => {
-            timer = null;
-            fn.apply(this, arguments);
+        timer = setTimeout(() => {
+            timer = 0;
+            //@ts-ignore
+            fn.apply(this, []);
         }, ms);
     };
 }

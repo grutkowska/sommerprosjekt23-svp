@@ -121,7 +121,7 @@
     "velkommen.intro.harFørstegangssøknadUnderBehandling": "Du har en søknad til behandling. Ønsker du å sende inn en ny søknad erstatter du søknaden som ligger til behandling, og du må fylle ut hele søknaden på nytt.",
     "velkommen.lesMerOmPersonopplysninger": "Les om hvordan NAV behandler personopplysningene dine",
     "velkommen.sak.sistEndret": "Sist endret: {date}",
-    "velkommen.sak.status.ferdigBehandlet": "Saken er ferdig behandlet",
+    "velkommen.sak.status.ferdigBehandlet": "Ferdig behandlet",
     "velkommen.sak.status.underBehandling": "Under behandling",
     "velkommen.sak.type": "Foreldrepenger",
     "velkommen.samtykke": "Jeg bekrefter at jeg har lest og forstått",
